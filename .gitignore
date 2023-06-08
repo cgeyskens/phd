@@ -1,3 +1,5 @@
 .Rhistory
 *.xlsx
 *.log
+*.docx
+*.ipynb_checkpoints/
