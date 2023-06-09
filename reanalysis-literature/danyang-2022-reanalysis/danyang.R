@@ -2,10 +2,15 @@ install.packages("tximport")
 install.packages("readr")
 library(tximport)
 library(readr)
-library(DESeq2)
-library(tximeta)
 
-# Need to use EdgeR instead DESeq2, look at the vignette online
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("edgeR")
+library(edgeR)
+
+# Need to use EdgeR instead DESeq2, look at the vignette online. 
+# The reads I got from Danyang are normalized by readlength, so don't need any normalization
 
 # set wd
 setwd("D:/code/reanalysis-literature/Danyang-He-2022")
@@ -39,6 +44,39 @@ df<-df[,-1]
 head(df)
 class(df)
 class(metadata_tau_gfp)
+
+# loading data into edgeR object
+d <- DGEList(counts=df, samples = metadata_tau_gfp, group = metadata_tau_gfp$microglia)
+dim(d)
+d$counts
+
+#filter out genes with less then 10 counts
+dds <- d[(rowSums(d$counts)) >= 10,]
+dim(dds)
+
+# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # loading into DeSeq object
 dd4 <- DESeqDataSetFromMatrix(countData = round(df),
