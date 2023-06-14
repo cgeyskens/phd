@@ -9,8 +9,13 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install("edgeR")
 library(edgeR)
 
-# Need to use EdgeR instead DESeq2, look at the vignette online. 
-# The reads I got from Danyang are normalized by readlength, so don't need any normalization
+# Need to use EdgeR instead DESeq2, look at the tutorial from VIB bulk RNAseq online. 
+# The reads I got from Danyang are probably normalized by readlength, so the analysis 
+# don't need any readlength normalization.
+# EdgeR will also get more differentially expressed genes compared to DESeq2
+# the publication: https://pubmed.ncbi.nlm.nih.gov/34982959/
+
+# setting wd, loading the data and filtering the data ####
 
 # set wd
 setwd("D:/code/reanalysis-literature/Danyang-He-2022")
@@ -22,7 +27,6 @@ counts <- read_delim("GSE127449_rsem.genes.counts.matrix",
 
 # loading the metadata of the columns
 metadata_tau_gfp <- read_table("metadata_tau-gfp.txt")
-View(metadata_tau_gfp)
 
 # converting to counts table to a df 
 counts_df <- as.data.frame(counts)
@@ -45,102 +49,89 @@ head(df)
 class(df)
 class(metadata_tau_gfp)
 
+
+
+# EdgeR ####
+
 # loading data into edgeR object
-d <- DGEList(counts=df, samples = metadata_tau_gfp, group = metadata_tau_gfp$microglia)
-dim(d)
-d$counts
+dge <- DGEList(counts=df, samples = metadata_tau_gfp, group = metadata_tau_gfp$microglia)
+dim(dge)
+head(dge$counts)
+dge$samples
 
-#filter out genes with less then 10 counts
-dds <- d[(rowSums(d$counts)) >= 10,]
-dim(dds)
+#filter out genes with less then 10 counts in total
+dge <- dge[(rowSums(dge$counts)) >= 10,]
+dim(dge)
 
-# 
+# library size normalization
+dge$samples$lib.size
+dge <- calcNormFactors(dge)
 
+## DGE analysis
+design <- model.matrix(~mice + microglia, dge$samples) 
+design
 
+# Estimate the dispersions
+dge <- estimateDisp(dge,design=design)
 
+# fit the generalized linear model and perform the DGE test
+fit <- glmFit(dge,design)
 
+design
 
+# retrieve results from dge test
+lrt <- glmLRT(fit,coef=9)
 
+# retrieving the DGE genes
+tt <- topTags(lrt,n=nrow(dge),p.value=0.05)
 
+# retrieving all genes into a table
+tt.all <- topTags(lrt,n=nrow(dge))
 
+# checking the genes shown in the manuscripts at Figure S2A
+tt$table["Igf1",]
+tt$table["Slc2a5",]
+tt$table["Cx3cr1",]
+tt$table["Spp1",]
+tt$table["Anxa5",]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# loading into DeSeq object
-dd4 <- DESeqDataSetFromMatrix(countData = round(df),
-                              colData = metadata_tau_gfp,
-                              design = ~mice + microglia) # error: because of genenames in the first column
-
-# filter genes out with less the 10 counts
-dds <- dd4[rowSums(counts(dd4)) >= 10, ]
-nrow(counts(dds))
-
-# Load into the DESeq object
-# we need the not the wald test but the LRT test because the microglia comes from the brains
-dds1 <- DESeq(dds, test="LRT", full = ~mice+microglia, reduced = ~mice) 
-
-# check the dispersion plot
-plotDispEsts(dds1)
-
-# Checking the comparison
-resultsNames(dds1)
-
-res <- results(dds1,name="microglia_Tau.GFP.Plus_vs_Tau.GFP.Neg")
-head(res,n=10)
-
-head(res[order(res$padj),])
-head(res[order(res$log2FoldChange),])
+# setting the log fold change threshold
+tt.String <- tt$table[abs(tt$table$logFC) >= 1,]
 
 
-#shrink the logfoldchange
-res.shr <- lfcShrink(dds1,coef=9)
-dim(res.shr)
 
-#removing genes with missing padj values, there were no missing padj values
-resFix <- res.shr[!is.na(res.shr$padj),]
-dim(resFix)
 
-# shrinking the log2foldchange
-resFix[order(resFix$log2FoldChange),]
-res["Itga9",]
-resFix["Itga9",]
-head(res)
-head(resFix)
-summary(res)
-summary(resFix)
+# plotting ####
 
-# checking the DEG genes
-up <- (resFix$log2FoldChange > 0.5 & resFix$padj < 0.05)
-down <- (resFix$log2FoldChange < -0.5 & resFix$padj < 0.05)
+# create two boolean vectors with all the results for the plotting
+up <- (tt.all$table$logFC > 1 & -log10(tt.all$table$FDR) > 2)
+down <- (tt.all$table$logFC < -1 & -log10(tt.all$table$FDR) > 2)
 
-sum(down)
-sum(up)
+# create a new column called DE in the tt.all table that says whether the gene up or down regulated
+tt.all$table$DE <- ifelse(up,'up',ifelse(down,'down','not DE'))
 
-# change to df for volcano plot
-res.shr.df <- as.data.frame(resFix)
-
-# volcano plot
-ggplot(res.shr.df,aes(log2FoldChange,-log10(padj))) + 
+# create the volcano plot
+library(ggplot2)
+ggplot(tt.all$table,aes(logFC,-log10(FDR))) + 
   geom_point(shape=1,aes(color=DE)) +
   scale_color_manual(name="differential expression",
-                     values=c("black","red","green"),
-                     labels=c("|lfc|<1 or p>0.01",
-                              ">2 fold UP and p<0.01",
-                              ">2 fold DOWN and p<0.01")) +
+                     values=c("green","black","red"),
+                     labels=c(">2 fold DOWN and p<0.01",
+                              "|lfc|<1 or p>0.01",
+                              ">2 fold UP and p<0.01")) +
   ggtitle("p-value versus fold change") + 
   geom_hline(yintercept=2,color="red",linetype=2) +
   geom_vline(xintercept=-1,color="red",linetype=2) +
   geom_vline(xintercept=1,color="red",linetype=2)
+
+
+
+
+
+
+
+
+
+
+
 
