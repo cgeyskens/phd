@@ -3,3 +3,6 @@
 *.log
 *.docx
 *.ipynb_checkpoints/
+*.nextflow.log
+work/
+.nextflow/
