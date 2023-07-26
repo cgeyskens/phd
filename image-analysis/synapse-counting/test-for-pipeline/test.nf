@@ -1,42 +1,37 @@
 #!/usr/bin/env nextflow
 
-params.input_dir = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
-params.output_dir = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/" 
+nextflow.enable.dsl = 2
 
-// Function to process an image
-def processImage(imagePath) {
+// Define the process that runs the Python script
+process runPythonScript {
+    
+    conda "/home/cgeyskens/anaconda3/envs/image-analysis"
+    
+    // Input files (you can use glob patterns to match multiple files)
+    input:
+    file path
+
+    // Define the script to be executed
     script:
     """
-    echo "Processing image: $imagePath"
-    python test-file-2.py "$imagePath" > output.txt
+    test-file-1.py "$path"
     """
+
+    // Output directory for the generated CSV files
+    output:
+    file "output_data/test_{path.baseName}.csv"
 }
 
-// Define the main workflow
+
+// Create a channel that matches the input files using the provided pattern
+input_files = file("/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/OE_Exp1_IHC_Exp1_HA-GPR37L1_555-VGLUT1_647-PSD95_63X_airyscan_1.8zoom_CA1_SO.czi")
+
+// Run the process for each input file in parallel
 workflow {
-    // Get a list of all image files in the input directory
-    images = Channel.fromPath(params.input_dir)
-
-    // Process each image in parallel using the 'processImage' function
-    processedData = images.map { imagePath ->
-        processImage(imagePath)
-    }
-
-    // Save the DataFrame to CSV for each image
-    process saveToCSV {
-        input:
-        file imageFile from processedData
-
-        output:
-        file "${params.output_dir}/test_${imageFile.baseName}.csv" into outputFiles
-
-        script:
-        """
-        # Load the DataFrame from 'output.txt' and write to CSV using pandas
-        python -c 'import pandas as pd; df = pd.read_csv("output.txt", header=None); df.to_csv("${outputFiles}", index=False)'
-        """
-    }
+    runPythonScript(input_files)
 }
+
+
 
 
 
