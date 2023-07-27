@@ -1,7 +1,5 @@
 # test-file-1.py
 
-#!/home/cgeyskens/anaconda3/envs/image-analysis/bin/python3
-
 from pathlib import Path
 import czifile
 import pandas as pd

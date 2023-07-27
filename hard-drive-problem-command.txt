@@ -1,3 +1,0 @@
-# problem with accessing the external hard drive d, do the following 2 commands while in root:
-sudo umount /mnt/d
-sudo mount -t drvfs D: /mnt/d
