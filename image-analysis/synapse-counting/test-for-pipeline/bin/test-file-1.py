@@ -20,12 +20,10 @@ desired_filename = "_".join(desired_parts)
 
 # converting tuple to df
 df = pd.DataFrame(data, columns = [desired_filename] )
-df.head()
 
 # pivoting the dataframe
 dic = df.to_dict(orient='dict')
 df_final = pd.DataFrame.from_dict(dic, orient='index')
-df_final.head()
 
 # Writing the dataframe in a csv format into the a specific folder
 output_filename = "test_" + desired_filename + ".csv"
