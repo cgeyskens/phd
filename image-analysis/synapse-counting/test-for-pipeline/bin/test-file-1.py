@@ -4,8 +4,14 @@ from pathlib import Path
 import czifile
 import pandas as pd
 import os
+import argparse
 
-path = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/OE_Exp1_IHC_Exp1_HA-GPR37L1_555-VGLUT1_647-PSD95_63X_airyscan_1.8zoom_CA1_SO.czi"
+parser = argparse.ArgumentParser(description='process input file')
+parser.add_argument('input_file_path', required=True, help='path to input file')
+args = parser.parse_args()
+
+path = args.input_file_path
+
 image = czifile.imread(path)
 data = image.shape
 

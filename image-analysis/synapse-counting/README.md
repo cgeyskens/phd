@@ -14,3 +14,12 @@ rm nextflow.log.*
 
 ##### Still needs debugging
 - For some reason nextflow can't find the scripts into the bin directory, temp fix with ${baseDir}/bin/
+
+##### Next-up
+
+1. Parsing arguments from nextflow to python
+- Looking into parsing arguments from nextflow script to python script (argparse library)
+- Check also batch processing in python (so that you don't need to import for each image, all the libraries again)
+- solution? Defining the directory in nextflow with argparser
+
+2. Parsing arguments from pyhton to nextflow
