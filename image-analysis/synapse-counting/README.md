@@ -22,4 +22,4 @@ rm nextflow.log.*
 - Check also batch processing in python (so that you don't need to import for each image, all the libraries again)
 - solution? Defining the directory in nextflow with argparser
 
-2. Parsing arguments from pyhton to nextflow
+2. Parsing arguments from python to nextflow

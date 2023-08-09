@@ -7,7 +7,7 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser(description='process input file')
-parser.add_argument('input_file_path', required=True, help='path to input file')
+parser.add_argument('input_file_path', type=str, help='path to input file')
 args = parser.parse_args()
 
 path = args.input_file_path
