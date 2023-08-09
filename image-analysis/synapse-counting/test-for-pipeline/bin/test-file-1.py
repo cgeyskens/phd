@@ -6,12 +6,16 @@ import pandas as pd
 import os
 import argparse
 
-parser = argparse.ArgumentParser(description='process input file')
-parser.add_argument('input_file_path', type=str, help='path to input file')
+# adding parser argument for nextflow script
+parser = argparse.ArgumentParser(description='process input files')
+parser.add_argument('input_dir', type=str, help='directory to input files')
 args = parser.parse_args()
 
-path = args.input_file_path
+# getting the input_dir
+directory = args.input_dir
 
+
+# define here a bath process function
 image = czifile.imread(path)
 data = image.shape
 
