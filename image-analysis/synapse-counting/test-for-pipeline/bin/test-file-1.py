@@ -12,7 +12,7 @@ parser.add_argument('input_dir', type=str, help='directory to input files')
 args = parser.parse_args()
 
 # getting the input_dir
-directory = args.input_dir
+path = args.input_dir
 
 
 # define here a bath process function

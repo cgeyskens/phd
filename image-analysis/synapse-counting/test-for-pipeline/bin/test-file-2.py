@@ -5,6 +5,11 @@ import czifile
 import pandas as pd
 import os
 
+# define the directory
+directory = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-2/"
+
+# get a list of the files
+
 def process_czi_file(path):
     
     # getting the shape of the image
