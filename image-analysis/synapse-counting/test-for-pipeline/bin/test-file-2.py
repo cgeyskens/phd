@@ -1,54 +1,51 @@
-# test-file-2.py
+# test-file-2.ipynb
 
 from pathlib import Path
 import czifile
 import pandas as pd
 import os
+from microfilm.microplot import microshow
+import numpy as np
 
-# define the directory
-directory = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-2/"
+# defining the input_folder and output_folder
+input_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
+output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
 
-# get a list of the files
+# get a list of files in that input_folder
+file_list = os.listdir(input_folder)
 
-def process_czi_file(path):
+# defing the image mean intensity
+def process(filename):
     
-    # getting the shape of the image
-    image = czifile.imread(path)
-    data = image.shape
+    # getting the mean intensity of the image
+    image = czifile.imread(filename)
+    intensity = np.mean(image)
+    
+    return intensity
 
+# getting the right filenames
+def image_filename(filename):
+    
     # get the filename
-    filename = os.path.splitext(os.path.basename(path))[0]
-    split_filename = filename.split("_")
+    name_of_file = os.path.splitext(os.path.basename(filename))[0]
+    split_filename = name_of_file.split("_")
 
     # get only the experimental parameters from the filename
-    index_nums = [0, 1, 2, 3, 10, 11] # the indexes of the elements that I would like to extract
+    index_nums = [0, 1, 2, 3, 10, 11] # the indexes of the elements that I would like to extract fro; the filename
     desired_parts = [split_filename[val] for val in index_nums]
     desired_filename = "_".join(desired_parts)
-
-    # converting tuple to df
-    df = pd.DataFrame(data, columns = [desired_filename] )
-
-    # pivoting the dataframe
-    dic = df.to_dict(orient='dict')
-    df_final = pd.DataFrame.from_dict(dic, orient='index')
     
-    return df_final
+    return desired_filename
 
-def process_folder(folder_path, output_folder):
-    # Process all CZI files in the given folder
-    file_paths = Path(folder_path).rglob('*.czi')
-    
-    for path in file_paths:
-        df = process_czi_file(str(path))
-        
-        # Writing the DataFrame to a CSV file
-        output_filename = "test_" + ".csv"
-        output_path = os.path.join(output_folder, output_filename)
-        df.to_csv(output_path)
+# getting the values
+intensities = [process(input_folder + file) for file in file_list]
+filenames = [image_filename(input_folder + file) for file in file_list]
 
-if __name__ == "__main__":
-    input_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-2/"
-    output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
-    
-    process_folder(input_folder, output_folder)
+# merging into df
+d = {"image_names": filenames, "intensities": intensities}
+df = pd.DataFrame(d).set_index("image_names")
 
+# writing the df out into a csv
+output_filename = "test" + ".csv"
+output_path = output_folder + output_filename
+df.to_csv(output_path)
