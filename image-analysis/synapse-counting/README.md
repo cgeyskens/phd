@@ -17,15 +17,15 @@ rm nextflow.log.*
 
 #### resolved
 - passing arguments from nextflow to python (commit on 09/08/23) with the argparse library
+- passing the outputfolder from nextflow to python (16/08/23) with the argparse libary (multiple parsers)
+- specifying the folder in nextflow that needs to be processed in python (16/08/23)
 
 ##### Next-up
-Make working python script of batch processing file and later connect it to nextflow
-
-
 1. with basic image parameters (image size)
 - specify the input directory with nextflow & batch process all the files inside the specified dir with python & output a single csv file of the input file parameters
 
 - channel the csv to another python script and calculate the mean or something else (ex nr of images/rows)
+- use another process in the test pipeline: not average intensity but threshold, this way you can go along make an entire test-pipeline.
 
 2. include suggestions of Benjamin into the ipynb and py script
 

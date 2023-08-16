@@ -6,10 +6,22 @@ import pandas as pd
 import os
 from microfilm.microplot import microshow
 import numpy as np
+import argparse
 
 # defining the input_folder and output_folder
-input_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
-output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
+# input_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
+# output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
+
+# adding parser arguments
+parser = argparse.ArgumentParser(description='process input files')
+parser.add_argument('input_dir', type=str, help='directory to input files')
+parser.add_argument('output_dir', type=str, help='directory to output folder')
+
+args = parser.parse_args()
+
+# assigning the parser arguments
+input_folder = args.input_dir
+output_folder = args.output_dir
 
 # get a list of files in that input_folder
 file_list = os.listdir(input_folder)
@@ -46,6 +58,6 @@ d = {"image_names": filenames, "intensities": intensities}
 df = pd.DataFrame(d).set_index("image_names")
 
 # writing the df out into a csv
-output_filename = "test" + ".csv"
+output_filename = "test1" + ".csv"
 output_path = output_folder + output_filename
 df.to_csv(output_path)

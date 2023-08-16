@@ -6,14 +6,20 @@ import pandas as pd
 import os
 import argparse
 
+# input folder file path: "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-2/OE_Exp1_IHC_Exp1_HA-GPR37L1_555-VGLUT1_647-PSD95_63X_airyscan_1.8zoom_CA1_SO.czi"
+# output folder file path: "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
+
+
 # adding parser argument for nextflow script
 parser = argparse.ArgumentParser(description='process input files')
 parser.add_argument('input_dir', type=str, help='directory to input files')
+parser.add_argument('output_dir', type=str, help='directory to output folder')
+
 args = parser.parse_args()
 
-# getting the input_dir
+# assigning the parser arguments
 path = args.input_dir
-
+output_folder = args.output_dir
 
 # define here a bath process function
 image = czifile.imread(path)
@@ -37,5 +43,5 @@ df_final = pd.DataFrame.from_dict(dic, orient='index')
 
 # Writing the dataframe in a csv format into the a specific folder
 output_filename = "test_" + desired_filename + ".csv"
-output_path = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/" + output_filename
+output_path = output_folder + output_filename
 df_final.to_csv(output_path)
