@@ -23,9 +23,15 @@ rm nextflow.log.*
 ##### Next-up
 1. with basic image parameters (image size)
 - channel the csv to another python script and calculate the mean or something else (ex nr of images/rows)
-- use a surogate process in the test pipeline: not average intensity but threshold, this way you can go along make an entire test-pipeline.
+- use a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step.
 
 2. include suggestions of Benjamin into the ipynb and py script
 
 3. Try out small pipeline with the actual coloc parameters or other parameters
 
+
+### Benchmarking
+1. Original local maxima detection + distance based colocalization (based on pixel intensity)
+2. Manders overlap coef (based on binary images)
+3. Pearsons correlation coef (based on pixel intensities)
+4. Pixel classifcation + distance based colocalization (based on ML)
