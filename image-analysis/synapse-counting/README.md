@@ -21,17 +21,34 @@ rm nextflow.log.*
 - specifying the folder in nextflow that needs to be processed in python (16/08/23)
 
 ##### Next-up
-1. with basic image parameters (image size)
-- channel the csv to another python script and calculate the mean or something else (ex nr of images/rows)
-- use a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step.
+1. with basic coloc workflow
+- develop a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step
+- make this into a batch process
+- channel the csv to another script to calculate the mean, and channel the mean to another script to actually calculate the coloc
 
 2. include suggestions of Benjamin into the ipynb and py script
 
-3. Try out small pipeline with the actual coloc parameters or other parameters
+3. Try out small pipeline with the surogate coloc analysis
+
+4. benchmark the different coloc analysis workflows
 
 
-### Benchmarking
-1. Original local maxima detection + distance based colocalization (based on pixel intensity)
-2. Manders overlap coef (based on binary images)
+#### test-for-pipeline
+Working scripts: test.nf wit test-file-1.py
+
+
+
+
+
+### Benchmarking coloc analyses
+1. Original: local maxima detection + distance based colocalization (based on pixel intensity) - need high computing power
+2. Pixel classifcation + distance based colocalization (based on ML) - need high computing power
+
 3. Pearsons correlation coef (based on pixel intensities)
-4. Pixel classifcation + distance based colocalization (based on ML)
+4. Manders overlap coef (based on binary images, so thresholded)
+5. Overlap area (based on binary images, so thresholded, convert pixels to um2) - also seperate pixel (um2) of vglut1 and psd95 channels
+
+### For synaptic markers seperately (check out Sudhof lab papers)
+1. mean fluorescence intensity (MFI) or staining intensity
+2. puncta nr or puncta density (puncta nr per 100 um2)
+3. staining area or puncta size
