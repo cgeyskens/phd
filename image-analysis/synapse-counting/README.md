@@ -19,10 +19,10 @@ rm nextflow.log.*
 - passing arguments from nextflow to python (commit on 09/08/23) with the argparse library
 - passing the outputfolder from nextflow to python (16/08/23) with the argparse libary (multiple parsers)
 - specifying the folder in nextflow that needs to be processed in python (16/08/23)
+- develop a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step (22/08/2023)
 
 ##### Next-up
 1. with basic coloc workflow
-- develop a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step
 - make this into a batch process
 - channel the csv to another script to calculate the mean, and channel the mean to another script to actually calculate the coloc
 
