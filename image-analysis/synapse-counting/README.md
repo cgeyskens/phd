@@ -12,7 +12,7 @@ nextflow -log /var/log/nextflow.log run test.nf -profile conda
 rm -r work/
 rm nextflow.log.*
 
-##### Issues
+##### presistent issues
 - For some reason nextflow can't find the scripts into the bin directory, temp fix with ${baseDir}/bin/
 
 #### resolved
@@ -22,12 +22,13 @@ rm nextflow.log.*
 - develop a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step (22/08/2023)
 - make the surrogate function into a batch process that is callable from nextflow (23/08/2023)
 - make the 2nd script for the test-pipeline that calculates the mean thresholds (23/08/2023)
+- in nextflow, channel the csv to the 2nd script that calculates the mean thresholds (23/08/2023)
 
 ##### Next-up
 1. with basic coloc workflow
-- in nextflow, channel the csv to the 2nd script that calculates the mean thresholds
 - make the 3rd script that actually does the operation: taking the mean thresholds and applying it to the input images
 - in nextflow, channel the mean thresholds to the 3rd script to actually calculate the overlap in um2
+- make also nice graphs of: for each hippocampal layer a comparison between actual and rotated overlaps in um2 (linked graph)
 
 
 2. include suggestions of Benjamin into the original ipynb and py script
