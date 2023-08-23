@@ -143,6 +143,7 @@ file_list = os.listdir(input_folder)
 # empty dict to store the results
 results = []
 
+# the actual function
 for filename in file_list:
     if filename.endswith('.czi'):
         file_path = os.path.join(input_folder, filename)
@@ -157,57 +158,5 @@ for filename in file_list:
             'psd95_threshold': psd95_threshold
         })
 
-output_csv_path = os.path.join(output_folder, 'output.csv')
+output_csv_path = os.path.join(output_folder, 'thresholds.csv')
 write_to_csv(output_csv_path, results)
-
-
-
-
-
-
-
-        
-
-
-# def main():
-#     output_csv = os.path.join(output_folder, "test2.csv")
-
-#     with open(output_csv, mode='w', newline='') as csv_file:
-#         csv_writer = csv.writer(csv_file)
-#         csv_writer.writerow(["image File", "overlap", "overlap in rot control"])
-            
-#     for filename in os.listdir(input_folder):
-#                 if filename.endswith(".czi"):
-#                     image_path = os.path.join(input_folder, filename)
-#                     overlap_um2, overlap_um2_rot = colocalization_overlap(image_path)
-#                     csv_writer.writerow([filename, overlap_um2, overlap_um2_rot])
-
-# if __name__ == "__main__":
-#     main()
-    
-# # getting the right filenames
-# def image_filename(filename):
-    
-#     # get the filename
-#     name_of_file = os.path.splitext(os.path.basename(filename))[0]
-#     split_filename = name_of_file.split("_")
-
-#     # get only the experimental parameters from the filename
-#     index_nums = [0, 1, 2, 3, 10, 11] # the indexes of the elements that I would like to extract fro; the filename
-#     desired_parts = [split_filename[val] for val in index_nums]
-#     desired_filename = "_".join(desired_parts)
-    
-#     return desired_filename
-
-# # getting the values
-# overlap, overlap_rot = [colocalization_overlap(input_folder + file) for file in file_list]
-# filenames = [image_filename(input_folder + file) for file in file_list]
-
-# # merging into df
-# d = {"image_names": filenames, "overlap (um2)": overlap, "overlap_rot (um2)": overlap_rot}
-# df = pd.DataFrame(d).set_index("image_names")
-
-# # writing the df out into a csv
-# output_filename = "test1" + ".csv"
-# output_path = output_folder + output_filename
-# df.to_csv(output_path)

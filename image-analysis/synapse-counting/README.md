@@ -20,13 +20,17 @@ rm nextflow.log.*
 - passing the outputfolder from nextflow to python (16/08/23) with the argparse libary (multiple parsers)
 - specifying the folder in nextflow that needs to be processed in python (16/08/23)
 - develop a surogate process in the test pipeline: like threshold, this way you can go along make an entire test-pipeline with each step (22/08/2023)
+- make the surrogate function into a batch process that is callable from nextflow (23/08/2023)
+- make the 2nd script for the test-pipeline that calculates the mean thresholds (23/08/2023)
 
 ##### Next-up
 1. with basic coloc workflow
-- make this into a batch process
-- channel the csv to another script to calculate the mean, and channel the mean to another script to actually calculate the coloc
+- in nextflow, channel the csv to the 2nd script that calculates the mean thresholds
+- make the 3rd script that actually does the operation: taking the mean thresholds and applying it to the input images
+- in nextflow, channel the mean thresholds to the 3rd script to actually calculate the overlap in um2
 
-2. include suggestions of Benjamin into the ipynb and py script
+
+2. include suggestions of Benjamin into the original ipynb and py script
 
 3. Try out small pipeline with the surogate coloc analysis
 
