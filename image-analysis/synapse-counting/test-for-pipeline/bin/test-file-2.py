@@ -18,9 +18,6 @@ from skimage.filters import gaussian
 from lxml import etree # required library to load the metadata
 import csv
 
-# defining the input_folder and output_folder
-# input_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
-# output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description='process input files')
