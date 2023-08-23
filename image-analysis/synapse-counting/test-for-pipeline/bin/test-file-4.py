@@ -1,45 +1,46 @@
-# test-file-2.py
-# this script is based on test-file-2b.ipynb, but here we will only output following parameters:
-# overlap (um2), overlap (um2) in rot cond, vglut1_threshold, psd95_threshold
+# test-file-4.py
 
-from pathlib import Path
-import czifile
-import pandas as pd
-import os
+# required packages
+import czifile # to import a .czi file
 from microfilm.microplot import microshow
 import numpy as np
+import pandas as pd
 import argparse
+import os
+import csv
 import matplotlib.pyplot as plt
 from skimage.restoration import rolling_ball
 from skimage import measure
 from skimage.transform import rotate
 from skimage import filters
-from skimage.filters import gaussian
+from skimage.filters import gaussian, try_all_threshold
 from lxml import etree # required library to load the metadata
-import csv
 
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description='process input files')
 parser.add_argument('input_dir', type=str, help='directory to input files')
+parser.add_argument('intermediate_dir', type=str, help='directory to intermediate folder')
 parser.add_argument('output_dir', type=str, help='directory to output folder')
 
 args = parser.parse_args()
 
 # assigning the parser arguments
 input_folder = args.input_dir
+intermediate_folder = args.intermediate_dir
 output_folder = args.output_dir
 
 
+# getting the mean threshold values
+input_file_path = intermediate_folder + "mean_threshold_values.csv"
+df_mean_threshold_values = pd.read_csv(input_file_path)
 
-
-# defing a function for the overlap between two synaptic markers
-def colocalization_overlap(filename):
+def colocalization_overlap_real(filename):
     
     # reading the file
-    image = czifile.imread(filename)
-    
-    # this retrieves the metadata
+    image = czifile.imread(filename)   
+
+    # this retrieves the metadata and the extracts to pixel_to_um conversion
     czi = czifile.CziFile(filename)
     czi_xml_str = czi.metadata() # gets the metadata in a xml string format
     czi_parsed = etree.fromstring(czi_xml_str) # parses the czi_xml_str file
@@ -59,43 +60,55 @@ def colocalization_overlap(filename):
     # calculater the pixel to micrometer (um)
     # first checking whether the X and Y dimensions of the image are equal
     if size_x_value == size_y_value and scaling_x_value == scaling_y_value:
-        pixel_size = ((scaling_x_value*1000000000)/size_x_value) # conversion from meter to micrometer  
-    
-    
-    # getting rid of all the extra channels and splitting the channels into vglut1 and psd95
+        pixel_size = ((scaling_x_value*1000000000)/size_x_value) # conversion from meter to micrometer
+
+
+    # get the filename
+    name_of_file = os.path.splitext(os.path.basename(filename))[0]
+    split_filename = name_of_file.split("_")
+
+    # get only the experimental parameters from the filename
+    index_nums = [0, 1, 2, 3, 10, 11] # the indexes of the elements that I would like to extract fro; the filename
+    desired_parts = [split_filename[val] for val in index_nums]
+    desired_filename = "_".join(desired_parts)
+
+    # getting rid of all the extra channels, splitting the channels and showing them one by one.
     image_squeezed = np.squeeze(image)
     image_squeezed.shape
     vglut1 = image_squeezed[0,:,:]
     psd95 = image_squeezed[1,:,:]
-    
-    # preproccesing step, removal of background with rolling ball radius of 10x
+
+    # now a preproccesing step, removal of background with rolling ball radius of 10x
     background_vglut1 = rolling_ball(vglut1, radius = 10)
     background_psd95 = rolling_ball(psd95, radius = 10)
     vglut1_bs = vglut1 - background_vglut1
     psd95_bs = psd95 - background_psd95
-    
+
     # for the thresholding, it is advised to perform a gaussian blur (in this case a light one with sigma 1)
     psd95_pre = gaussian(psd95_bs, sigma=1, preserve_range=True)
     vglut1_pre = gaussian(vglut1_bs, sigma=1, preserve_range=True)
-    
-    
-    #########################################
-    ### vglut1 and psd95 overlap - in um2 ###
-    #########################################
+
+    ####################################
+    # vglut1 and psd95 overlap - in um #
+    ####################################
 
     # rotating the psd95 image as control
     psd95_pre_rot = rotate(psd95_pre, 90)
 
-    # getting the threshold (triangle) of each image
-    vglut1_threshold = filters.threshold_triangle(vglut1_pre)
-    psd95_threshold = filters.threshold_triangle(psd95_pre)
-    psd95_threshold_rot = filters.threshold_triangle(psd95_pre_rot)
+    #### take here the correct threshold value from df_mean_threshold_values ####
 
-    # applying the threhold
+    # filter the df_mean_threshold_values based on desired_filename
+    filtered_df = df_mean_threshold_values[df_mean_threshold_values['image file name'] == desired_filename]
+
+    # get the thresholds for vglut1 and psd95
+    vglut1_threshold = filtered_df["vglut1_threshold"].iloc[0]
+    psd95_threshold = filtered_df["psd95_threshold"].iloc[0]
+
+    # applying the threshold
     vglut1_pre_thr = vglut1_pre >= vglut1_threshold
     psd95_pre_thr = psd95_pre >= psd95_threshold
-    psd95_pre_rot_thr = psd95_pre_rot >= psd95_threshold_rot
-    
+    psd95_pre_rot_thr = psd95_pre_rot >= psd95_threshold
+
     # getting the overlap and nr of pixel that overlapped
     overlap = vglut1_pre_thr & psd95_pre_thr
     overlap_rot = vglut1_pre_thr & psd95_pre_rot_thr
@@ -103,25 +116,11 @@ def colocalization_overlap(filename):
     overlap_pix = np.sum(overlap)
     overlap_pix_rot = np.sum(overlap_rot)
 
-    overlap_um2 = overlap_pix * pixel_size * pixel_size
-    overlap_um2_rot = overlap_pix_rot * pixel_size * pixel_size
-    
-    return overlap_um2, overlap_um2_rot, vglut1_threshold, psd95_threshold
-    
+    overlap_um = overlap_pix * pixel_size * pixel_size
+    overlap_um_rot = overlap_pix_rot * pixel_size * pixel_size
 
-# defining a function to extract the right elements from the filename
-def image_filename(filename):
-    
-    # get the filename
-    name_of_file = os.path.splitext(os.path.basename(filename))[0]
-    split_filename = name_of_file.split("_")
+    return overlap_um, overlap_um_rot, vglut1_threshold, psd95_threshold, desired_filename
 
-    # get only the experimental parameters from the filename
-    index_nums = [0, 1, 2, 3, 10, 11] # the indexes of the elements that I would like to extract from
-    desired_parts = [split_filename[val] for val in index_nums]
-    desired_filename = "_".join(desired_parts)
-    
-    return desired_filename
 
 
 # defining a function that writes results to a csv file
@@ -145,16 +144,16 @@ results = []
 for filename in file_list:
     if filename.endswith('.czi'):
         file_path = os.path.join(input_folder, filename)
-        overlap_um2, overlap_um2_rot, vglut1_threshold, psd95_threshold  = colocalization_overlap(file_path)
-        img_filename = image_filename(filename)  # Extract desired filename parts
+        overlap_um, overlap_um_rot, vglut1_threshold, psd95_threshold, desired_filename  = colocalization_overlap_real(file_path)
+        img_filename = desired_filename
 
         results.append({
             'image file name': img_filename,
-            'overlap_um2': overlap_um2,
-            'overlap_um2_rot': overlap_um2_rot,
+            'overlap_um2': overlap_um,
+            'overlap_um2_rot': overlap_um_rot,
             'vglut1_threshold': vglut1_threshold,
             'psd95_threshold': psd95_threshold
         })
 
-output_csv_path = os.path.join(output_folder, 'thresholds.csv')
+output_csv_path = os.path.join(output_folder, 'overlap.csv')
 write_to_csv(output_csv_path, results)

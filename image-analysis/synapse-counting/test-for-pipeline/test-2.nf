@@ -26,14 +26,29 @@ process calculateMeanThresholds {
 
     script:
     """
-    python ${baseDir}/bin/test-file-3.py ${intermediate_dir} ${output_dir}
+    python ${baseDir}/bin/test-file-3.py ${intermediate_dir} ${intermediate_dir}
+    """
+    
+    output:
+    file z
+}
+
+process calculateOverlap {
+    input:
+    path q
+
+    script:
+    """
+    python ${baseDir}/bin/test-file-4.py ${input_dir} ${intermediate_dir} ${output_dir}
     """
 }
+
 
 workflow {
     input_ch = input_dir
     threshold_ch = calculateThresholds(input_ch)
     meanThreshold_ch = calculateMeanThresholds(threshold_ch)
+    overlap_ch = calculateOverlap(meanThreshold_ch)
 }
 
 
