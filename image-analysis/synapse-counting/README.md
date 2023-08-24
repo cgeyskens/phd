@@ -43,8 +43,11 @@ rm nextflow.log.*
 Working scripts: test.nf wit test-file-1.py
 
 
+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
+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
 
-
+key fingerprint
+SHA256:m1zfmjBn9VzR7ZrohF3etw6DOUjHF7WCs6uEBEJh0ho cydric.geyskens@gmail.com
 
 ### Benchmarking coloc analyses
 1. Original: local maxima detection + distance based colocalization (based on pixel intensity) - need high computing power
