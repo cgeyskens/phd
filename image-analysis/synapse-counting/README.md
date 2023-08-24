@@ -30,27 +30,39 @@ rm nextflow.log.*
 
 ##### Next-up
 1. Make pipeline with basic coloc workflow in nextflow
-- 
-- install R in your conda env and run it in vscode for last part of the pipeline (visualization)
+last part: small adjustments & make the code clean:
+- use "" instead of ''
+- for the plotting: try to link the datapoints between actual and rotated for each image (use _1 & _2)
+- naming of python and nextflow scripts: change the names of python to more intuitive names
+- delete other unnessary scripts
+- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders)
+- Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...)
+- update the ppt file for meeting with Joris
+
+- (install R in your conda env and run it in vscode for last part of the pipeline (visualization))
 
 ### Next-up for after HPC training:
 2. include suggestions of Benjamin into the original ipynb and py script
-
 3. benchmark the different coloc analysis workflows
 
 
 #### test-for-pipeline
-Working scripts: test.nf wit test-file-1.py
+Working python scripts:
+test-file-2.py (test-file-2b.ipynb)
+test-file-3.py (test-file-3.ipynb)
+test-file-4.py (test-file-4.ipynb)
+test-file-5.py (test-file-5.ipynb)
+Overarching nextflow script:
+test-2.nf
+
+last runtime: 2m 8s
 
 
-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
-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
 
-key fingerprint
-SHA256:m1zfmjBn9VzR7ZrohF3etw6DOUjHF7WCs6uEBEJh0ho cydric.geyskens@gmail.com
+
 
 ### Benchmarking coloc analyses
-1. Original: local maxima detection + distance based colocalization (based on pixel intensity) - need high computing power
+1. Original: local maxima detection + searching best parameters space with actual vs rotated + distance based colocalization (based on pixel intensity) - need high computing power
 2. Pixel classifcation + distance based colocalization (based on ML) - need high computing power
 
 3. Pearsons correlation coef (based on pixel intensities)
