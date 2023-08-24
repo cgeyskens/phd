@@ -24,16 +24,16 @@ rm nextflow.log.*
 - make the 2nd script for the test-pipeline that calculates the mean thresholds (23/08/2023)
 - in nextflow, channel the csv to the 2nd script that calculates the mean thresholds (23/08/2023)
 - make the 3rd script that actually does the operation: taking the mean thresholds and applying it to the input images (23/08/2023)
+- in nextflow, channel the mean thresholds to the 3rd script to actually calculate the overlap in um2 (23/08/2023)
 
 ##### Next-up
-1. with basic coloc workflow
-- in nextflow, channel the mean thresholds to the 3rd script to actually calculate the overlap in um2
+1. Make pipeline with basic coloc workflow in nextflow
 - make a fourth script that makes also nice graphs of: for each hippocampal layer a comparison between actual and rotated overlaps in um2 (linked graph data points) with the mean thresholds of each hippocampal layer
+- attach this last script to the pipeline
 
+2. install R in your conda env and run it in vscode for last part of the pipeline (visualization)
 
-2. include suggestions of Benjamin into the original ipynb and py script
-
-3. Try out small pipeline with the surogate coloc analysis
+3. include suggestions of Benjamin into the original ipynb and py script
 
 4. benchmark the different coloc analysis workflows
 
