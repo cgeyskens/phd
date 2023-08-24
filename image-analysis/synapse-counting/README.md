@@ -1,21 +1,21 @@
-#### If your having troubles connecting the to external hard drive: do the following commands
+## If your having troubles connecting the to external hard drive: do the following commands
 sudo umount /mnt/d
 sudo mount -t drvfs D: /mnt/d
 
-#### You can run the nextflow pipeline with a conda env even if the conda env is not activated in your current directory. Specificy in the nextflow.config file the conda under profiles and then you execute with the following command:
+## You can run the nextflow pipeline with a conda env even if the conda env is not activated in your current directory. Specificy in the nextflow.config file the conda under profiles and then you execute with the following command:
 nextflow run test.nf -profile conda # I now specified conda in the config file
 
-#### This command prevents the creation of seperate .nextflow.log.x files for each run pipeline
+## This command prevents the creation of seperate .nextflow.log.x files for each run pipeline
 nextflow -log /var/log/nextflow.log run test.nf -profile conda
 
-#### After running pipeline: removing the work directory & the nextflow.log.x files
+## After running pipeline: removing the work directory & the nextflow.log.x files
 rm -r work/
 rm nextflow.log.*
 
-##### presistent issues
+## presistent issues
 - For some reason nextflow can't find the scripts into the bin directory, temp fix with ${baseDir}/bin/
 
-#### resolved
+## resolved
 - passing arguments from nextflow to python (commit on 09/08/23) with the argparse library
 - passing the outputfolder from nextflow to python (16/08/23) with the argparse libary (multiple parsers)
 - specifying the folder in nextflow that needs to be processed in python (16/08/23)
@@ -28,7 +28,7 @@ rm nextflow.log.*
 - make a fourth script that makes also nice graphs of: for each hippocampal layer a comparison between actual and rotated overlaps in um2 with the mean thresholds of each hippocampal layer (24/08/2023)
 - attach this last script to the pipeline (24/08/2023)
 
-##### Next-up
+## Next-up
 1. Make pipeline with basic coloc workflow in nextflow
 last part: small adjustments & make the code clean:
 - use "" instead of ''
@@ -36,19 +36,20 @@ last part: small adjustments & make the code clean:
 - naming of python and nextflow scripts: change the names of python to more intuitive names
 - make a 2nd called "synapse-count-dev-2.ipynb" that includes the analyses of coloc and the seperate channels
 - delete other unnessary development scripts (and delete the output of the ipynb files)
-- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders). Also instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers).
-- Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...)
+- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images). Also customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline). Also instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers).
+- Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...). 
+- Take the content of this file and make a new .md file that is named "development.md".
 - update the ppt file for meeting with Joris
 - update the yml file 
 
 - (install R in your conda env and run it in vscode for last part of the pipeline (visualization))
 
-### Next-up for after HPC training:
+## Next-up for after HPC training:
 2. include suggestions of Benjamin into the original ipynb and py script
 3. benchmark the different coloc analysis workflows
 
 
-#### test-for-pipeline
+## test-for-pipeline
 Working python scripts:
 test-file-2.py (test-file-2b.ipynb)
 test-file-3.py (test-file-3.ipynb)
