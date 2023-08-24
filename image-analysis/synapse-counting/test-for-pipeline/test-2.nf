@@ -41,6 +41,19 @@ process calculateOverlap {
     """
     python ${baseDir}/bin/test-file-4.py ${input_dir} ${intermediate_dir} ${output_dir}
     """
+
+    output:
+    file q
+}
+
+process makeFigure {
+    input:
+    path w
+
+    script:
+    """
+    python ${baseDir}/bin/test-file-5.py ${output_dir} ${output_dir}
+    """
 }
 
 
@@ -49,6 +62,7 @@ workflow {
     threshold_ch = calculateThresholds(input_ch)
     meanThreshold_ch = calculateMeanThresholds(threshold_ch)
     overlap_ch = calculateOverlap(meanThreshold_ch)
+    fifure_ch = makeFigure(overlap_ch)
 }
 
 

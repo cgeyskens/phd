@@ -4,9 +4,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import argparse
+
+# adding parser arguments
+parser = argparse.ArgumentParser(description='process input files')
+parser.add_argument('input_dir', type=str, help='directory to input files')
+parser.add_argument('output_dir', type=str, help='directory to output folder')
+
+args = parser.parse_args()
+
+# assigning the parser arguments
+input_folder = args.input_dir
+output_folder = args.output_dir
+
 
 # specifying the path to the csv file that needs to be imported (the overlap.csv)
-input_file_path = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/overlap.csv"
+input_file_path = input_folder + "overlap.csv"
 df = pd.read_csv(input_file_path)
 
 # transforming the df into the right format
@@ -25,8 +38,6 @@ p = sns.stripplot(y="overlap (um2)", x="hippocampal layer", hue = "condition",
                         alpha = 0.5)
 
 # exporting the plot as png
-output_folder = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
-
 output_file = os.path.join(output_folder, "dotplot.png")
 plot = p.get_figure()
 plt.savefig(output_file, dpi = 300)
