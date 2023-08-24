@@ -34,10 +34,12 @@ last part: small adjustments & make the code clean:
 - use "" instead of ''
 - for the plotting: try to link the datapoints between actual and rotated for each image (use _1 & _2)
 - naming of python and nextflow scripts: change the names of python to more intuitive names
-- delete other unnessary scripts
-- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders)
+- make a 2nd called "synapse-count-dev-2.ipynb" that includes the analyses of coloc and the seperate channels
+- delete other unnessary development scripts (and delete the output of the ipynb files)
+- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders). Also instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers).
 - Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...)
 - update the ppt file for meeting with Joris
+- update the yml file 
 
 - (install R in your conda env and run it in vscode for last part of the pipeline (visualization))
 
