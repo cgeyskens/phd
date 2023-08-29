@@ -1,4 +1,4 @@
-# test-file-2.py
+# test-1-thresholds.py
 # this script is based on test-file-2b.ipynb, but here we will only output following parameters:
 # overlap (um2), overlap (um2) in rot cond, vglut1_threshold, psd95_threshold
 
@@ -20,9 +20,9 @@ import csv
 
 
 # adding parser arguments
-parser = argparse.ArgumentParser(description='process input files')
-parser.add_argument('input_dir', type=str, help='directory to input files')
-parser.add_argument('output_dir', type=str, help='directory to output folder')
+parser = argparse.ArgumentParser(description="process input files")
+parser.add_argument("input_dir", type=str, help="directory to input files")
+parser.add_argument("output_dir", type=str, help="directory to output folder")
 
 args = parser.parse_args()
 
@@ -126,8 +126,8 @@ def image_filename(filename):
 
 # defining a function that writes results to a csv file
 def write_to_csv(output_file, data_list):
-    with open(output_file, mode='w', newline='') as csv_file:
-        fieldnames = ['image file name', 'overlap_um2', 'overlap_um2_rot', 'vglut1_threshold', 'psd95_threshold']
+    with open(output_file, mode="w", newline="") as csv_file:
+        fieldnames = ["image file name", "overlap_um2", "overlap_um2_rot", "vglut1_threshold", "psd95_threshold"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
 
@@ -143,18 +143,18 @@ results = []
 
 # the actual function
 for filename in file_list:
-    if filename.endswith('.czi'):
+    if filename.endswith(".czi"):
         file_path = os.path.join(input_folder, filename)
         overlap_um2, overlap_um2_rot, vglut1_threshold, psd95_threshold  = colocalization_overlap(file_path)
         img_filename = image_filename(filename)  # Extract desired filename parts
 
         results.append({
-            'image file name': img_filename,
-            'overlap_um2': overlap_um2,
-            'overlap_um2_rot': overlap_um2_rot,
-            'vglut1_threshold': vglut1_threshold,
-            'psd95_threshold': psd95_threshold
+            "image file name": img_filename,
+            "overlap_um2": overlap_um2,
+            "overlap_um2_rot": overlap_um2_rot,
+            "vglut1_threshold": vglut1_threshold,
+            "psd95_threshold": psd95_threshold
         })
 
-output_csv_path = os.path.join(output_folder, 'thresholds.csv')
+output_csv_path = os.path.join(output_folder, "thresholds.csv")
 write_to_csv(output_csv_path, results)

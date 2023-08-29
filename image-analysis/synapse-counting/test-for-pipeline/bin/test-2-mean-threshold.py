@@ -1,13 +1,13 @@
-# test-file-3.py
+# test-2-mean-threshold.py
 import csv
 import pandas as pd
 import argparse
 
 
 # adding parser arguments
-parser = argparse.ArgumentParser(description='calculate mean thresholds')
-parser.add_argument('input_dir', type=str, help='directory to input files')
-parser.add_argument('output_dir', type=str, help='directory to output folder')
+parser = argparse.ArgumentParser(description="calculate mean thresholds")
+parser.add_argument("input_dir", type=str, help="directory to input files")
+parser.add_argument("output_dir", type=str, help="directory to output folder")
 
 args = parser.parse_args()
 

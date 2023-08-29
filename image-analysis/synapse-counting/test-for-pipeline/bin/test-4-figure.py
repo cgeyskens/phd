@@ -1,4 +1,4 @@
-# test-file-5.py
+# test-4-figure.py
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,9 +7,9 @@ import os
 import argparse
 
 # adding parser arguments
-parser = argparse.ArgumentParser(description='process input files')
-parser.add_argument('input_dir', type=str, help='directory to input files')
-parser.add_argument('output_dir', type=str, help='directory to output folder')
+parser = argparse.ArgumentParser(description="process input files")
+parser.add_argument("input_dir", type=str, help="directory to input files")
+parser.add_argument("output_dir", type=str, help="directory to output folder")
 
 args = parser.parse_args()
 
@@ -26,7 +26,7 @@ df = pd.read_csv(input_file_path)
 df_melted = pd.melt(df, id_vars = ["image file name"], value_vars=["overlap_um2", "overlap_um2_rot"],
                     var_name="condition", value_name="overlap (um2)")
 df_melted["condition"] = df_melted["condition"].apply(lambda x: "rotated" if "overlap_um2_rot" in x else "actual")
-df_melted['hippocampal layer'] = df_melted['image file name'].apply(lambda x: ' '.join(x.split('_')[-2:]))
+df_melted["hippocampal layer"] = df_melted["image file name"].apply(lambda x: " ".join(x.split("_")[-2:]))
 df_final = df_melted.drop("image file name", axis=1)
 
 # creating the plot

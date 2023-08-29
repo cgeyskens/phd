@@ -1,4 +1,4 @@
-# test-file-4.py
+# test-3-overlap.py
 
 # required packages
 import czifile # to import a .czi file
@@ -18,10 +18,10 @@ from lxml import etree # required library to load the metadata
 
 
 # adding parser arguments
-parser = argparse.ArgumentParser(description='process input files')
-parser.add_argument('input_dir', type=str, help='directory to input files')
-parser.add_argument('intermediate_dir', type=str, help='directory to intermediate folder')
-parser.add_argument('output_dir', type=str, help='directory to output folder')
+parser = argparse.ArgumentParser(description="process input files")
+parser.add_argument("input_dir", type=str, help="directory to input files")
+parser.add_argument("intermediate_dir", type=str, help="directory to intermediate folder")
+parser.add_argument("output_dir", type=str, help="directory to output folder")
 
 args = parser.parse_args()
 
@@ -98,7 +98,7 @@ def colocalization_overlap_real(filename):
     #### take here the correct threshold value from df_mean_threshold_values ####
 
     # filter the df_mean_threshold_values based on desired_filename
-    filtered_df = df_mean_threshold_values[df_mean_threshold_values['image file name'] == desired_filename]
+    filtered_df = df_mean_threshold_values[df_mean_threshold_values["image file name"] == desired_filename]
 
     # get the thresholds for vglut1 and psd95
     vglut1_threshold = filtered_df["vglut1_threshold"].iloc[0]
@@ -125,8 +125,8 @@ def colocalization_overlap_real(filename):
 
 # defining a function that writes results to a csv file
 def write_to_csv(output_file, data_list):
-    with open(output_file, mode='w', newline='') as csv_file:
-        fieldnames = ['image file name', 'overlap_um2', 'overlap_um2_rot', 'vglut1_threshold', 'psd95_threshold']
+    with open(output_file, mode="w", newline="") as csv_file:
+        fieldnames = ["image file name", "overlap_um2", "overlap_um2_rot", "vglut1_threshold", "psd95_threshold"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
 
@@ -142,18 +142,18 @@ results = []
 
 # the actual function
 for filename in file_list:
-    if filename.endswith('.czi'):
+    if filename.endswith(".czi"):
         file_path = os.path.join(input_folder, filename)
         overlap_um, overlap_um_rot, vglut1_threshold, psd95_threshold, desired_filename  = colocalization_overlap_real(file_path)
         img_filename = desired_filename
 
         results.append({
-            'image file name': img_filename,
-            'overlap_um2': overlap_um,
-            'overlap_um2_rot': overlap_um_rot,
-            'vglut1_threshold': vglut1_threshold,
-            'psd95_threshold': psd95_threshold
+            "image file name": img_filename,
+            "overlap_um2": overlap_um,
+            "overlap_um2_rot": overlap_um_rot,
+            "vglut1_threshold": vglut1_threshold,
+            "psd95_threshold": psd95_threshold
         })
 
-output_csv_path = os.path.join(output_folder, 'overlap.csv')
+output_csv_path = os.path.join(output_folder, "overlap.csv")
 write_to_csv(output_csv_path, results)
