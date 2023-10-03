@@ -1,0 +1,9 @@
+
+
+```{r}
+install.packages("PSICQUIC")
+library(PSICQUIC)
+
+psicquic <- PSICQUIC()
+providers(psicquic)
+```

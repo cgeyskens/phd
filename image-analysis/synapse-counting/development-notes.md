@@ -44,7 +44,7 @@ last part: small adjustments & make the code clean:
 - Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...). 
 
 ### Next-up for after HPC training:
-2. include suggestions of Benjamin into the original ipynb and py script
+2. include suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
 3. benchmark the different coloc analysis workflows
 
 
