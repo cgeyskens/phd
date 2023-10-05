@@ -60,7 +60,7 @@ def extract_table(proteinid):
                 "ProteinB": data1[1].get_text().strip(),
                 "MethodType": data1[2].get_text().strip(),
                 "Method": data1[3].get_text().strip(),
-                "Publication": data1[4].get_text().strip(),
+                "Publication": data1[4].get_text().strip().replace("\n", ""),
                 "Source": data1[5].get_text().strip(),
                 }
                 interactions.append(interaction) #append interaction object to result list
