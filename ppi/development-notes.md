@@ -19,3 +19,18 @@ Bernard et al. 2022 Science
 
 ## Goal
 - Make this automated with a nextflow script calling the R and python scripts with just one parameter: the uniprot ID of the protein
+
+
+
+## Webscraping tips from Simon (with APID db)
+
+1. Go to the website
+2. CNTRL + SHIFT + I (or go to settings -> more tools -> more developer tools), now you get a side window
+3. put in the query (bv VCAM1_HUMAN)
+4. click on the table icon to get the table
+5. Now in the developer tools window, right-click on "interactions.actions?protein=P19320" -> copy -> copy as cURL (bash)
+6. go to postman, as a GET request and paste the content in the bar 
+7. this get you an HTML file, the content that copied are the headers of the request
+8. from this content you can create a JSON object using BeautifulSoup
+
+
