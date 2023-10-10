@@ -4,8 +4,11 @@
 ## Next-up
 - look into omnipath.R script again (make R markdown work in VSCode)
 
+## Problems
+-
+
 ## Workflow
-- get data from PSICQUIC, STRING, OMNIPATH, APID and HIPPIE.
+- get data from secondary: STRING, APID, HIPPIE & primary: BioGRID & IntAct
 - from the UniProt API, make a function that converts proteinID/Name
 - make JSON object, this can be used for other APIs to attach data to in the future
 - remove duplicates between databases

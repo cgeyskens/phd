@@ -79,7 +79,7 @@ def queryPsicquic(psicquicRestUrl, query, offset, maxResults):
 
 # -----------------------------------------------------
 
-query = 'BBC1'
+query = 'GPR37L1'
 
 
 services = readActiveServicesFromRegistry()
