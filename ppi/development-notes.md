@@ -12,12 +12,15 @@
 - plot the data using the upSetplot for intersections
 - from the UniProt API, make a function that converts proteinID/Name
 - try to have a score for the interactions from each database (STRING score, nr of publications)
+- cleaning up the dataframes further seperatly before merge (merging rows based on one value in one column)
+- make one large dataframe off all the databases
+- filter using the Uniprot API: only include one of the following interactors (using the Uniprot API, or PANTHER?): transmembrane signal receptor, cell adhesion molecule, cell junction protein, defense immune protein, extracellular matrix protein, intercellular signal molecule, membrane traffic protein, transmembrane signal receptor (for protein class); cell junction, extracellular region part, extracellular region, membrane part, membrane, synapse part, synapse (for cellular component); biological adhesion, developmental process, immune system process, response to stimulus, signaling (for biological process).
 
-## Workflowt
-- make one large dataframe off all the databases & remove duplicates between databases
-- try to have a score for the interactions from each database (STRING score, nr of publications)
-- filter using the Uniprot API: only include one of the following interactors (using the Uniprot API): transmembrane signal receptor, cell adhesion molecule, cell junction protein, defense immune protein, extracellular matrix protein, intercellular signal molecule, membrane traffic protein, transmembrane signal receptor (for protein class); cell junction, extracellular region part, extracellular region, membrane part, membrane, synapse part, synapse (for cellular component); biological adhesion, developmental process, immune system process, response to stimulus, signaling (for biological process).
-- make a heatmap & UpSetplit
+## TODO
+- make a heatmap & UpSetplot
+- clean up the script (pipe it with the pipe(), if statements in the request responses) and make it into a .py script that is callable from the CLI
+
+
 
 ## Example papers
 Favuzzi et al. 2021 Cell
