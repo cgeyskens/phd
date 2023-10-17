@@ -5,6 +5,7 @@ library(ggplot2)
 library(ComplexHeatmap)
 library(dplyr)
 library(tidyverse)
+library(circlize)
 
 ```
 
@@ -25,7 +26,7 @@ df_interactors <- subset(df_final, select = -X) %>%
 
 ```
 
-
+Example of heatmap using the regular ggplot and geom_tile
 ```{r}
 # Heatmap using the ggplot & geom_tile
 
@@ -48,6 +49,10 @@ STRING - ESCORE
 
 # STRING - ESCORE
 
+# color of the heatmap
+col_string_escore = colorRamp2(c(0, 0.5), c("#f5f5f5","#da0188"))
+col_string_escore(seq(0, 0.5))
+
 # Formatting the data 
 df_heatmap_string_escore <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore")) %>%
 column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
@@ -58,12 +63,19 @@ data.matrix()
 H_string_escore <- Heatmap(df_heatmap_string_escore, name = "string_escore",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_escore)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_escore)))),
-    width = unit(0.25, "cm"))
+    width = unit(0.25, "cm"),
+    col = col_string_escore)
+
+H_string_escore
 ```
 
 
 STRING - CONFIDENCE SCORE
 ```{r}
+
+# color of the heatmap
+col_string_score = colorRamp2(c(0.4, 1), c("#f5f5f5","#558383"))
+col_string_score(seq(0.4, 1))
 
 df_heatmap_string_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_score")) %>%
 column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
@@ -74,12 +86,18 @@ data.matrix()
 H_string_score <- Heatmap(df_heatmap_string_score, name = "string_score",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_score)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_score)))),
-    width = unit(0.25, "cm"))
+    width = unit(0.25, "cm"),
+    col = col_string_score)
 
+H_string_score
 ```
 
 INTACT SCORE
 ```{r}
+
+# color of the heatmap
+col_intact_score = colorRamp2(c(0, 0.66), c("#f5f5f5","#f48046"))
+col_intact_score(seq(0, 0.66))
 
 df_heatmap_intact_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "IntAct_score")) %>%
     mutate(IntAct_score = ifelse(str_count(IntAct_score, ",") > 0, 
@@ -90,17 +108,25 @@ df_heatmap_intact_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN",
                                           }),
                                    IntAct_score)) %>%
     column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
-    mutate(IntAct_score = ifelse(IntAct_score == "", 0, IntAct_score))
+    mutate(IntAct_score = ifelse(IntAct_score == "", 0, IntAct_score)) %>%
+    mutate(IntAct_score = as.numeric(IntAct_score))
 
 H_intact_score <- Heatmap(df_heatmap_intact_score, name = "intact_score",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_intact_score)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_intact_score)))),
-    width = unit(0.25, "cm"))
+    width = unit(0.25, "cm"),
+    col = col_intact_score)
+
+H_intact_score
 
 ```
 
 BioGRID nr of pubs
 ```{r}
+
+# color of the heatmap
+col_biogrid_score = colorRamp2(c(0, 4), c("#f5f5f5","#4c2c2c"))
+col_biogrid_score(seq(0, 4))
 
 df_heatmap_biogrid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "biogrid_pubID")) %>%
     mutate(biogrid_nr_pubs = sapply(strsplit(biogrid_pubID, ","), function(x) length(unique(x)))) %>%
@@ -110,11 +136,18 @@ df_heatmap_biogrid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN",
 H_biogrid_nr_pubs <- Heatmap(df_heatmap_biogrid_pubs, name = "biogrid_nr_pubs",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_biogrid_pubs)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_biogrid_pubs)))),
-    width = unit(0.25, "cm"))
+    width = unit(0.25, "cm"),
+    col = col_biogrid_score)
+
+H_biogrid_nr_pubs
 ```
 
 APID nr of pubs
 ```{r}
+# color of the heatmap
+col_apid_score = colorRamp2(c(0, 5), c("#f5f5f5","#14b4f4"))
+col_apid_score(seq(0, 5))
+
 
 df_heatmap_apid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "apid_publication")) %>%
   mutate(modified_column = gsub(",", "", apid_publication)) %>% 
@@ -131,7 +164,10 @@ df_heatmap_apid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "a
 H_apid_nr_pubs <- Heatmap(df_heatmap_apid_pubs, name = "apid_nr_pubs",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_apid_pubs)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_apid_pubs)))),
-    width = unit(0.25, "cm"))
+    width = unit(0.25, "cm"),
+    col = col_apid_score)
+
+H_apid_nr_pubs
 
 ```
 
