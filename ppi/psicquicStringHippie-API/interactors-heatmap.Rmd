@@ -49,6 +49,12 @@ STRING - ESCORE
 
 # STRING - ESCORE
 
+ha = rowAnnotation(foo = anno_mark(at = c(151, 155, 157), 
+                    labels = c("ITGA9", "ITAM", "ITAX"), 
+                    side = "left", 
+                    labels_rot = 180,
+                    extend = unit(5, "cm")))
+
 # color of the heatmap
 col_string_escore = colorRamp2(c(0, 0.5), c("#f5f5f5","#da0188"))
 col_string_escore(seq(0, 0.5))
@@ -64,7 +70,9 @@ H_string_escore <- Heatmap(df_heatmap_string_escore, name = "string_escore",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_escore)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_escore)))),
     width = unit(0.25, "cm"),
-    col = col_string_escore)
+    col = col_string_escore,
+    left_annotation = ha,
+    show_row_names = FALSE)
 
 H_string_escore
 ```
@@ -87,7 +95,8 @@ H_string_score <- Heatmap(df_heatmap_string_score, name = "string_score",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_score)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_score)))),
     width = unit(0.25, "cm"),
-    col = col_string_score)
+    col = col_string_score,
+    show_row_names = FALSE)
 
 H_string_score
 ```
@@ -115,7 +124,8 @@ H_intact_score <- Heatmap(df_heatmap_intact_score, name = "intact_score",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_intact_score)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_intact_score)))),
     width = unit(0.25, "cm"),
-    col = col_intact_score)
+    col = col_intact_score,
+    show_row_names = FALSE)
 
 H_intact_score
 
@@ -137,7 +147,8 @@ H_biogrid_nr_pubs <- Heatmap(df_heatmap_biogrid_pubs, name = "biogrid_nr_pubs",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_biogrid_pubs)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_biogrid_pubs)))),
     width = unit(0.25, "cm"),
-    col = col_biogrid_score)
+    col = col_biogrid_score,
+    show_row_names = FALSE)
 
 H_biogrid_nr_pubs
 ```
@@ -165,7 +176,8 @@ H_apid_nr_pubs <- Heatmap(df_heatmap_apid_pubs, name = "apid_nr_pubs",
     row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_apid_pubs)))), 
     column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_apid_pubs)))),
     width = unit(0.25, "cm"),
-    col = col_apid_score)
+    col = col_apid_score,
+    show_row_names = FALSE)
 
 H_apid_nr_pubs
 
@@ -173,6 +185,18 @@ H_apid_nr_pubs
 
 ALL the heatmaps together
 ```{r}
+
 Ht_list = H_string_escore + H_string_score + H_intact_score + H_biogrid_nr_pubs + H_apid_nr_pubs
 draw(Ht_list, ht_gap = unit(0.1, "cm"))
+
+```
+
+
+Getting all the genes for the following GO terms & cross reference them my list of interactors
+phagocytosis GO:0006909
+synapse pruning: GO:0150062
+
+```{r}
+
+
 ```
