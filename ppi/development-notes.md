@@ -18,7 +18,11 @@
 
 ## TODO
 - make a heatmap & UpSetplot
-- clean up the script (pipe it with the pipe(), if statements in the request responses) and make it into a .py script that is callable from the CLI
+- clean up the script:
+    - pipe it with the pipe()
+    - if/print statements during each step (request responses)
+    - make it into a .py script that is callable from the CLI (arggparse)
+    - batch REST calling, especially Uniprot?
 
 
 

@@ -6,3 +6,4 @@
 *.nextflow.log.*
 work/
 .nextflow/
+*.csv
