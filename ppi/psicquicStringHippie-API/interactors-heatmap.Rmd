@@ -16,74 +16,41 @@ getwd()
 ```
 
 ```{r}
+# loading the big dataframe
 df_final <- read.csv("interactors_of_VCAM1_HUMAN.csv")
 
-# removing the first column
+# removing the first column (index from pandas)
 df_interactors <- subset(df_final, select = -X)
 
-# get only the string escore
-df_onlyString <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore"))
-
-# replace NA values with 0
-df_heatmap <- df_onlyString %>% replace(is.na(.), 0)
-
-# make a long df
-df_heatmap_long <- df_heatmap %>% pivot_longer(cols="string_escore",
-                                                names_to = "score")
-
-```
-
-```{r}
-# testing out the simple heatmap
-data(mtcars)
-cars_dataset <- as.matrix(mtcars)
-heatmap(cars_dataset)
-View(mtcars)
 ```
 
 
 ```{r}
-df_good <- column_to_rownames(df_interactors, "interactor_of_VCAM1_HUMAN" )
-df_heatmap <- df_good %>% replace(is.na(.), 0)
-df_heatmap_2 <- as.matrix(df_heatmap)
-View(df_heatmap_2)
-heatmap(df_heatmap_2)
-```
+# Heatmap using the ggplot & geom_tile
 
-```{r}
-# create a tibble with one column for depth and one for the value
+# Formatting the data 
+df_ggplot_string_escore <- select(df_interactors, 
+                                          c("interactor_of_VCAM1_HUMAN", "string_escore")) %>% # selecting only the relevant columns # nolint
+                                          replace(is.na(.), 0) %>% # replacing all the NA values with 0
+                                          pivot_longer(cols="string_escore", names_to = "score") # pivoting to longer format needed for the heatmap # nolint
 
-ggplot(df_heatmap, aes(interactor_of_VCAM1_HUMAN, string_escore, fill = string_score)) + 
-  geom_tile()
- # add label inside the tiles:   
-  geom_label(aes(label=string_escore),fill="white")+ 
- #  flip y axis:
-#   scale_y_reverse(breaks = interactor_of_VCAM1_HUMAN)+
- # remove x axis lable 
-  theme( axis.text.x=element_blank())
-
-
+# Make the heatmap
+ggplot(df_ggplot_string_escore,
+       aes(interactor_of_VCAM1_HUMAN, score, fill = value))+
+       geom_tile()
 
 ```
 
 ```{r}
-# Dummy data
-x <- LETTERS[1:20]
-y <- paste0("var", seq(1,20))
-data <- expand.grid(X=x, Y=y)
-data$Z <- runif(400, 0, 5)
- 
-# Heatmap 
-ggplot(data, aes(X, Y, fill= Z)) + 
-  geom_tile()
+# Formatting the data 
+df_heatmap_string_escore <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore")) %>%
+column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+replace(is.na(.), 0) %>%
+data.matrix()
 
-```
-
-
-```{r}
-
-ggplot(df_heatmap_long, aes(interactor_of_VCAM1_HUMAN, score, fill = value)) +
-    geom_tile()
-
-
+# heatmap from the string e score
+Heatmap(df_matrix_1, name = "string_escore",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_matrix_1)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_matrix_1)))),
+    column_title = "reorder matrix")
 ```
