@@ -18,7 +18,9 @@
 
 ## TODO
 - make a heatmap & UpSetplot
-    - order the interactions according alpabetic order
+    - make the color grading more beautiful & specific for each score. 0 should be white.
+    - add heatmap of GO terms (phagocytosis, synapse phagocytosis)
+    - add heatmap of the dangyang et al. 2022 
 - clean up the script:
     - pipe it with the pipe()
     - if/print statements during each step (request responses)
