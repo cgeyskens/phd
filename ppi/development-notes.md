@@ -18,6 +18,7 @@
 
 ## TODO
 - make a heatmap & UpSetplot
+    - order the interactions according alpabetic order
 - clean up the script:
     - pipe it with the pipe()
     - if/print statements during each step (request responses)

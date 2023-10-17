@@ -42,6 +42,9 @@ ggplot(df_ggplot_string_escore,
 ```
 
 ```{r}
+
+# Making a single heatmap for the STRING ESCORE
+
 # Formatting the data 
 df_heatmap_string_escore <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore")) %>%
 column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
@@ -49,8 +52,84 @@ replace(is.na(.), 0) %>%
 data.matrix()
 
 # heatmap from the string e score
-Heatmap(df_matrix_1, name = "string_escore",
-    row_order = order(as.numeric(gsub("row", "", rownames(df_matrix_1)))), 
-    column_order = order(as.numeric(gsub("column", "", colnames(df_matrix_1)))),
-    column_title = "reorder matrix")
+H_string_escore <- Heatmap(df_heatmap_string_escore, name = "string_escore",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_escore)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_escore)))),
+    width = unit(0.5, "cm"))
+```
+
+```{r}
+# Making a single heatmap for the STRING GENERAL SCORE
+df_heatmap_string_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_score")) %>%
+column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+replace(is.na(.), 0) %>%
+data.matrix()
+
+# heatmap from the string e score
+H_string_score <- Heatmap(df_heatmap_string_score, name = "string_score",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_string_score)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_string_score)))),
+    width = unit(0.5, "cm"))
+
+```
+
+
+```{r}
+# Making a single heatmap for the INTACT SCORE
+df_heatmap_intact_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "IntAct_score")) %>%
+    mutate(IntAct_score = ifelse(str_count(IntAct_score, ",") > 0, 
+                                   sapply(strsplit(IntAct_score, ","), 
+                                          function(values) {
+                                            values <- as.numeric(values)
+                                            mean(values, na.rm = TRUE)
+                                          }),
+                                   IntAct_score)) %>%
+    column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+    mutate(IntAct_score = ifelse(IntAct_score == "", 0, IntAct_score))
+
+H_intact_score <- Heatmap(df_heatmap_intact_score, name = "string_score",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_intact_score)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_intact_score)))),
+    width = unit(0.5, "cm"))
+
+```
+
+```{r}
+# Making a single heatmap for the BioGRID nr of pubs
+df_heatmap_biogrid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "biogrid_pubID")) %>%
+    mutate(biogrid_nr_pubs = sapply(strsplit(biogrid_pubID, ","), function(x) length(unique(x)))) %>%
+    column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+    subset(select = "biogrid_nr_pub")
+
+H_biogrid_nr_pubs <- Heatmap(df_heatmap_biogrid_pubs, name = "string_score",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_biogrid_pubs)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_biogrid_pubs)))),
+    width = unit(0.5, "cm"))
+```
+
+```{r}
+# Making a single heatmap for the APID nr of pubs
+df_heatmap_apid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "apid_publication")) %>%
+  mutate(modified_column = gsub(",", "", apid_publication)) %>% 
+  mutate(modified_column = gsub("\\)", "\\),", modified_column)) %>%
+  mutate(modified_column = sub(",$", "", modified_column)) %>% 
+  mutate(apid_nr_pubs = sapply(strsplit(modified_column, ", "), function(x) {
+    unique_entries <- gsub("^[^(]+\\(\\s*|\\s*\\)$", "", x)  # Remove leading/trailing parentheses and spaces
+    length(unique(unique_entries))
+  })) %>%
+  select(-modified_column) %>%
+  column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+  subset(select = "apid_nr_pubs")
+
+H_apid_nr_pubs <- Heatmap(df_heatmap_apid_pubs, name = "string_score",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_apid_pubs)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_apid_pubs)))),
+    width = unit(0.5, "cm"))
+
+```
+
+
+```{r}
+H_string_escore + H_string_score + H_intact_score + H_biogrid_nr_pubs + H_apid_nr_pubs
+
 ```
