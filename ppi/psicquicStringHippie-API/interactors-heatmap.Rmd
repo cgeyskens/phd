@@ -6,7 +6,8 @@ library(ComplexHeatmap)
 library(dplyr)
 library(tidyverse)
 library(circlize)
-
+library(biomaRt)
+library(readxl)
 ```
 
 
@@ -52,8 +53,7 @@ STRING - ESCORE
 ha = rowAnnotation(foo = anno_mark(at = c(151, 155, 157), 
                     labels = c("ITGA9", "ITAM", "ITAX"), 
                     side = "left", 
-                    labels_rot = 180,
-                    extend = unit(5, "cm")))
+                    labels_rot = 180))
 
 # color of the heatmap
 col_string_escore = colorRamp2(c(0, 0.5), c("#f5f5f5","#da0188"))
@@ -195,8 +195,10 @@ draw(Ht_list, ht_gap = unit(0.1, "cm"))
 Getting all the genes for the following GO terms & cross reference them my list of interactors
 phagocytosis GO:0006909
 synapse pruning: GO:0150062
+complement binding: GO:0001848
 
 ```{r}
-
+phagocytosis_genes <- read_excel("GO_phagocytosis.xlsx")
+View(phagocytosis_genes)
 
 ```
