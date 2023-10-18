@@ -24,7 +24,6 @@ df_final <- read.csv("interactors_of_VCAM1_HUMAN.csv")
 # removing the first column (index from pandas) & order the columns according to alphabetic order by the interactors name
 df_interactors <- subset(df_final, select = -X) %>%
     arrange(interactor_of_VCAM1_HUMAN)
-
 ```
 
 Example of heatmap using the regular ggplot and geom_tile
@@ -60,7 +59,7 @@ col_string_escore = colorRamp2(c(0, 0.5), c("#f5f5f5","#da0188"))
 col_string_escore(seq(0, 0.5))
 
 # Formatting the data 
-df_heatmap_string_escore <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore")) %>%
+df_heatmap_string_escore <- dplyr::select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_escore")) %>%
 column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
 replace(is.na(.), 0) %>%
 data.matrix()
@@ -85,7 +84,7 @@ STRING - CONFIDENCE SCORE
 col_string_score = colorRamp2(c(0.4, 1), c("#f5f5f5","#558383"))
 col_string_score(seq(0.4, 1))
 
-df_heatmap_string_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_score")) %>%
+df_heatmap_string_score <- dplyr::select(df_interactors, c("interactor_of_VCAM1_HUMAN", "string_score")) %>%
 column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
 replace(is.na(.), 0) %>%
 data.matrix()
@@ -108,7 +107,7 @@ INTACT SCORE
 col_intact_score = colorRamp2(c(0, 0.66), c("#f5f5f5","#f48046"))
 col_intact_score(seq(0, 0.66))
 
-df_heatmap_intact_score <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "IntAct_score")) %>%
+df_heatmap_intact_score <- dplyr::select(df_interactors, c("interactor_of_VCAM1_HUMAN", "IntAct_score")) %>%
     mutate(IntAct_score = ifelse(str_count(IntAct_score, ",") > 0, 
                                    sapply(strsplit(IntAct_score, ","), 
                                           function(values) {
@@ -138,7 +137,7 @@ BioGRID nr of pubs
 col_biogrid_score = colorRamp2(c(0, 4), c("#f5f5f5","#4c2c2c"))
 col_biogrid_score(seq(0, 4))
 
-df_heatmap_biogrid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "biogrid_pubID")) %>%
+df_heatmap_biogrid_pubs <- dplyr::select(df_interactors, c("interactor_of_VCAM1_HUMAN", "biogrid_pubID")) %>%
     mutate(biogrid_nr_pubs = sapply(strsplit(biogrid_pubID, ","), function(x) length(unique(x)))) %>%
     column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
     subset(select = "biogrid_nr_pubs")
@@ -160,7 +159,7 @@ col_apid_score = colorRamp2(c(0, 5), c("#f5f5f5","#14b4f4"))
 col_apid_score(seq(0, 5))
 
 
-df_heatmap_apid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "apid_publication")) %>%
+df_heatmap_apid_pubs <- dplyr::select(df_interactors, c("interactor_of_VCAM1_HUMAN", "apid_publication")) %>%
   mutate(modified_column = gsub(",", "", apid_publication)) %>% 
   mutate(modified_column = gsub("\\)", "\\),", modified_column)) %>%
   mutate(modified_column = sub(",$", "", modified_column)) %>% 
@@ -168,7 +167,7 @@ df_heatmap_apid_pubs <- select(df_interactors, c("interactor_of_VCAM1_HUMAN", "a
     unique_entries <- gsub("^[^(]+\\(\\s*|\\s*\\)$", "", x)  # Remove leading/trailing parentheses and spaces
     length(unique(unique_entries))
   })) %>%
-  select(-modified_column) %>%
+  dplyr::select(-modified_column) %>%
   column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
   subset(select = "apid_nr_pubs")
 
@@ -197,8 +196,44 @@ phagocytosis GO:0006909
 synapse pruning: GO:0150062
 complement binding: GO:0001848
 
+Before this we have also need to convert human gene symbols to mouse gene symbols. 
+We will do this now just by putting it in lowercase. #TODO: make this more robust.
+```{r}
+# conversion
+
+
+
+df_interactors <- df_interactors %>%
+  mutate(mouseGeneSymbols = str_to_sentence(interactor_of_VCAM1_HUMAN_geneSymbol))
+
+```
+
+
 ```{r}
 phagocytosis_genes <- read_excel("GO_phagocytosis.xlsx")
-View(phagocytosis_genes)
+
+phago_distinct <- distinct(phagocytosis_genes, Symbol, .keep_all = TRUE)
+
+
+joined <- merge(x = df_interactors, y = phago_distinct, by.x = "mouseGeneSymbols", by.y = "Symbol", all.x = TRUE)
+
+
+df_heatmap_GO_phagocytosis <- dplyr::select(joined, c("interactor_of_VCAM1_HUMAN", "Annotated Term")) %>%
+    mutate(phago = ifelse(is.na(`Annotated Term`), 0, 1)) %>%
+    dplyr::select(c("interactor_of_VCAM1_HUMAN", "phago")) %>%
+    column_to_rownames(var ="interactor_of_VCAM1_HUMAN")
+
+H_GO_phagocytosis <- Heatmap(df_heatmap_GO_phagocytosis, name = "GO_phagocytosis",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_GO_phagocytosis)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_GO_phagocytosis)))),
+    width = unit(0.25, "cm"),
+    col = c("#f5f5f5","#6b6b6b"),
+    show_row_names = FALSE)
+
+H_GO_phagocytosis
+
+```
+
+
 
 ```
