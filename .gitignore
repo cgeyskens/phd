@@ -8,3 +8,4 @@ work/
 .nextflow/
 *.csv
 *.pptx
+*.csv:Zone.Identifier
