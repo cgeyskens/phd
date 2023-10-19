@@ -18,8 +18,8 @@
 
 ## TODO
 - make a heatmap & UpSetplot
-    - add heatmap of GO terms (phagocytosis, synapse phagocytosis)
-    - add heatmap of the dangyang et al. 2022 
+    - add heatmap of GO terms (phagocytosis, synapse phagocytosis), now I just uploaded a .csv from MGI for these GO terms
+    - add heatmap of the dangyang et al. 2022. Again need to reanalyze the data, now I just uploaded the xlsx file from the paper
 - clean up the script:
     - pipe it with the pipe()
     - if/print statements during each step (request responses)

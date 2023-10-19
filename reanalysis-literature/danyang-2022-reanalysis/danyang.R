@@ -1,12 +1,5 @@
-install.packages("tximport")
-install.packages("readr")
 library(tximport)
 library(readr)
-
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("edgeR")
 library(edgeR)
 
 # Need to use EdgeR instead DESeq2, look at the tutorial from VIB bulk RNAseq online. 
