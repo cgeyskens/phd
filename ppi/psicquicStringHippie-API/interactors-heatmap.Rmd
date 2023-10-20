@@ -13,7 +13,7 @@ library(readxl)
 
 ```{r}
 getwd()
-setwd("./phd/ppi/psicquicStringHippie-API")
+setwd("/home/cgeyskens/code/phd/ppi/psicquicStringHippie-API")
 getwd()
 ```
 
@@ -49,8 +49,8 @@ STRING - ESCORE
 
 # STRING - ESCORE
 
-ha = rowAnnotation(foo = anno_mark(at = c(12, 54, 56, 97, 129, 131, 150, 151, 223, 228, 268 ), 
-                    labels = c("Anxa1", "Ccr2", "Ccr5",  "Dbn1", "Hp", "Hspa1a", "Itga6", "Itga9", "S100a8", "Selplg", "Tjp1"), 
+ha = rowAnnotation(foo = anno_mark(at = c(12, 54, 56, 81, 97, 129, 131, 150, 151, 155, 157, 158, 223, 228, 268 ), 
+                    labels = c("Anxa1", "Ccr2", "Ccr5",  "Cx3c1", "Dbn1", "Hp", "Hspa1a", "Itga6", "Itga9", "Itgam", "Itgax", "Itgb1", "S100a8", "Selplg", "Tjp1"), 
                     side = "left", 
                     labels_rot = 180))
 
@@ -256,7 +256,7 @@ H_GO_synapsePruning
 ```
 
 
-Now Danyang-2022. I downloaded the excel straigth from the paper link
+Now Danyang-2022, MitoActivity. I downloaded the excel straigth from the paper link.
 
 ```{r}
 
@@ -276,7 +276,7 @@ Danyang_joined <- merge(x = df_interactors, y = Danyang_2022_data_filtered, by.x
 ```
 
 
-Heatmap of Danyang log2FoldChange
+Heatmap of Danyang MitoActivity - log2FoldChange
 ```{r}
 # heatmap of log2foldchange
 df_heatmap_Danyang_log <- dplyr::select(Danyang_joined, c("interactor_of_VCAM1_HUMAN", "log2FoldChange")) %>%
@@ -297,7 +297,7 @@ H_Danyang_log
 ```
 
 
-Heatmap of Danyang padj
+Heatmap of Danyang MitoActivity - padj
 ```{r}
 # heatmap of padj
 df_heatmap_Danyang_padj <- dplyr::select(Danyang_joined, c("interactor_of_VCAM1_HUMAN", "padj")) %>%
@@ -326,11 +326,87 @@ H_Danyang_padj
 
 ```
 
+Now Danyang-2022, GFP PhagoActivity. I got the data by reanalysis of the raw data.
+
+```{r}
+Danyang_2022_gfp_data <- read_csv("danyang-GFP.csv")
+
+Danyang_2022_gfp_data_filtered <- Danyang_2022_gfp_data %>% 
+    filter(abs(logFC) > 0.58 & PValue < 0.05) %>%
+    rename("Gene" = ...1) %>%
+    dplyr::select(c("Gene", "logFC", "PValue", "FDR"))
+
+# join
+Danyang_gfp_joined <- merge(x = df_interactors, y = Danyang_2022_gfp_data_filtered, by.x = "mouseGeneSymbols", by.y = "Gene", all.x = TRUE) %>%
+    arrange(interactor_of_VCAM1_HUMAN)
+
+```
+
+Danyang-2022, GFP PhagoActivity, log2FoldChange
+
+```{r}
+df_heatmap_Danyang_gfp_log <- dplyr::select(Danyang_gfp_joined, c("interactor_of_VCAM1_HUMAN", "logFC")) %>%
+    column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+    replace(is.na(.), 0)
+
+col_danyang_gfp_log = colorRamp2(c(-4, -0.58, 0, 0.58, 4), c("blue", "#f5f5f5",  "#f5f5f5", "#f5f5f5","red"))
+col_danyang_gfp_log(seq(-4, 4))
+
+H_Danyang_gfp_log <- Heatmap(df_heatmap_Danyang_gfp_log, name = "log2FoldChange",
+    row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_Danyang_gfp_log)))), 
+    column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_Danyang_gfp_log)))),
+    width = unit(0.25, "cm"),
+    col = col_danyang_gfp_log,
+    show_row_names = FALSE)
+
+H_Danyang_gfp_log
+
+```
+
+Danyang-2022, GFP PhagoActivity, padj
+
+```{r}
+df_heatmap_Danyang_gfp_padj <- dplyr::select(Danyang_gfp_joined, c("interactor_of_VCAM1_HUMAN", "FDR")) %>%
+    column_to_rownames(var ="interactor_of_VCAM1_HUMAN") %>%
+    replace(is.na(.), 0) %>%
+    mutate(log10_p_value = -log10(FDR)) %>%
+    dplyr::select(log10_p_value) %>%
+    mutate(log10_p_value = ifelse(is.infinite(log10_p_value), 0, log10_p_value))
+
+# Define the color palette
+col_danyang_gfp_padj <- colorRamp2(c(1.3, 3), c("#f5f5f5","#dfe318"))
+
+# Create the heatmap of -log10(padj) values
+H_Danyang_gfp_padj <- Heatmap(
+  df_heatmap_Danyang_gfp_padj,
+  name = "-log10(padj)",
+  row_order = order(as.numeric(gsub("row", "", rownames(df_heatmap_Danyang_gfp_padj)))), 
+  column_order = order(as.numeric(gsub("column", "", colnames(df_heatmap_Danyang_gfp_padj)))),
+  width = unit(0.25, "cm"),
+  col = col_danyang_gfp_padj,
+  show_row_names = FALSE
+)
+
+H_Danyang_gfp_padj
+
+```
+
+
 
 ALL the heatmaps together
 ```{r}
 
-Ht_list = H_string_escore + H_string_score + H_intact_score + H_biogrid_nr_pubs + H_apid_nr_pubs + H_GO_phagocytosis + H_GO_synapsePruning + H_Danyang_log + H_Danyang_padj
+Ht_list = H_string_escore + 
+    H_string_score + 
+    H_intact_score + 
+    H_biogrid_nr_pubs + 
+    H_apid_nr_pubs + 
+    H_GO_phagocytosis + 
+    H_GO_synapsePruning + 
+    H_Danyang_log + 
+    H_Danyang_padj + 
+    H_Danyang_gfp_log + 
+    H_Danyang_gfp_padj
 draw(Ht_list, ht_gap = unit(0.1, "cm"))
 
 ```

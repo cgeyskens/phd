@@ -11,7 +11,7 @@ library(edgeR)
 # setting wd, loading the data and filtering the data ####
 
 # set wd
-setwd("D:/code/reanalysis-literature/Danyang-He-2022")
+setwd("/mnt/d/code/phd/reanalysis-literature/Danyang-He-2022")
 
 # loading the counts
 counts <- read_delim("GSE127449_rsem.genes.counts.matrix", 
@@ -41,7 +41,6 @@ df<-df[,-1]
 head(df)
 class(df)
 class(metadata_tau_gfp)
-
 
 
 # EdgeR ####
@@ -118,6 +117,11 @@ ggplot(tt.all$table,aes(logFC,-log10(FDR))) +
   geom_vline(xintercept=1,color="red",linetype=2)
 
 
+tt$table["Anxa1",]
+
+# writing out the results of the DEG analysis
+out <- topTags(tt, n=Inf)
+write.csv(out, file="danyang-GFP.csv")
 
 
 
