@@ -17,14 +17,16 @@
 - filter using the Uniprot API: only include one of the following interactors (using the Uniprot API, or PANTHER?): transmembrane signal receptor, cell adhesion molecule, cell junction protein, defense immune protein, extracellular matrix protein, intercellular signal molecule, membrane traffic protein, transmembrane signal receptor (for protein class); cell junction, extracellular region part, extracellular region, membrane part, membrane, synapse part, synapse (for cellular component); biological adhesion, developmental process, immune system process, response to stimulus, signaling (for biological process).
 
 ## TODO
+- clean up the script:
+    - batch retrieval REST calling, especially Uniprot and mygene. Use these APIs more effectively
+    - pipe the dataframe operations with the pipe()
+    - if/print statements during each step (request responses)
+    - make it into a .py script that is callable from the CLI (arggparse)
+
+
 - make a heatmap & UpSetplot
     - add heatmap of GO terms (phagocytosis, synapse phagocytosis), now I just uploaded a .csv from MGI for these GO terms
     - add heatmap of the dangyang et al. 2022. Again need to reanalyze the data, now I just uploaded the xlsx file from the paper
-- clean up the script:
-    - pipe it with the pipe()
-    - if/print statements during each step (request responses)
-    - make it into a .py script that is callable from the CLI (arggparse)
-    - batch REST calling, especially Uniprot?
 
 
 
@@ -36,7 +38,7 @@ Bernard et al. 2022 Science
 ## Goal
 Make this automated e.g.  $ script.py -p "VCAM1_HUMAN"
 outputs: 
-- interactions.csv
+- interactions.csv (very polished, no duplicate data)
 - upsetplot
 - heatmap (maybe this seperately)
 

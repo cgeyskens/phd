@@ -11,4 +11,4 @@ work/
 *.csv:Zone.Identifier
 *.svg
 *.png
-
+data/
