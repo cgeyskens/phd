@@ -18,17 +18,17 @@
 
 ## TODO
 - clean up the script:
-    - batch retrieval REST calling, especially Uniprot and mygene. Use these APIs more effectively.
+    - batch retrieval REST calling, especially Uniprot/Mygene/Ensemble. Use these APIs more effectively.
+    - properly document each function & each step
     - pipe the dataframe operations with the pipe()
-    - if/print statements during each API request.
+    - if/print statements during each API request, 200 response or not
     - make it into a .py script that is callable from the CLI (arggparse)
+    - write a documentation README file, with png and how to use the script
 
 
 - make a heatmap & UpSetplot
     - add heatmap of GO terms (phagocytosis, synapse phagocytosis), now I just uploaded a .csv from MGI for these GO terms
     - add heatmap of the dangyang et al. 2022. Again need to reanalyze the data, now I just uploaded the xlsx file from the paper
-
-
 
 ## Example papers
 Favuzzi et al. 2021 Cell
