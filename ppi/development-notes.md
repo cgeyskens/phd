@@ -18,9 +18,9 @@
 
 ## TODO
 - clean up the script:
-    - batch retrieval REST calling, especially Uniprot and mygene. Use these APIs more effectively
+    - batch retrieval REST calling, especially Uniprot and mygene. Use these APIs more effectively.
     - pipe the dataframe operations with the pipe()
-    - if/print statements during each step (request responses)
+    - if/print statements during each API request.
     - make it into a .py script that is callable from the CLI (arggparse)
 
 
@@ -40,6 +40,7 @@ Make this automated e.g.  $ script.py -p "VCAM1_HUMAN"
 outputs: 
 - interactions.csv (very polished, no duplicate data)
 - upsetplot
+Make separate script for plotting:
 - heatmap (maybe this seperately)
 
 
