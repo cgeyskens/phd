@@ -17,6 +17,10 @@
 - filter using the Uniprot API: only include one of the following interactors (using the Uniprot API, or PANTHER?): transmembrane signal receptor, cell adhesion molecule, cell junction protein, defense immune protein, extracellular matrix protein, intercellular signal molecule, membrane traffic protein, transmembrane signal receptor (for protein class); cell junction, extracellular region part, extracellular region, membrane part, membrane, synapse part, synapse (for cellular component); biological adhesion, developmental process, immune system process, response to stimulus, signaling (for biological process).
 
 ## TODO
+- I'm losing a lot of data in the conversions (human_UniprotID -> human_UniprotAcNr -> human_ensembl -> mouse_ensembl -> mouseGeneSymbol, not better to go from human_UniprotAcNr -> mouse_UniprotAcNr -> mouse_geneSymbol)
+- immediately:
+    - only need the following IDs: human_UniprotID, human_UniprotAcNr, mouse_Gene_Symbol 
+
 - clean up the script:
     - batch retrieval REST calling, especially Uniprot/Mygene/Ensemble. Use these APIs more effectively.
     - properly document each function & each step
