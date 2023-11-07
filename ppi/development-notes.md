@@ -15,20 +15,16 @@
 - cleaning up the dataframes further seperatly before merge (merging rows based on one value in one column)
 - make one large dataframe off all the databases
 - filter using the Uniprot API: only include one of the following interactors (using the Uniprot API, or PANTHER?): transmembrane signal receptor, cell adhesion molecule, cell junction protein, defense immune protein, extracellular matrix protein, intercellular signal molecule, membrane traffic protein, transmembrane signal receptor (for protein class); cell junction, extracellular region part, extracellular region, membrane part, membrane, synapse part, synapse (for cellular component); biological adhesion, developmental process, immune system process, response to stimulus, signaling (for biological process).
+- I'm losing a lot of data in the conversions (human_UniprotID -> human_UniprotAcNr -> human_ensembl -> mouse_ensembl -> mouseGeneSymbol, should be better to go from human_UniprotAcNr -> mouse_UniprotAcNr -> mouse_geneSymbol). Now much straightforward using the pantherDB API: from human_UniprotID -> human_UniprotAcNr -> MGIgene
+- batch retrieval REST calling, especially Uniprot/Mygene/Ensemble. Use these APIs more effectively.
 
 ## TODO
-- I'm losing a lot of data in the conversions (human_UniprotID -> human_UniprotAcNr -> human_ensembl -> mouse_ensembl -> mouseGeneSymbol, not better to go from human_UniprotAcNr -> mouse_UniprotAcNr -> mouse_geneSymbol)
-- immediately:
-    - only need the following IDs: human_UniprotID, human_UniprotAcNr, mouse_Gene_Symbol 
-
 - clean up the script:
-    - batch retrieval REST calling, especially Uniprot/Mygene/Ensemble. Use these APIs more effectively.
     - properly document each function & each step
     - pipe the dataframe operations with the pipe()
     - if/print statements during each API request, 200 response or not
     - make it into a .py script that is callable from the CLI (arggparse)
     - write a documentation README file, with png and how to use the script
-
 
 - make a heatmap & UpSetplot
     - add heatmap of GO terms (phagocytosis, synapse phagocytosis), now I just uploaded a .csv from MGI for these GO terms

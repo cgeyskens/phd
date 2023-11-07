@@ -183,8 +183,6 @@ H_apid_nr_pubs
 ```
 
 
-
-
 Getting all the genes for the following GO terms & cross reference them my list of interactors
 phagocytosis GO:0006909
 synapse pruning: GO:0150062
