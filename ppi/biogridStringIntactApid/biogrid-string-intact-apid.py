@@ -597,7 +597,7 @@ df_apid = (apid_df
 
 
 #######################################################################################################################################
-############################################################## Figure #################################################################
+##################################################### Intersections plot ##############################################################
 #######################################################################################################################################
 
 # Make an intersecions diagram using the pyUpSet
@@ -613,7 +613,7 @@ ppis = from_contents({"BioGrid": biogrid_interactors, "IntAct": IntAct_interacto
 ax_dict = UpSet(ppis, subset_size="count", show_counts=True).plot()
 
 # saving the upsetplot
-plt.savefig("interactors_of_" + query + "_intersectionsPlot.png", dpi = 300)
+plt.savefig("data/interactors_of_" + query + "_intersectionsPlot.png", dpi = 300)
 
 
 #######################################################################################################################################
@@ -649,7 +649,7 @@ final_df[["subcellularLocation"]] = final_df[["interactor_of_" + query]].map(get
 final_df["subcellularLocation"] = final_df["subcellularLocation"].apply(lambda x: ", ".join(x))
 
 # exporting the filtered dataset to a csv
-final_df.to_csv("interactors_of_" + query + ".csv", index = False)
+final_df.to_csv("data/interactors_of_" + query + ".csv", index = False)
 
 
 #######################################################################################################################################
@@ -657,18 +657,18 @@ final_df.to_csv("interactors_of_" + query + ".csv", index = False)
 #######################################################################################################################################
 
 # filter on the following subcellular locations
-subcellular_locations = ["Membrane", "membrane",
-                         "Cell junction", "cell junction",
-                         "Cell projection", "cell projection",
-                         "Cell membrane", "cell membrane",
-                         "Plasma membrane", "plasma membrane",
-                         "Secreted", "secreted",
-                         "Extracellular space", "extracellular space",
-                         "Extracellular matrix", "extracellular matrix"
-                         "Extracellular exosome", "extracellular exosome",
-                         "Cell surface", "cell surface"] # for each term I filtered it twice because of capital letters
+subcellular_locations = ["membrane",
+                         "cell junction",
+                         "cell projection",
+                         "cell membrane",
+                         "plasma membrane",
+                         "secreted",
+                         "extracellular space",
+                         "extracellular matrix"
+                         "extracellular exosome",
+                         "cell surface"] 
 
-final_df_filtered = final_df[final_df["subcellularLocation"].apply(lambda x: any(location in subcellular_locations for location in x))]
+final_df_filtered = final_df[final_df["subcellularLocation"].str.contains('|'.join(subcellular_locations), case=False)]
 
 # Data cleaning
 df_final = (final_df_filtered
@@ -683,5 +683,5 @@ df_final = (final_df_filtered
                 + list(final_df_filtered.columns.difference(["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"]))])
 
 # exporting the filtered dataset to a csv
-df_final.to_csv("interactors_of_" + query + "_filtered.csv", index = False)
+final_df_filtered.to_csv("data/interactors_of_" + query + "_filtered.csv", index = False)
 

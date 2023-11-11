@@ -20,10 +20,11 @@
 - properly document each function & each step
 - pipe the dataframe operations with the pipe()
 - if/print statements during each API request, 200 response or not
+- make it into a .py script that is callable from the CLI (arggparse)
 
 ## TODO
 - clean up the script:
-    - make it into a .py script that is callable from the CLI (arggparse)
+    - try all of your proteins
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot
