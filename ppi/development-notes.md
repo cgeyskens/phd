@@ -18,11 +18,11 @@
 - I'm losing a lot of data in the conversions (human_UniprotID -> human_UniprotAcNr -> human_ensembl -> mouse_ensembl -> mouseGeneSymbol, should be better to go from human_UniprotAcNr -> mouse_UniprotAcNr -> mouse_geneSymbol). Now much straightforward using the pantherDB API: from human_UniprotID -> human_UniprotAcNr -> MGIgene
 - batch retrieval REST calling, especially Uniprot/Mygene/Ensemble. Use these APIs more effectively.
 - properly document each function & each step
+- pipe the dataframe operations with the pipe()
+- if/print statements during each API request, 200 response or not
 
 ## TODO
 - clean up the script:
-    - pipe the dataframe operations with the pipe()
-    - if/print statements during each API request, 200 response or not
     - make it into a .py script that is callable from the CLI (arggparse)
     - write a documentation README file, with png and how to use the script
 
@@ -38,10 +38,12 @@ Bernard et al. 2022 Science
 ## Goal
 Make this automated e.g.  $ script.py -p "VCAM1_HUMAN"
 outputs: 
-- interactions.csv (very polished, no duplicate data)
+- interactions.csv
 - upsetplot
+- interactions_filtered.csv (filtered on subcellular location)
+
 Make separate script for plotting:
-- heatmap (maybe this seperately)
+- heatmap 
 
 
 ## Webscraping tips from Simon (with APID db)
