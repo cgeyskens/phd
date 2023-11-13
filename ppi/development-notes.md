@@ -21,10 +21,11 @@
 - pipe the dataframe operations with the pipe()
 - if/print statements during each API request, 200 response or not
 - make it into a .py script that is callable from the CLI (arggparse)
+- debug last issues: converting from entrez gene IDs to uniprot IDs using the myGene API python package, a lot is lost in this conversion
 
 ## TODO
 - clean up the script:
-    - try all of your proteins
+    - try all of your proteins, and debug the issues
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot

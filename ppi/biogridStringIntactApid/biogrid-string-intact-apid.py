@@ -1,6 +1,7 @@
-# This script uses the BioGrid, STRING, IntAct and APID databases to look for protein-protein interactions for a given query
+# This script uses the BioGrid, STRING, IntAct and APID databases to look for protein-protein interactions for a given query.
 
 # The first section of the script will have the custom functions necessary for downstream purposes.
+# The second section of the script will get the data through various APIs, clean the data and output it.
 
 # importing the necessary libraries
 import argparse
@@ -12,11 +13,17 @@ import matplotlib.pyplot as plt
 import itertools
 from functools import reduce
 import mygene
-from io import StringIO
+import io
 import time
 import numpy as np
 from bs4 import BeautifulSoup
 import re
+
+# To measure the time that has elapses when running the script
+start_time = time.time()
+
+# To suppress warnings from SettingWithCopyWarning & ChainedAssignmentError in Pandas
+pd.options.mode.chained_assignment = None
 
 # Parsing the argument form the command line
 parser = argparse.ArgumentParser(description = "Retrieves PPI interactions")
@@ -96,7 +103,7 @@ def extract_main_protein(isoform_list):
     return protein_list
 
 
-def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_column_name):
+def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_column_name, batch_size = 10):
     """     
     Converts a pandas dataframe column that contains uniprot accession numbers (e.g. Q13740) 
     to uniprot IDs (e.g. CD166_HUMAN) & vice versa. It uses the Uniprot-API ID mapping
@@ -108,6 +115,8 @@ def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_colu
             this column holds either uniprot IDs or accession numbers.
         new_column_name: name of the new column where the converted items 
             will be stored.
+        batch_size: the size of batches for the API request, this is needed because the 
+            returned JSON is too big. 
     
     Returns:
         An exact copy of the original dataframe but it holds an extra column that 
@@ -125,62 +134,67 @@ def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_colu
     # Conversions for input into Uniprot-API
     df[column_to_convert] = df[column_to_convert].astype(str) # making sure it is a string
     list_of_uniprotIDs_or_Names = df[column_to_convert].tolist() # column to list
-    ls = ",".join(list_of_uniprotIDs_or_Names) # conversion to input as payload to uniprot
     
-    # making the POST request
-    r = requests.post("https://rest.uniprot.org/idmapping/run", data={
-        "from": "UniProtKB_AC-ID",
-        "to": "UniProtKB", 
-        "ids": ls 
-    })
+    # Split the list into batches
+    batches = [list_of_uniprotIDs_or_Names[i:i + batch_size] for i in range(0, len(list_of_uniprotIDs_or_Names), batch_size)]
 
-    # getting the job ID nr
-    job_id = r.json()["jobId"]
-    print("job ID:", job_id)
-
-    # for loop that checks whether the job is running and when job is finished it will return a list
-    while True:
-        response = requests.get(f"https://rest.uniprot.org/idmapping/status/{job_id}")
-        data_json = json.loads(response.text)
+    # making a list to append the results
+    desired_id_proteins =[]
     
-        if "jobStatus" in data_json:
-            job_status = data_json["jobStatus"]
-            print(f"job status: {job_status}")
-            
-            if job_status != "RUNNING":
-                print("JobError: job status is not running, error with posting the request")
-                break
-    
-        if "results" in data_json:
-            if "_" in ls:
-                desired_id = []
-                for entry in list_of_uniprotIDs_or_Names:
-                    matched = False
-                    for json_entry in data_json["results"]:
-                        if entry == json_entry["from"]:
-                            desired_id.append(json_entry["to"]["primaryAccession"])
-                            matched = True
-                            break
-                    if not matched:
-                        desired_id.append("nan")
-                desired_id_proteins = extract_main_protein(desired_id)   
-                break
-
-            else:
-                desired_id_proteins = []
-                for entry in list_of_uniprotIDs_or_Names:
-                    matched = False
-                    for json_entry in data_json["results"]:
-                        if entry == json_entry["from"]:  
-                            desired_id_proteins.append(json_entry["to"]["uniProtkbId"])
-                            matched = True
-                            break
-                    if not matched:
-                        desired_id_proteins.append("nan")
-                break
+    # batch process
+    for batch in batches: 
+        ls = ",".join(batch) # conversion to input as payload to uniprot
         
-        time.sleep(5) # wait for 5sec before the looop begins again
-    
+        # making the POST request
+        r = requests.post("https://rest.uniprot.org/idmapping/run", data={
+            "from": "UniProtKB_AC-ID",
+            "to": "UniProtKB", 
+            "ids": ls})
+
+        # getting the job ID nr
+        job_id = r.json()["jobId"]
+        print("job ID for ID mapping through Uniprot:", job_id)
+
+        # for loop that checks whether the job is running and when job is finished it will return a list
+        while True:
+            response = requests.get(f"https://rest.uniprot.org/idmapping/status/{job_id}")
+            data_json = json.loads(response.text)
+        
+            if "jobStatus" in data_json:
+                job_status = data_json["jobStatus"]
+                print(f"job status: {job_status}")
+                
+                if job_status != "RUNNING":
+                    print("JobError: job status is not running, error with posting the request")
+                    break
+        
+            if "results" in data_json:
+                if "_" in ls:
+                    for entry in batch:
+                        matched = False
+                        for json_entry in data_json["results"]:
+                            if entry == json_entry["from"]:
+                                desired_id_proteins.append(json_entry["to"]["primaryAccession"])
+                                matched = True
+                                break
+                        if not matched:
+                            desired_id_proteins.append("nan")   
+                            
+                else:
+                    for entry in batch:
+                        matched = False
+                        for json_entry in data_json["results"]:
+                            if entry == json_entry["from"]:  
+                                desired_id_proteins.append(json_entry["to"]["uniProtkbId"])
+                                matched = True
+                                break
+                        if not matched:
+                            desired_id_proteins.append("nan")
+                
+                break
+            
+            time.sleep(5) # wait for 5sec before the looop begins again
+        
     # check before appending list to original dataframe, if the list has the same nr of items as the original df has rows
     if len(desired_id_proteins) != len(list_of_uniprotIDs_or_Names):
         raise ValueError("Data appending conflict: the returned list from UniProt-API is not equal in length to the nr of rows in the original dataframe")
@@ -410,8 +424,8 @@ biogrid_df = biogrid_df[columns]
 
 # Data cleaning
 df_biogrid = (biogrid_df
-              .pipe(convert_geneIDs_uniprotAcNr, "ENTREZ_GENE_A", "UniprotID_A") # converting entrez gene IDs to uniprot AcNr
-              .pipe(convert_geneIDs_uniprotAcNr, "ENTREZ_GENE_B", "UniprotID_B") # again converting entrez gene IDs to uniprot AcNr but for other column
+              .assign(**{"UniprotID_A": lambda x: x["ENTREZ_GENE_A"].map(convert_geneID_uniprotID)})
+              .assign(**{"UniprotID_B": lambda x: x["ENTREZ_GENE_B"].map(convert_geneID_uniprotID)}) # converting entrez gene IDs to uniprot AcNr
               .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "UniprotID_A", "UniprotName_A") # converting uniprotID to uniprot AcNr
               .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "UniprotID_B", "UniprotName_B") # converting uniprotID to uniprot AcNr
               .filter(items = { "UniprotName_A", 
@@ -425,8 +439,9 @@ df_biogrid = (biogrid_df
                                         "PUBMED_ID": "biogrid_pubID",
                                         "PUBMED_AUTHOR": "biogrid_publication"}) # renaming the columns
               .pipe(get_interactors_for_target, "biogrid_interactor_a", "biogrid_interactor_b", query) # only retaining the interactors column
-              .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query ,"biogrid_publication", "biogrid_method", "biogrid_pubID")) # removing duplicate rows but retainig info
-
+              .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query ,"biogrid_publication", "biogrid_method", "biogrid_pubID") # removing duplicate rows but retainig info
+              .assign(**{"interactor_of_" + query: lambda x: x["interactor_of_" + query].replace("nan", np.nan)}) # replacing the nan values with NaN 
+              .dropna(subset = ["interactor_of_" + query])) # dropping all NaN values in the interactor column
 
 ####################################################### IntAct using the PSIQUIC API #####################################################
 
@@ -516,7 +531,8 @@ if response.ok:
     string_raw_data = response.text
     
 # Loading into dataframe
-string_df = pd.read_json(string_raw_data)
+string_io = io.StringIO(string_raw_data)
+string_df = pd.read_json(string_io)
 
 # Converting the GeneID to UniprotID
 string_df[["UniprotID_A", "UniprotID_B"]] = string_df[["preferredName_A", "preferredName_B"]].map(convert_stringID_to_uniprotName) # takes a long time
@@ -610,6 +626,13 @@ apid_interactors = convert_column_to_list(df_apid, "interactor_of_" + query)
 
 # Plot the data into an upSetplot
 ppis = from_contents({"BioGrid": biogrid_interactors, "IntAct": IntAct_interactors, "STRING": string_interactors, "APID": apid_interactors})
+
+# adding a statement to the console
+print("\n")
+print("{}Ignore the following warnings, which are related to the upsetplot package{}".format('\033[1m', '\033[0m'))
+print("\n")
+
+# make the figure
 ax_dict = UpSet(ppis, subset_size="count", show_counts=True).plot()
 
 # saving the upsetplot
@@ -685,3 +708,14 @@ df_final = (final_df_filtered
 # exporting the filtered dataset to a csv
 final_df_filtered.to_csv("data/interactors_of_" + query + "_filtered.csv", index = False)
 
+# The end time
+end_time = time.time()
+elapsed_time = end_time - start_time
+elapsed_time_formatted = time.strftime("%H:%M:%S", time.gmtime(elapsed_time)) # formatting the time
+
+# Printing out that the script was finished and succesfull
+print("\n")
+print("{}The script ran succesfull, find your data in the subfolder data/{}".format('\033[1m', '\033[0m'))
+print("\n")
+print("Time elapsed:", elapsed_time_formatted)
+print("\n")
