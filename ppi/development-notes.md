@@ -22,13 +22,14 @@
 - if/print statements during each API request, 200 response or not
 - make it into a .py script that is callable from the CLI (arggparse)
 - debug last issues: converting from entrez gene IDs to uniprot IDs using the myGene API python package, a lot is lost in this conversion
+- Also for mouse proteins? No for biogrid, string has taxID, made function for this at the beginning. Problem with mouse ID in string with the function: convert_stringID_to_uniprotName
 
 ## TODO
 - clean up the script:
     - try all of your proteins, and debug the issues
-        1. Check for the databases which uniprot format input is preferred.
+        1. Check for the databases which uniprot format input is preferred. G37L1_HUMAN in APID fe
         2. Check the filtering, is also has mitochondrial membrane...
-        3. Also for mouse proteins? No for biogrid, string has taxID, made function for this at the beginning. Problem with mouse ID in string with the function: convert_stringID_to_uniprotName
+        3. Also include statements if the get request from the API doesnt return anything, ie no results returned if there is actually no results.
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot

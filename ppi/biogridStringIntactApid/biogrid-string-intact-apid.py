@@ -484,7 +484,7 @@ intact_columns = [  "Unique identifier for interactor A",
                     "Confidence score"]
 
 intact_rows = [row.split("\t") for row in int_act_interactions.split("\n")]
-intact_df = pd.DataFrame(intact_rows, columns=intact_columns)
+intact_df = pd.DataFrame(intact_rows, columns = intact_columns)
 
 # Data cleaning
 df_intact = (intact_df
