@@ -28,7 +28,7 @@
     - try all of your proteins, and debug the issues
         1. Check for the databases which uniprot format input is preferred.
         2. Check the filtering, is also has mitochondrial membrane...
-        3. Also for mouse proteins? No for biogrid, string has taxID
+        3. Also for mouse proteins? No for biogrid, string has taxID, made function for this at the beginning. Problem with mouse ID in string with the function: convert_stringID_to_uniprotName
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot

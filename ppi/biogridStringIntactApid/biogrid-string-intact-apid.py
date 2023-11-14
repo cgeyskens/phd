@@ -263,7 +263,7 @@ def convert_stringID_to_uniprotName(string_id):
     not in batch retrieval.
     """
     uniprot_api_url = "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:"
-    uniprot_request_url = f"{uniprot_api_url}{string_id}+AND+organism_id:9606"
+    uniprot_request_url = f"{uniprot_api_url}{string_id}+AND+organism_id:{species_tax_id}"
 
     uniprot_response = requests.get(uniprot_request_url)
     
