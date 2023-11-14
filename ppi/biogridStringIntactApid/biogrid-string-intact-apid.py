@@ -30,10 +30,17 @@ parser = argparse.ArgumentParser(description = "Retrieves PPI interactions")
 parser.add_argument("protein_to_query", type = str, help = "enter your protein of interest")
 args = parser.parse_args()
 
-protein = args.protein_to_query
+query = args.protein_to_query
 
-# the query protein
-query = protein + "_HUMAN"
+# checking if mouse or human
+def check_species(query_to_check):
+    split_value = query_to_check.split("_")
+    if split_value[1] == "HUMAN":
+        return 9606 # human tax id
+    if split_value[1] == "MOUSE":
+        return 10090 # mouse tax id
+    
+species_tax_id = check_species(query)
 
 #########################################################################################################################################
 ############################################################### FUNCTIONS ###############################################################
@@ -90,18 +97,6 @@ def convert_uniprotID_uniprotAcNr(uniprotID_or_AcNr): # e.g. can be P19320 or VC
     else: 
         print("Data retrieval through Uniprot API failed, for the function convert_uniprotID_uniprotAcNr")
         
-        
-def extract_main_protein(isoform_list):
-    """
-    Extracts only the main proteins from a isoform list of uniprot accession numbers.
-    This function is used in the function "convert_uniprotID_uniprotAcNr_from_df_column".
-    """
-    convert_None_to_NaN = [np.nan if isoform is None else isoform for isoform in isoform_list] # convert None to NaN
-    convert_float_to_str = [str(isoform) if isoform is np.nan else isoform for isoform in convert_None_to_NaN] # conversion of NaN floats to NaN strings
-    protein_list = list(filter(lambda isoform: "-" not in isoform, convert_float_to_str)) # the iteration, filtering out the isoforms
-    
-    return protein_list
-
 
 def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_column_name, batch_size = 10):
     """     
@@ -153,7 +148,7 @@ def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_colu
 
         # getting the job ID nr
         job_id = r.json()["jobId"]
-        print("job ID for ID mapping through Uniprot:", job_id)
+        # print("job ID for ID mapping through Uniprot:", job_id) # do not print this out this will clutter the terminal
 
         # for loop that checks whether the job is running and when job is finished it will return a list
         while True:
@@ -162,7 +157,7 @@ def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_colu
         
             if "jobStatus" in data_json:
                 job_status = data_json["jobStatus"]
-                print(f"job status: {job_status}")
+                # print(f"job status: {job_status}") # do not print this out, this will clutter the terminal
                 
                 if job_status != "RUNNING":
                     print("JobError: job status is not running, error with posting the request")
@@ -216,9 +211,9 @@ def convert_geneID_uniprotID(geneID):
     if mygene_response.ok:     
         mygene_json = mygene_response.json()
 
-        if "uniprot" in mygene_json:
+        if "uniprot" in mygene_json and "Swiss-Prot" in mygene_json["uniprot"]:
             uniprot_id = mygene_json["uniprot"]["Swiss-Prot"]
-        elif "pantherdb" in mygene_json:
+        elif "pantherdb" in mygene_json and "uniprot_kb" in mygene_json["pantherdb"]:
             uniprot_id = mygene_json["pantherdb"]["uniprot_kb"]
         else:
             uniprot_id = "NA"
@@ -381,6 +376,10 @@ def convert_column_to_list(df, column):
 
 ########################################################## BioGRID API ################################################################
 
+print("\n")
+print("{}Starting data retrieval from BioGRID API. {}".format('\033[1m', '\033[0m'))
+print("\n")
+
 # calling the API
 biogrid_api_url = "https://webservice.thebiogrid.org/interactions"
 
@@ -391,7 +390,7 @@ params = {
     "additionalIdentifierTypes": "UNIPROT",
     "format": "json",
     "geneList": geneList,
-    "taxId": 9606, # human
+    "taxId": species_tax_id,
     "max": 100000
 }
 
@@ -442,6 +441,10 @@ df_biogrid = (biogrid_df
               .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query ,"biogrid_publication", "biogrid_method", "biogrid_pubID") # removing duplicate rows but retainig info
               .assign(**{"interactor_of_" + query: lambda x: x["interactor_of_" + query].replace("nan", np.nan)}) # replacing the nan values with NaN 
               .dropna(subset = ["interactor_of_" + query])) # dropping all NaN values in the interactor column
+
+print("\n")
+print("{}Data retrieval from BioGRID API & data cleaning is successfull. Now IntAct. {}".format('\033[1m', '\033[0m'))
+print("\n")
 
 ####################################################### IntAct using the PSIQUIC API #####################################################
 
@@ -508,6 +511,9 @@ df_intact = (intact_df
                 .assign(**{"IntAct_score": lambda x: x["IntAct_score"].str.removeprefix("intact-miscore:")}) # removing a prefix from a certain column value
                 .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query, "IntAct_publication", "IntAct_method", "IntAct_pubID", "IntAct_score") ) 
 
+print("\n")
+print("{}Data retrieval from IntAct API & data cleaning is successfull. Now STRING. {}".format('\033[1m', '\033[0m'))
+print("\n")
 
 ################################################################## STRING API ###################################################################
 
@@ -521,7 +527,7 @@ string_request_url = "/".join([string_api_url, output_format, method])
 
 params = {
     "identifiers": query,
-    "species": 9606, # human
+    "species": species_tax_id,
     "required_score": 400,
     "limit": 1000000}
 
@@ -547,9 +553,12 @@ df_string = (string_df
                   .pipe(get_interactors_for_target, "string_interactor_a", "string_interactor_b", query) # get one column, only the interactor of the query
                   .dropna(subset = ["interactor_of_" + query]) # removing NAs
                   .sort_values(by = "string_escore") # sore of experimental score
-                  .drop_duplicates(subset  =["interactor_of_" + query]) # removing duplicates
+                  .drop_duplicates(subset = ["interactor_of_" + query]) # removing duplicates
                   .loc[lambda x: x["string_escore"] != 0]) # only getting interactors with an experimental score != 0
 
+print("\n")
+print("{}Data retrieval from STRING API & data cleaning is successfull. Now APID. {}".format('\033[1m', '\033[0m'))
+print("\n")
 
 ################################################################ APID webscraping ###################################################################
 
@@ -611,6 +620,9 @@ df_apid = (apid_df
             .pipe(get_interactors_for_target, "apid_interactor_a", "apid_interactor_b", query)
             .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query, "apid_method", "apid_publication", "apid_source"))
 
+print("\n")
+print("{}Data retrieval from APID through webscraping & data cleaning is successfull. Now making intersections plot. {}".format('\033[1m', '\033[0m'))
+print("\n")
 
 #######################################################################################################################################
 ##################################################### Intersections plot ##############################################################
@@ -638,6 +650,9 @@ ax_dict = UpSet(ppis, subset_size="count", show_counts=True).plot()
 # saving the upsetplot
 plt.savefig("data/interactors_of_" + query + "_intersectionsPlot.png", dpi = 300)
 
+print("\n")
+print("{}Plotting successfull, intersections plot now inside the data folder.{}".format('\033[1m', '\033[0m'))
+print("\n")
 
 #######################################################################################################################################
 ######################################## Merging data & getting subcellular locations #################################################
@@ -671,8 +686,12 @@ final_df[["subcellularLocation"]] = final_df[["interactor_of_" + query]].map(get
 # undo the list in the "subcellular locations" column
 final_df["subcellularLocation"] = final_df["subcellularLocation"].apply(lambda x: ", ".join(x))
 
-# exporting the filtered dataset to a csv
+# exporting the dataset to a csv
 final_df.to_csv("data/interactors_of_" + query + ".csv", index = False)
+
+print("\n")
+print("{}Interactors of query are exported a .cvs file, check the data folder. {}".format('\033[1m', '\033[0m'))
+print("\n")
 
 
 #######################################################################################################################################
@@ -715,7 +734,9 @@ elapsed_time_formatted = time.strftime("%H:%M:%S", time.gmtime(elapsed_time)) # 
 
 # Printing out that the script was finished and succesfull
 print("\n")
-print("{}The script ran succesfull, find your data in the subfolder data/{}".format('\033[1m', '\033[0m'))
+print("{}Filtered interactors of query are exported a .cvs file. {}".format('\033[1m', '\033[0m'))
+print("\n")
+print("{}The script ran succesfull, check the data folder.{}".format('\033[1m', '\033[0m'))
 print("\n")
 print("Time elapsed:", elapsed_time_formatted)
 print("\n")
