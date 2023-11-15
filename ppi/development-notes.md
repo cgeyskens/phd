@@ -23,13 +23,17 @@
 - make it into a .py script that is callable from the CLI (arggparse)
 - debug last issues: converting from entrez gene IDs to uniprot IDs using the myGene API python package, a lot is lost in this conversion
 - Also for mouse proteins? No for biogrid, string has taxID, made function for this at the beginning. Problem with mouse ID in string with the function: convert_stringID_to_uniprotName
+- Check for the databases which uniprot format input is preferred. G37L1_HUMAN in APID for example & if they accept mouse Uniprot ID. IntAct prefers AcNR, Biogrid prefers AcNr, APID prefers AcNr -> do all input as AcNrs
+- something wrong with the function -get_interactors_for_target- but only for string data cleaning, why? Dont know, just dropped it at the end.
+- Also include statements if the get request from the API doesnt return anything, ie no results returned if there is actually no results and it handles it well.
+- Format of .csv file should be the same for unfiltered and filtered, same order of column names. Reoder the last part of the script.
 
 ## TODO
 - clean up the script:
     - try all of your proteins, and debug the issues
-        1. Check for the databases which uniprot format input is preferred. G37L1_HUMAN in APID fe
-        2. Check the filtering, is also has mitochondrial membrane...
-        3. Also include statements if the get request from the API doesnt return anything, ie no results returned if there is actually no results.
+        1. something wrong with MGI convertion function => adjust the MGI function, write two function, one for human to mouse MGI and mouse to mouse MGI or integrate it.
+        2. check the filtering, because there is also mitochondrial membrane in there.
+
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot
@@ -45,7 +49,7 @@ Bernard et al. 2022 Science
 Make this automated e.g.  $ script.py -p "VCAM1_HUMAN"
 outputs: 
 - interactions.csv
-- upsetplot
+- upsetplot.png
 - interactions_filtered.csv (filtered on subcellular location)
 
 Make separate script for plotting:

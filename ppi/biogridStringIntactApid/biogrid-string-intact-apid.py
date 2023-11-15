@@ -43,7 +43,7 @@ def check_species(query_to_check):
 species_tax_id = check_species(query)
 
 #########################################################################################################################################
-############################################################### FUNCTIONS ###############################################################
+########################################################## MAIN FUNCTIONS ###############################################################
 #########################################################################################################################################
 
 def get_interactors_for_target(df, column_a, column_b, target_protein):
@@ -314,14 +314,9 @@ def removeDuplicateRow_butRetainInfo (df, columnWithDuplicate, columnRetain1, co
     
     return df_final
 
-
-def convert_uniprotAcNr_to_mouseMGI(uniprotAcNr):
-    """
-    Converts a uniprot accession number to mouse MGI ID using the panther-API,
-    not in batch retrieval.
-    """
+def convert_uniprotAcNr_to_mouseMGI(uniprotAcNr, species):
     panther_api_url = "https://pantherdb.org/services/oai/pantherdb/ortholog/matchortho?"
-    originOrganism = "9606"
+    originOrganism = species
     targetOrganism = "10090"
     panther_request_url = f"{panther_api_url}geneInputList={uniprotAcNr}&organism={originOrganism}&targetOrganism={targetOrganism}&orthologType=all"
     
@@ -335,25 +330,22 @@ def convert_uniprotAcNr_to_mouseMGI(uniprotAcNr):
             mapping = panther_json["search"]["mapping"]
             
             if "mapped" in mapping:
-                if isinstance(mapping["mapped"], list):
-                    for mapped_gene in mapping["mapped"]:
-                        try:
-                            mgi_id = mapped_gene["target_gene"].split("|")[1].split("=")[2]
-                        except IndexError:
-                            mgi_id = "NA"
-                        mgi_ids.append(mgi_id)
-                elif isinstance(mapping["mapped"], dict):
-                    try:
-                        mgi_id = mapping["mapped"]["target_gene"].split("|")[1].split("=")[2]
-                    except (KeyError, IndexError):
-                        mgi_id = "NA"
-                    mgi_ids.append(mgi_id)
+                mapped_gene = mapping["mapped"]
+                try:
+                    if species_tax_id == 10090:
+                        mgi_id = mapped_gene["target_gene"].split("|")[1].split("=")[1]
+                    elif species_tax_id == 9606:
+                        mgi_id = mapped_gene["gene"].split("|")[1].split("=")[1]  
+                except (KeyError, IndexError):
+                    mgi_id = "NA"
+                mgi_ids.append(mgi_id)
         
         return mgi_ids
     
     else:
         print("Data retrieval through Panther API failed, for the function: convert_uniprotAcNr_to_mouseMGI")
-        
+        return []        
+    
         
 def convert_column_to_list(df, column):
     """
@@ -368,10 +360,34 @@ def convert_column_to_list(df, column):
 
     return interactors
 
+def get_subcellular_location(protein):
+    """
+    Returns the subcellular location of the interactor of the query, using the Uniprot-API.
+    """
+    uniprot_api_url = "https://rest.uniprot.org/uniprotkb" 
+    format = "json"
+    uniprot_request_url = f"{uniprot_api_url}/{protein}?format={format}"
+    uniprot_response = requests.get(uniprot_request_url)
+
+    uniprot_json = uniprot_response.json()
+
+    subcellular_locations = []
+    for comment in uniprot_json.get("comments", []):
+        if comment.get("commentType") == "SUBCELLULAR LOCATION":
+            for subcellular_location in comment.get("subcellularLocations", []):
+                location_value = subcellular_location.get("location", {}).get("value", "")
+                subcellular_locations.append(location_value)
+    
+    return subcellular_locations
+
 
 #######################################################################################################################################
 ########################################################## DATA RETRIEVAL #############################################################
 #######################################################################################################################################
+
+
+# Conversion to uniprot accession number, because some 3 out of the 4 database likes uniprot accession numbers
+query_AcNr = convert_uniprotID_uniprotAcNr(query)
 
 
 ########################################################## BioGRID API ################################################################
@@ -383,7 +399,7 @@ print("\n")
 # calling the API
 biogrid_api_url = "https://webservice.thebiogrid.org/interactions"
 
-geneList = [convert_uniprotID_uniprotAcNr(query)]
+geneList = query_AcNr
 
 params = {
     "accesskey": "caf14dfd9a0b7be447d282c322b8362e", # need to request
@@ -398,11 +414,14 @@ response = requests.get(biogrid_api_url, params=params)
 
 if response.ok:
     biogrid_interactions = response.json()
-
-    biogrid_data = {}
-    for interaction_id, interaction in biogrid_interactions.items():
-        biogrid_data[interaction_id] = interaction
-        biogrid_data[interaction_id]["INTERACTION_ID"] = interaction_id
+    
+    if not biogrid_interactions: # checking whether the response is empty
+        biogrid_data ={}     
+    else:
+        biogrid_data = {}
+        for interaction_id, interaction in biogrid_interactions.items():
+            biogrid_data[interaction_id] = interaction
+            biogrid_data[interaction_id]["INTERACTION_ID"] = interaction_id
 else:
     print("Access to BioGrid database failed")
     
@@ -453,7 +472,7 @@ intact_api_url = "http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webserv
 
 version = "current"
 method = "interactor"
-protein = query
+protein = query_AcNr
 format = "tab25"
 
 intact_request_url = f"{intact_api_url}/{version}/search/{method}/{protein}?format={format}"
@@ -466,7 +485,6 @@ else:
     print("Access to IntAct database failed")
     
 # Loading into a dataframe
-
 intact_columns = [  "Unique identifier for interactor A", 
                     "Unique identifier for interactor B", 
                     "Alternative identifier for interactor A", 
@@ -483,8 +501,11 @@ intact_columns = [  "Unique identifier for interactor A",
                     "Interaction identifier(s)", 
                     "Confidence score"]
 
-intact_rows = [row.split("\t") for row in int_act_interactions.split("\n")]
-intact_df = pd.DataFrame(intact_rows, columns = intact_columns)
+if not int_act_interactions: # checking if the response is empty
+    intact_df = pd.DataFrame(columns = intact_columns)
+else:
+    intact_rows = [row.split("\t") for row in int_act_interactions.split("\n")]
+    intact_df = pd.DataFrame(intact_rows, columns = intact_columns)
 
 # Data cleaning
 df_intact = (intact_df
@@ -526,7 +547,7 @@ method = "interaction_partners"
 string_request_url = "/".join([string_api_url, output_format, method])
 
 params = {
-    "identifiers": query,
+    "identifiers": query_AcNr,
     "species": species_tax_id,
     "required_score": 400,
     "limit": 1000000}
@@ -535,26 +556,33 @@ response = requests.post(string_request_url, data = params)
 
 if response.ok:
     string_raw_data = response.text
+else:
+    print("Access to STRING database failed")
+    string_raw_data = ""
     
 # Loading into dataframe
-string_io = io.StringIO(string_raw_data)
-string_df = pd.read_json(string_io)
+if not string_raw_data:
+    df_string = pd.Dataframe(columns = ["interactor_of_" + query, "score", "escore"])
+else:
+    string_io = io.StringIO(string_raw_data)
+    string_df = pd.read_json(string_io)
 
-# Converting the GeneID to UniprotID
-string_df[["UniprotID_A", "UniprotID_B"]] = string_df[["preferredName_A", "preferredName_B"]].map(convert_stringID_to_uniprotName) # takes a long time
+    # Converting the GeneID to UniprotID
+    string_df[["UniprotID_A", "UniprotID_B"]] = string_df[["preferredName_A", "preferredName_B"]].map(convert_stringID_to_uniprotName) # takes a long time
 
-# Data cleaning
-df_string = (string_df
-                  .filter(items = {"UniprotID_A", "UniprotID_B", "score", "escore"}) # filter out the columns that are needed
-                  .rename(columns = {"UniprotID_A": "string_interactor_a", 
-                                     "UniprotID_B": "string_interactor_b",
-                                     "score": "string_score",
-                                     "escore": "string_escore"}) # renaming column headers
-                  .pipe(get_interactors_for_target, "string_interactor_a", "string_interactor_b", query) # get one column, only the interactor of the query
-                  .dropna(subset = ["interactor_of_" + query]) # removing NAs
-                  .sort_values(by = "string_escore") # sore of experimental score
-                  .drop_duplicates(subset = ["interactor_of_" + query]) # removing duplicates
-                  .loc[lambda x: x["string_escore"] != 0]) # only getting interactors with an experimental score != 0
+    # Data cleaning
+    df_string = (string_df
+                    .filter(items = {"UniprotID_A", "UniprotID_B", "score", "escore"}) # filter out the columns that are needed
+                    .rename(columns = {"UniprotID_A": "string_interactor_a", 
+                                        "UniprotID_B": "string_interactor_b",
+                                        "score": "string_score",
+                                        "escore": "string_escore"}) # renaming column headers
+                    .pipe(get_interactors_for_target, "string_interactor_a", "string_interactor_b", query) # get one column, only the interactor of the query
+                    .dropna(subset = ["interactor_of_" + query]) # removing NAs
+                    .sort_values(by = "string_escore") # sore of experimental score
+                    .drop_duplicates(subset = ["interactor_of_" + query]) # removing duplicates
+                    .loc[lambda x: x["string_escore"] != 0] # only getting interactors with an experimental score != 0
+                    .drop(columns=["string_interactor_a", "string_interactor_b"])) # dropping the string_interactor_a and b column
 
 print("\n")
 print("{}Data retrieval from STRING API & data cleaning is successfull. Now APID. {}".format('\033[1m', '\033[0m'))
@@ -577,37 +605,47 @@ def extract_table(proteinid):
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
-    soup = BeautifulSoup(response.text, "html.parser")
-    table = soup.find("table", id="interactions") #Find the table
-
-    rows = table.find_all("tr") # Find all table rows
-    interactions = [] #initialize empty list
-    for idx, row in enumerate(rows): #loop over rows, keep index
-        if idx == 0: # first row is the header, skip.
-            pass
+    
+    if response.ok:
+        soup = BeautifulSoup(response.text, "html.parser")
+        table = soup.find("table", id="interactions") #Find the table
+        
+        if table:
+            rows = table.find_all("tr") # Find all table rows
+            interactions = [] #initialize empty list
+            for idx, row in enumerate(rows): #loop over rows, keep index
+                if idx == 0: # first row is the header, skip.
+                    pass
+                else:
+                    try:
+                        data1 = row.find_all("td") # get column
+                        interaction = { # build intraction object
+                        "ProteinA": data1[0].get_text().strip(),
+                        "ProteinB": data1[1].get_text().strip(),
+                        "MethodType": data1[2].get_text().strip(),
+                        "Method": data1[3].get_text().strip(),
+                        "Publication": re.sub(" +", " ",data1[4].get_text().strip().replace("\n", "")),
+                        "Source": data1[5].get_text().strip()
+                        }
+                        interactions.append(interaction) #append interaction object to result list
+                    except:
+                        pass
+            return interactions #return the result list
         else:
-            try:
-                data1 = row.find_all("td") # get column
-                interaction = { # build intraction object
-                "ProteinA": data1[0].get_text().strip(),
-                "ProteinB": data1[1].get_text().strip(),
-                "MethodType": data1[2].get_text().strip(),
-                "Method": data1[3].get_text().strip(),
-                "Publication": re.sub(" +", " ",data1[4].get_text().strip().replace("\n", "")),
-                "Source": data1[5].get_text().strip()
-                }
-                interactions.append(interaction) #append interaction object to result list
-            except:
-                pass
-    return interactions #return the result list
+            print("Table not found in the response.")
+            return []
+    else:
+        print("Access to APID database failed")
+        return []
 
-
-# To find the UniProtID from the protein name
-proteinid = convert_uniprotID_uniprotAcNr(query)
-apid_results = extract_table(proteinid)
+# Get the data
+apid_results = extract_table(query_AcNr)
 
 # loading into dataframe
-apid_df = pd.DataFrame(apid_results)
+if not apid_results:
+    apid_df = pd.DataFrame(columns = ["interactor_of_" + query, "apid_method", "apid_publication", "apid_source"])
+else:
+    apid_df = pd.DataFrame(apid_results)
 
 # Data cleaning
 df_apid = (apid_df
@@ -660,25 +698,6 @@ print("\n")
 
 dfs = [df_biogrid, df_intact, df_string, df_apid]
 final_df = reduce(lambda left, right: pd.merge(left,right, on=["interactor_of_" + query], how="outer"), dfs)
-
-# get the subcellular location of the interactor of the query, using the Uniprot-API
-def get_subcellular_location(protein):
-    
-    uniprot_api_url = "https://rest.uniprot.org/uniprotkb" 
-    format = "json"
-    uniprot_request_url = f"{uniprot_api_url}/{protein}?format={format}"
-    uniprot_response = requests.get(uniprot_request_url)
-
-    uniprot_json = uniprot_response.json()
-
-    subcellular_locations = []
-    for comment in uniprot_json.get("comments", []):
-        if comment.get("commentType") == "SUBCELLULAR LOCATION":
-            for subcellular_location in comment.get("subcellularLocations", []):
-                location_value = subcellular_location.get("location", {}).get("value", "")
-                subcellular_locations.append(location_value)
-    
-    return subcellular_locations
     
 # now go over the dataframe and make a new column with the subcellular location
 final_df[["subcellularLocation"]] = final_df[["interactor_of_" + query]].map(get_subcellular_location) # takes a long time
@@ -686,8 +705,20 @@ final_df[["subcellularLocation"]] = final_df[["interactor_of_" + query]].map(get
 # undo the list in the "subcellular locations" column
 final_df["subcellularLocation"] = final_df["subcellularLocation"].apply(lambda x: ", ".join(x))
 
+# Data cleaning
+df_final = (final_df
+            # Convert the human uniprotID to human uniprotAcNr, make new column "interactor_of_VCAM1_uniprotAcNr"
+            .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr")
+            # Convert from human uniprotAcNr to mouseGene MGI
+            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x, species_tax_id=species_tax_id: x["interactor_of_" + query + "_Uniprot_AcNr"].map(lambda acnr: convert_uniprotAcNr_to_mouseMGI(acnr, species_tax_id))})
+            # undo the list in the mouseGene MGI column (MGI is necessary for further downstream gene ontology)
+            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x: x["interactor_of_" + query + "_mouseGene_MGI"].apply(lambda y: ", ".join(y))})
+            # column order
+            .loc[:, ["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"] 
+                + list(final_df.columns.difference(["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"]))])
+
 # exporting the dataset to a csv
-final_df.to_csv("data/interactors_of_" + query + ".csv", index = False)
+df_final.to_csv("data/interactors_of_" + query + ".csv", index = False)
 
 print("\n")
 print("{}Interactors of query are exported a .cvs file, check the data folder. {}".format('\033[1m', '\033[0m'))
@@ -710,19 +741,7 @@ subcellular_locations = ["membrane",
                          "extracellular exosome",
                          "cell surface"] 
 
-final_df_filtered = final_df[final_df["subcellularLocation"].str.contains('|'.join(subcellular_locations), case=False)]
-
-# Data cleaning
-df_final = (final_df_filtered
-            # Convert the human uniprotID to human uniprotAcNr, make new column "interactor_of_VCAM1_uniprotAcNr"
-            .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr")
-            # Convert from human uniprotAcNr to mouseGene MGI
-            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x: x["interactor_of_" + query + "_Uniprot_AcNr"].map(convert_uniprotAcNr_to_mouseMGI)})
-            # undo the list in the mouseGene MGI column (MGI is necessary for further downstream gene ontology)
-            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x: x["interactor_of_" + query + "_mouseGene_MGI"].apply(lambda y: ", ".join(y))})
-            # column order
-            .loc[:, ["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"] 
-                + list(final_df_filtered.columns.difference(["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"]))])
+final_df_filtered = df_final[df_final["subcellularLocation"].str.contains('|'.join(subcellular_locations), case=False)]
 
 # exporting the filtered dataset to a csv
 final_df_filtered.to_csv("data/interactors_of_" + query + "_filtered.csv", index = False)
