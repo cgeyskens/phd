@@ -27,8 +27,8 @@ start_time = time.time()
 pd.options.mode.chained_assignment = None
 
 # Parsing the argument form the command line
-parser = argparse.ArgumentParser(description = "Retrieves PPI interactions")
-parser.add_argument("protein_to_query", type = str, help = "enter your protein of interest")
+parser = argparse.ArgumentParser(description = "Retrieves PPI interactions from BioGrid, STRING, IntAct and APID")
+parser.add_argument("protein_to_query", type = str, help = "enter your protein of interest in the uniprot ID format (PROTEIN_SPECIES, e.g. CADM4_MOUSE)")
 args = parser.parse_args()
 
 query = args.protein_to_query
@@ -659,7 +659,7 @@ def extract_table(proteinid):
 apid_results = extract_table(query_AcNr)
 
 # loading into dataframe
-if not apid_results:
+if not apid_results: # if the dataframe is empty
     apid_df = pd.DataFrame(columns = ["interactor_of_" + query, "apid_method", "apid_publication", "apid_source"])
 else:
     apid_df = pd.DataFrame(apid_results)

@@ -27,11 +27,14 @@
 - something wrong with the function -get_interactors_for_target- but only for string data cleaning, why? Dont know, just dropped it at the end.
 - Also include statements if the get request from the API doesnt return anything, ie no results returned if there is actually no results and it handles it well.
 - Format of .csv file should be the same for unfiltered and filtered, same order of column names. Reoder the last part of the script.
+- check the filtering, because there is also mitochondrial membrane, endoplamic reticulum, ... in there.
 
 ## TODO
 - clean up the script:
-    - try all of your proteins, and debug the issues
-        2. check the filtering, because there is also mitochondrial membrane, endoplamic reticulum, ... in there.
+    - try all of your proteins, and debug the issues. Tested all 5 (mouse and human), and the isssue's are:
+        1. For G37L1_MOUSE (Q99JG2), the Biogrid API retrieves nothing and gives an error
+        2. For G37L1_HUMAN (O6088), the APID doesnt retrieve anything but there are a lot of interactors there
+        3. For VCAM1_MOUSE (P29533), the IntAct retrieves nothing but there is one interactor there.
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot
