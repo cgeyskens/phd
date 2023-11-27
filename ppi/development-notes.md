@@ -31,9 +31,7 @@
 ## TODO
 - clean up the script:
     - try all of your proteins, and debug the issues
-        1. something wrong with MGI convertion function => adjust the MGI function, write two function, one for human to mouse MGI and mouse to mouse MGI or integrate it.
-        2. check the filtering, because there is also mitochondrial membrane in there.
-
+        2. check the filtering, because there is also mitochondrial membrane, endoplamic reticulum, ... in there.
     - write a documentation README file, with png and how to use the script
 
 - make a heatmap & UpSetplot

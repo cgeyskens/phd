@@ -18,6 +18,7 @@ import time
 import numpy as np
 from bs4 import BeautifulSoup
 import re
+import ast
 
 # To measure the time that has elapses when running the script
 start_time = time.time()
@@ -201,7 +202,9 @@ def convert_uniprotID_uniprotAcNr_from_df_column(df, column_to_convert, new_colu
 
 
 def convert_geneID_uniprotID(geneID):
-
+    """
+    Converts an entrez geneID to a uniprot accession number.
+    """
     mygene_api_url = "https://mygene.info/v3/gene"
     entrezGeneID = geneID
     mygene_request_url = f"{mygene_api_url}/{entrezGeneID}?fields=all&dotfield=false&size=10"
@@ -314,39 +317,52 @@ def removeDuplicateRow_butRetainInfo (df, columnWithDuplicate, columnRetain1, co
     
     return df_final
 
-def convert_uniprotAcNr_to_mouseMGI(uniprotAcNr, species):
+
+def convert_humanUniprotAcNr_to_mouseMGI(humanUniprotAcNr):
+    """
+    Convert a human uniprot accession number to a mouse MGI ID.
+    """
     panther_api_url = "https://pantherdb.org/services/oai/pantherdb/ortholog/matchortho?"
-    originOrganism = species
+    originOrganism = "9606"
     targetOrganism = "10090"
-    panther_request_url = f"{panther_api_url}geneInputList={uniprotAcNr}&organism={originOrganism}&targetOrganism={targetOrganism}&orthologType=all"
+    panther_request_url = f"{panther_api_url}geneInputList={humanUniprotAcNr}&organism={originOrganism}&targetOrganism={targetOrganism}&orthologType=all"
     
     panther_response = requests.post(panther_request_url)
     
     if panther_response.ok:      
         panther_json = panther_response.json()
-        
-        mgi_ids = []
         if "search" in panther_json and "mapping" in panther_json["search"]:
-            mapping = panther_json["search"]["mapping"]
-            
-            if "mapped" in mapping:
-                mapped_gene = mapping["mapped"]
-                try:
-                    if species_tax_id == 10090:
-                        mgi_id = mapped_gene["target_gene"].split("|")[1].split("=")[1]
-                    elif species_tax_id == 9606:
-                        mgi_id = mapped_gene["gene"].split("|")[1].split("=")[1]  
-                except (KeyError, IndexError):
-                    mgi_id = "NA"
-                mgi_ids.append(mgi_id)
-        
-        return mgi_ids
-    
+            mgi_id = panther_json["search"]["mapping"]["mapped"]["target_gene"].split("|")[1].split("=")[2] 
+        else:
+            mgi_id = "NA"
+        return mgi_id
     else:
         print("Data retrieval through Panther API failed, for the function: convert_uniprotAcNr_to_mouseMGI")
-        return []        
+        return []
+      
     
-        
+def convert_mouseUniprotAcNr_to_mouseMGI(mouseUniprotAcNr):
+    """
+    converts a mouse uniprot accession number to a mouse GMI.    
+    """
+    panther_api_url = "https://pantherdb.org/services/oai/pantherdb/geneinfo?"
+    organism = 10090
+    panther_request_url = f"{panther_api_url}geneInputList={mouseUniprotAcNr}&organism={organism}"
+
+    panther_response = requests.post(panther_request_url)
+    
+    if panther_response.ok:      
+        panther_json = panther_response.json()
+        if "search" in panther_json and "accession" in panther_json["search"]["mapped_genes"]["gene"]:
+            mgi_id = panther_json["search"]["mapped_genes"]["gene"]["accession"].split("|")[1].split("=")[2]
+        else:    
+            mgi_id = "NA"
+        return mgi_id
+    else:
+        print("Data retrieval through Panther API failed, for the function: convert_mouseUniprotAcNr_to_mouseMGI")
+        return []
+
+     
 def convert_column_to_list(df, column):
     """
     Converts a column to a flattened list, specifcally for the upsetplot.
@@ -359,6 +375,7 @@ def convert_column_to_list(df, column):
     interactors = flatten_list(column_list)
 
     return interactors
+
 
 def get_subcellular_location(protein):
     """
@@ -386,7 +403,7 @@ def get_subcellular_location(protein):
 #######################################################################################################################################
 
 
-# Conversion to uniprot accession number, because some 3 out of the 4 database likes uniprot accession numbers
+# Conversion to uniprot accession number, because 3 out of the 4 database recognize mostly uniprot accession numbers
 query_AcNr = convert_uniprotID_uniprotAcNr(query)
 
 
@@ -416,7 +433,7 @@ if response.ok:
     biogrid_interactions = response.json()
     
     if not biogrid_interactions: # checking whether the response is empty
-        biogrid_data ={}     
+        biogrid_data = {}     
     else:
         biogrid_data = {}
         for interaction_id, interaction in biogrid_interactions.items():
@@ -705,17 +722,17 @@ final_df[["subcellularLocation"]] = final_df[["interactor_of_" + query]].map(get
 # undo the list in the "subcellular locations" column
 final_df["subcellularLocation"] = final_df["subcellularLocation"].apply(lambda x: ", ".join(x))
 
+# formating the subcellular location column to lower for the filtering because the isin function doesnt have a case tag
+final_df['subcellularLocation'] = final_df['subcellularLocation'].str.lower()
+
 # Data cleaning
 df_final = (final_df
-            # Convert the human uniprotID to human uniprotAcNr, make new column "interactor_of_VCAM1_uniprotAcNr"
+            # Convert the uniprotID to uniprotAcNr, make new column "interactor_of_query_uniprotAcNr"
             .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr")
-            # Convert from human uniprotAcNr to mouseGene MGI
-            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x, species_tax_id=species_tax_id: x["interactor_of_" + query + "_Uniprot_AcNr"].map(lambda acnr: convert_uniprotAcNr_to_mouseMGI(acnr, species_tax_id))})
-            # undo the list in the mouseGene MGI column (MGI is necessary for further downstream gene ontology)
-            .assign(**{"interactor_of_" + query + "_mouseGene_MGI": lambda x: x["interactor_of_" + query + "_mouseGene_MGI"].apply(lambda y: ", ".join(y))})
             # column order
-            .loc[:, ["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"] 
-                + list(final_df.columns.difference(["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr", "interactor_of_" + query + "_mouseGene_MGI"]))])
+            .loc[:, ["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr"] 
+                + list(final_df.columns.difference(["interactor_of_" + query, "interactor_of_" + query + "_Uniprot_AcNr"]))])
+
 
 # exporting the dataset to a csv
 df_final.to_csv("data/interactors_of_" + query + ".csv", index = False)
@@ -729,19 +746,25 @@ print("\n")
 ###################################################### Filtering interactions #########################################################
 #######################################################################################################################################
 
+# convert the subcellular column back to a list for easy filtering
+df_final['subcellularLocation'] = df_final['subcellularLocation'].str.split(", ")
+
 # filter on the following subcellular locations
 subcellular_locations = ["membrane",
+                         "cell membrane",
                          "cell junction",
-                         "cell projection",
                          "cell membrane",
                          "plasma membrane",
                          "secreted",
                          "extracellular space",
-                         "extracellular matrix"
-                         "extracellular exosome",
+                         "extracellular matrix",
                          "cell surface"] 
 
-final_df_filtered = df_final[df_final["subcellularLocation"].str.contains('|'.join(subcellular_locations), case=False)]
+# perform the filtering
+final_df_filtered = df_final[df_final["subcellularLocation"].apply(lambda x: any(value in x for value in subcellular_locations))]
+
+# undo the list again in the "subcellular locations" column
+final_df_filtered["subcellularLocation"] = final_df_filtered["subcellularLocation"].apply(lambda x: ", ".join(x))
 
 # exporting the filtered dataset to a csv
 final_df_filtered.to_csv("data/interactors_of_" + query + "_filtered.csv", index = False)
@@ -756,6 +779,5 @@ print("\n")
 print("{}Filtered interactors of query are exported a .cvs file. {}".format('\033[1m', '\033[0m'))
 print("\n")
 print("{}The script ran succesfull, check the data folder.{}".format('\033[1m', '\033[0m'))
-print("\n")
 print("Time elapsed:", elapsed_time_formatted)
 print("\n")
