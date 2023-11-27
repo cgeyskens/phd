@@ -8,8 +8,8 @@ import argparse
 import requests
 import pandas as pd
 import json
-from upsetplot import UpSet, from_contents
 import matplotlib.pyplot as plt
+from upsetplot import UpSet, from_contents
 import itertools
 from functools import reduce
 import mygene
@@ -18,7 +18,6 @@ import time
 import numpy as np
 from bs4 import BeautifulSoup
 import re
-import ast
 
 # To measure the time that has elapses when running the script
 start_time = time.time()
