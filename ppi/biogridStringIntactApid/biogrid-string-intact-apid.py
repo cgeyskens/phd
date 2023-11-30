@@ -683,7 +683,8 @@ df_apid = (apid_df
                                 "Source": "apid_source"})
             .pipe(get_interactors_for_target, "apid_interactor_a", "apid_interactor_b", query_AcNr, "interactor_of_" + query + "_2")
             .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query + "_2", "apid_method", "apid_publication", "apid_source")
-            .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query + "_2", "interactor_of_" + query))
+            .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query + "_2", "interactor_of_" + query)
+            .drop("interactor_of_" + query + "_2", axis = 1))
 
 print("\n")
 print("{}Data retrieval from APID through webscraping & data cleaning is successfull. Now making intersections plot. {}".format('\033[1m', '\033[0m'))
