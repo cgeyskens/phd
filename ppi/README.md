@@ -1,7 +1,7 @@
 # In silico protein-protein interactions 
 With this script you can collect all the known interactions of a human or mouse protein from the following databases: [BioGRID](https://thebiogrid.org/), [STRING](https://string-db.org/), [IntAct](https://www.ebi.ac.uk/intact/home) & [APID](http://cicblade.dep.usal.es:8080/APID/init.action). You can find the script under the folder biogridStrinIntactApid. 
 
-![Alt text](image.png)
+![Alt text](image-readme.png)
 
 ### What is does
 
