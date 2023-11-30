@@ -1,7 +1,9 @@
 # In silico protein-protein interactions 
-With this script you can collect all the known interactions of a human or mouse protein from the following databases: [BioGRID](https://thebiogrid.org/), [STRING](https://string-db.org/), [IntAct](https://www.ebi.ac.uk/intact/home) & [APID](http://cicblade.dep.usal.es:8080/APID/init.action). You can find the script under the folder `biogridStrinIntactApid/`. 
+With this script you can collect all the known interactions of a human or mouse protein from the following databases: [BioGRID](https://thebiogrid.org/), [STRING](https://string-db.org/), [IntAct](https://www.ebi.ac.uk/intact/home) & [APID](http://cicblade.dep.usal.es:8080/APID/init.action). You can find the script under the folder `biogridStrinIntactApid/`.  
 
-<img src="image-readme.png" alt="drawing" width="500" height=200/>
+<p align="center">
+    <img src="image-readme.png" alt="drawing" width="500" height=200/>
+</p>  
 
 ### How to use
 Requirments in conda environment: `ppi-env.yml`
@@ -10,7 +12,8 @@ Requirments in conda environment: `ppi-env.yml`
 To run the script you must add the query protein right after script name. The format must be in Uniprot ID format and it can take both mouse and human uniprot IDs.  
 If the query = `L1CAM_HUMAN`  
 
-eg: `python biogrid-string-intact-apid.py L1CAM_HUMAN`
+eg: `python biogrid-string-intact-apid.py L1CAM_HUMAN`   
+
 eg: `python biogrid-string-intact-apid.py L1CAM_HUMAN`
 
 #### Output
