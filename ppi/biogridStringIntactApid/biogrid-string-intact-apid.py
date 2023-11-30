@@ -46,7 +46,7 @@ species_tax_id = check_species(query)
 ########################################################## MAIN FUNCTIONS ###############################################################
 #########################################################################################################################################
 
-def get_interactors_for_target(df, column_a, column_b, target_protein):
+def get_interactors_for_target(df, column_a, column_b, target_protein, new_column_name):
     """
     Takes a ppi dataframe in the format column1:interactor-of-query & column2:query, 
     and outputs from those two columns only one column with the interactor of the query (target protein)
@@ -61,15 +61,20 @@ def get_interactors_for_target(df, column_a, column_b, target_protein):
         df: dataframe with one column less then input dataframe but now with only the interactor
         of the query.
     """    
-    def get_interactors(row):
-        if row[column_a] == target_protein:
-            return row[column_b]
-        elif row[column_b] == target_protein:
-            return row[column_a]
-        else:
-            return None
-    df["interactor_of_" + target_protein] = df.apply(get_interactors, axis = 1)
     
+    if df.shape[0] == 0 & df.shape[1] > 0: # when the dataframe is empty
+        df.drop([column_a, column_b])
+        df.columns = [new_column_name]
+        return df
+    else:
+        def get_interactors(row):
+            if row[column_a] == target_protein:
+                return row[column_b]
+            elif row[column_b] == target_protein:
+                return row[column_a]
+            else:
+                return None
+        df[new_column_name] = df.apply(get_interactors, axis = 1)
     return df
 
 
@@ -442,8 +447,7 @@ else:
     print("Access to BioGrid database failed")
     
 # Loading into a dataframe
-biogrid_df = pd.DataFrame.from_dict(biogrid_data, orient="index")
-columns = [
+columns_biogrid = [
     "INTERACTION_ID",
     "ENTREZ_GENE_A",
     "ENTREZ_GENE_B",
@@ -454,7 +458,8 @@ columns = [
     "PUBMED_AUTHOR",
     "THROUGHPUT",
     "QUALIFICATIONS"]
-biogrid_df = biogrid_df[columns]
+
+biogrid_df = pd.DataFrame.from_dict(biogrid_data, orient="index", columns = columns_biogrid)
 
 # Data cleaning
 df_biogrid = (biogrid_df
@@ -466,13 +471,13 @@ df_biogrid = (biogrid_df
                                 "UniprotName_B", 
                                 "EXPERIMENTAL_SYSTEM", 
                                 "PUBMED_ID",
-                                "PUBMED_AUTHOR"}) # filtering the columns
+                                "PUBMED_AUTHOR"}) # filtering the colummns
               .rename(columns = {       "UniprotName_A": "biogrid_interactor_a", 
                                         "UniprotName_B": "biogrid_interactor_b",
                                         "EXPERIMENTAL_SYSTEM": "biogrid_method",
                                         "PUBMED_ID": "biogrid_pubID",
                                         "PUBMED_AUTHOR": "biogrid_publication"}) # renaming the columns
-              .pipe(get_interactors_for_target, "biogrid_interactor_a", "biogrid_interactor_b", query) # only retaining the interactors column
+              .pipe(get_interactors_for_target, "biogrid_interactor_a", "biogrid_interactor_b", query, "interactor_of_" + query) # only retaining the interactors column
               .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query ,"biogrid_publication", "biogrid_method", "biogrid_pubID") # removing duplicate rows but retainig info
               .assign(**{"interactor_of_" + query: lambda x: x["interactor_of_" + query].replace("nan", np.nan)}) # replacing the nan values with NaN 
               .dropna(subset = ["interactor_of_" + query])) # dropping all NaN values in the interactor column
@@ -544,7 +549,7 @@ df_intact = (intact_df
                                     "First author": "IntAct_publication",
                                     "Identifier of the publication": "IntAct_pubID",
                                     "Confidence score": "IntAct_score"}) # renaming columns
-                .pipe(get_interactors_for_target, "IntAct_interactor_a", "IntAct_interactor_b", query) # get only the interactors column
+                .pipe(get_interactors_for_target, "IntAct_interactor_a", "IntAct_interactor_b", query, "interactor_of_" + query) # get only the interactors column
                 .assign(**{"IntAct_score": lambda x: x["IntAct_score"].str.removeprefix("intact-miscore:")}) # removing a prefix from a certain column value
                 .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query, "IntAct_publication", "IntAct_method", "IntAct_pubID", "IntAct_score") ) 
 
@@ -593,7 +598,7 @@ else:
                                         "UniprotID_B": "string_interactor_b",
                                         "score": "string_score",
                                         "escore": "string_escore"}) # renaming column headers
-                    .pipe(get_interactors_for_target, "string_interactor_a", "string_interactor_b", query) # get one column, only the interactor of the query
+                    .pipe(get_interactors_for_target, "string_interactor_a", "string_interactor_b", query, "interactor_of_" + query) # get one column, only the interactor of the query
                     .dropna(subset = ["interactor_of_" + query]) # removing NAs
                     .sort_values(by = "string_escore") # sore of experimental score
                     .drop_duplicates(subset = ["interactor_of_" + query]) # removing duplicates
@@ -624,8 +629,7 @@ def extract_table(proteinid):
     
     if response.ok:
         soup = BeautifulSoup(response.text, "html.parser")
-        table = soup.find("table", id="interactions") #Find the table
-        
+        table = soup.find("table", id="interactions") # Find the table
         if table:
             rows = table.find_all("tr") # Find all table rows
             interactions = [] #initialize empty list
@@ -635,9 +639,15 @@ def extract_table(proteinid):
                 else:
                     try:
                         data1 = row.find_all("td") # get column
+                        protein1_a_tag = data1[0].find("a")
+                        if protein1_a_tag:
+                            protein1_uniprot_AcNr = protein1_a_tag['href'].split('/')[-1]
+                        protein2_a_tag = data1[1].find("a")
+                        if protein2_a_tag:
+                            protein2_uniprot_AcNr = protein2_a_tag['href'].split('/')[-1]
                         interaction = { # build intraction object
-                        "ProteinA": data1[0].get_text().strip(),
-                        "ProteinB": data1[1].get_text().strip(),
+                        "ProteinA": protein1_uniprot_AcNr,
+                        "ProteinB": protein2_uniprot_AcNr,
                         "MethodType": data1[2].get_text().strip(),
                         "Method": data1[3].get_text().strip(),
                         "Publication": re.sub(" +", " ",data1[4].get_text().strip().replace("\n", "")),
@@ -659,7 +669,7 @@ apid_results = extract_table(query_AcNr)
 
 # loading into dataframe
 if not apid_results: # if the dataframe is empty
-    apid_df = pd.DataFrame(columns = ["interactor_of_" + query, "apid_method", "apid_publication", "apid_source"])
+    apid_df = pd.DataFrame(columns = ["ProteinA", "ProteinB", "Method", "Publication", "Source"])
 else:
     apid_df = pd.DataFrame(apid_results)
 
@@ -671,8 +681,9 @@ df_apid = (apid_df
                                 "Method": "apid_method",
                                 "Publication": "apid_publication",
                                 "Source": "apid_source"})
-            .pipe(get_interactors_for_target, "apid_interactor_a", "apid_interactor_b", query)
-            .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query, "apid_method", "apid_publication", "apid_source"))
+            .pipe(get_interactors_for_target, "apid_interactor_a", "apid_interactor_b", query_AcNr, "interactor_of_" + query + "_2")
+            .pipe(removeDuplicateRow_butRetainInfo, "interactor_of_" + query + "_2", "apid_method", "apid_publication", "apid_source")
+            .pipe(convert_uniprotID_uniprotAcNr_from_df_column, "interactor_of_" + query + "_2", "interactor_of_" + query))
 
 print("\n")
 print("{}Data retrieval from APID through webscraping & data cleaning is successfull. Now making intersections plot. {}".format('\033[1m', '\033[0m'))
