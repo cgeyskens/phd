@@ -1,0 +1,52 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+# copying the files from host to inside the container
+%files
+   ppi-env.yml /opt 
+   ../biogridStringIntactApid/biogrid-string-intact-apid.py /opt
+
+%environment
+   export PATH=opt/miniconda/bin:$PATH
+
+%runscript
+   exec "$@"
+
+# operations for building the container
+%post
+   # basic installations
+   apt-get update -y
+   apt-get install wget -y
+
+   # installing miniconda
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+   bash miniconda.sh -b -u -p /opt/miniconda 
+   export PATH="/opt/miniconda/bin:$PATH"     
+   
+   # install conda env.yml file
+   echo ". /opt/miniconda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+   echo "conda activate ppi" >> $SINGULARITY_ENVIRONMENT
+   
+   # running the conda env	
+   /opt/miniconda/bin/conda env create -f /opt/ppi-env.yml
+
+   # activating the conda env
+   . /opt/miniconda/etc/profile.d/conda.sh
+
+   # make data directory inside opt/ for script   
+   mkdir opt/data/
+
+%labels
+   Author cgeyskens 
+
+# # To activate the apptainer container:
+# apptainer shell --writable ppi-con.sif
+# 
+# # Go inside the /opt directory
+# cd opt/
+# 
+# # Run the script (the conda env is already set from the .def file
+# python biogrid-string-intact-apid.py "PROTEIN_OF_INTEREST"
+# 
+# # check the data folder inside opt
+# cd /data

@@ -10,4 +10,5 @@ work/
 *.pptx
 *.csv:Zone.Identifier
 *.svg
+*.sif
 data/

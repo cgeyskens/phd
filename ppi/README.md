@@ -5,21 +5,23 @@ With this script, you can collect all the known **experimentally verified** inte
     <img src="image-readme.png" alt="drawing" width="500" height=200/>
 </p>  
 
-### How to use
-Dependencies in conda environment:   
-`ppi-env.yml`
+### Dependencies in apptainer container and inside conda environment
+To build the container from the .def file:
+`apptainer build --sandbox ppi-con.sif ppi-con.def`
 
-Setting up conda env:  
-`conda create -f ppi-env.yml`  
-`conda activate ppi-env.yml`
+To activate the apptainer container interactively:
+`apptainer shell -writable ppi-con.sif`
+
+Run the script interactively (the conda env is already set from the .def file)
+`python opt/biogrid-string-intact-apid.py PROTEIN_OF_INTEREST` see below for more details.
 
 #### Input
 To run the script, you must add a single query protein as an arugment (the script cannot handle multiple input query proteins). The input format is Uniprot ID format and it can take both mouse and human uniprot IDs.  
 If the query = `L1CAM_HUMAN`  or `L1CAM_MOUSE`
 
-eg: `python biogrid-string-intact-apid.py L1CAM_HUMAN`   
+e.g.: `python biogrid-string-intact-apid.py L1CAM_HUMAN`   
 
-eg: `python biogrid-string-intact-apid.py L1CAM_MOUSE`
+e.g.: `python biogrid-string-intact-apid.py L1CAM_MOUSE`
 
 #### Output
 The script returns three files inside a `/data` folder from your current directory:
