@@ -12,3 +12,5 @@ work/
 *.svg
 *.sif
 data/
+# all folders related to the hpc
+ppi-hpc/

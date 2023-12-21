@@ -21,6 +21,8 @@ From: ubuntu:22.04
    # installing miniconda
    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
    bash miniconda.sh -b -u -p /opt/miniconda 
+   # $PATH is a special environmental variable that controls where the system will look for software
+   # It is basically a list of directories where the software will look through for a command before giving up
    export PATH="/opt/miniconda/bin:$PATH"     
    
    # install conda env.yml file
