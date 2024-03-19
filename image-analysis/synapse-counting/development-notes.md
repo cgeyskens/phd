@@ -30,7 +30,7 @@ rm nextflow.log.*
 - attach this last script to the pipeline (24/08/2023)
 
 last part: small adjustments & make the code clean: (29/08/2023)
-- use "" instead of ''
+- use "" instead of '', be consistent
 - naming of python and nextflow scripts: change the names of python to more intuitive names
 - delete other unnessary development scripts (and delete the output of the ipynb files)
 - Take the content of this file and make a new .md file that is named "development.md".
@@ -46,7 +46,10 @@ last part: small adjustments & make the code clean:
 
 ### Next-up for after HPC training:
 2. include suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
-3. benchmark the different coloc analysis workflows
+3. Implement the pipeline onto the HPC using apptainer & conda
+4. Implement the pipeline with GPUs on HPC
+5. benchmark the different coloc analysis workflows
+5. do the actual analysis
 
 
 ### working test-pipeline
@@ -72,3 +75,4 @@ test-4-figure.py (test-4-figure.ipynb)
 1. mean fluorescence intensity (MFI) or staining intensity
 2. puncta nr or puncta density (puncta nr per 100 um2)
 3. staining area or puncta size
+4. punta size (Bosworth et al. 2024)
