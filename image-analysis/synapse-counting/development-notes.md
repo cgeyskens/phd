@@ -44,6 +44,7 @@ last part: small adjustments & make the code clean:
 - customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images). Also customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline). Also instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers). Also customize the names from the file input that should be stored for analysis. 
 - Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...). 
 - make a class out of the analysis?
+- parrallel workflow via nextflow?s
 
 ### Next-up for after HPC training:
 2. include suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)

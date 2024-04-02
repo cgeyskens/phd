@@ -1,0 +1,14 @@
+name: ppi
+channels:
+  - defaults
+dependencies:
+  - anaconda::requests
+  - pandas==2.2.1
+  - jmcmurray::json
+  - conda-forge::matplotlib
+  - conda-forge::upsetplot
+  - anaconda::more-itertools
+  - bs4
+  - ipykernel
+  - bioconda::mygene
+prefix: /Users/cgeyskens/miniconda3/envs/ppi

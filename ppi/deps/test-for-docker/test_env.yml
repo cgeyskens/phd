@@ -1,0 +1,8 @@
+name: test_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - pandas=2.2.1
+  - python=3.12.2
+prefix: /Users/cgeyskens/miniconda3/envs/test_env
