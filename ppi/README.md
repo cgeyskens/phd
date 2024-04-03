@@ -5,8 +5,9 @@ With this script, you can collect all the known **experimentally verified** inte
     <img src="image-readme.png" alt="drawing" width="500" height=200/>
 </p>  
 
-### Dependencies in apptainer container and inside conda environment
-To build the container from the .def file:
+### Dependencies
+#### Apptainer
+To build the apptainer container from the .def file:
 `apptainer build --sandbox ppi-con.sif ppi-con.def`
 
 To activate the apptainer container interactively:
@@ -14,6 +15,20 @@ To activate the apptainer container interactively:
 
 Run the script interactively (the conda env is already set from the .def file)
 `python opt/biogrid-string-intact-apid.py PROTEIN_OF_INTEREST` see below for more details.
+
+#### Docker 
+To build the docker container from the Dockerfile:
+`docker build docker build -t ppi-con`
+
+To run the container (with script on local host and outside container)
+`bash run-docker.sh`
+
+#### Conda
+To build the conda env:
+`conda env create -f /opt/ppi-env.yml`
+
+To activate the conda env:
+`conda activate ppi`
 
 #### Input
 To run the script, you must add a single query protein as an arugment (the script cannot handle multiple input query proteins). The input format is Uniprot ID format and it can take both mouse and human uniprot IDs.  
