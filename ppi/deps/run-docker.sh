@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# to build this docker image:
+## to build this docker image:
 # docker build -t ppi-con  
 
 # to run interactively the image interactively:
