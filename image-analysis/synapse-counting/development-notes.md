@@ -1,5 +1,5 @@
 ### If your having troubles connecting the to external hard drive: do the following commands
-# first unmount & then mount it again
+# first unmount & then mount it again (only in WSL on windows)
 sudo umount /mnt/d
 sudo mount -t drvfs D: /mnt/d
 

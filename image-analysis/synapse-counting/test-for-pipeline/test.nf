@@ -3,9 +3,9 @@
 nextflow.enable.dsl = 2
 
 // specifying the input and output directories
-input_dir = "/mnt/d/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
-intermediate_dir = "/mnt/d/code/phd/image-analysis/synapse-counting/intermediate_data/"
-output_dir = "/mnt/d/code/phd/image-analysis/synapse-counting/output_data/"
+input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
+intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/intermediate_data/"
+output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/output_data/"
 
 process calculateThresholds {
     input:
