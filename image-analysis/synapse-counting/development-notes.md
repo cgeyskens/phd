@@ -38,20 +38,17 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - update the yml file
 
 ### Next-up
-1. Make pipeline with basic coloc workflow in nextflow
-last part: small adjustments & make the code clean:
-- for the plotting: try to add the mean to the datapoints with R (for this first install R in the conda env)
-- customizability: go over the pipeline and scripts try to customize it. Some things that should be specified from the nextflow script (eg the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images). Also customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline). Also instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers). Also customize the names from the file input that should be stored for analysis. 
-- Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...). 
-- make a class out of the analysis?
-- parrallel workflow via nextflow?s
-
-### Next-up for after HPC training:
-2. include suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
-3. Implement the pipeline onto the HPC using apptainer & conda
-4. Implement the pipeline with GPUs on HPC or with Dask on CPUs as scikitimage cannot run on GPUs
-5. benchmark the different coloc analysis workflows
-5. do the actual analysis
+- include and test suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
+- customizability: go over the pipeline and scripts try to customize it. 
+    - export the intermediate images with the detected synaptic puncta on it for inspection
+    - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
+    - Customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline)
+    - Instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers).
+    - Customize the names from the file input that should be stored for analysis
+- incorporate docker in the pipeline
+- try to run the different coloc analysis workflows
+- do the actual analysis
+- implement the pipeline with GPUs on HPC or with Dask on CPUs as scikitimage cannot run on GPUs
 
 
 ### working test-pipeline
@@ -62,6 +59,7 @@ test-1-threshold.py (threshold-&-different-analysis.ipynb)
 test-2-mean-thresholds.py (test-2-mean-thresholds.ipynb)
 test-3-overlap.py (test-3-overlap.ipynb)
 test-4-figure.py (test-4-figure.ipynb)
+
 
 
 
@@ -76,5 +74,14 @@ test-4-figure.py (test-4-figure.ipynb)
 ### For synaptic markers seperately (check out Sudhof lab papers)
 1. mean fluorescence intensity (MFI) or staining intensity
 2. puncta nr or puncta density (puncta nr per 100 um2)
-3. staining area or puncta size
+3. staining area
 4. punta size (Bosworth et al. 2024)
+
+
+
+
+### When finished:
+- Write a good README.md file for future use of the pipeline (from where you should run the pipeline, where the data is, ...). 
+- make a class or module out of the analysis? so that the scripts can the class in the module.
+- parrallel workflow via nextflow?
+
