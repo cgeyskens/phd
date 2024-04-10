@@ -3,7 +3,7 @@
 nextflow.enable.dsl = 2
 
 // specifying the input and output directories
-input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95/"
+input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95-A/"
 intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/intermediate_data/"
 output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/output_data/"
 
