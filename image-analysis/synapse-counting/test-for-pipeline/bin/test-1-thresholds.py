@@ -31,8 +31,6 @@ input_folder = args.input_dir
 output_folder = args.output_dir
 
 
-
-
 # defing a function for the overlap between two synaptic markers
 def colocalization_overlap(filename):
     

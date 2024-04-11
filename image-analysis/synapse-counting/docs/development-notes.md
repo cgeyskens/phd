@@ -39,6 +39,7 @@ last part: small adjustments & make the code clean: (29/08/2023)
 
 ### Next-up
 - include and test suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
+- modularize your code: make a /src file for modules and code and then a seperate folder for the scripts
 - customizability: go over the pipeline and scripts try to customize it. 
     - export the intermediate images with the detected synaptic puncta on it for inspection
     - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
