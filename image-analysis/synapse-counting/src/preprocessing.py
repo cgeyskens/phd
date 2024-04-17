@@ -24,6 +24,7 @@ def extract_and_split(path, presynapse_channel = 0, postsynapse_channel = 1):
 
     return presynapse, postsynapse
 
+
 class ImagePreprocessing:
     """
     Class for preprocessing images. 
