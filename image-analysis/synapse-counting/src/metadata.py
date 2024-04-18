@@ -55,7 +55,7 @@ def image_filename(path, indices):
 
     Args:
         filename (str): the filename from which the elements needed to extract.
-        indices (list): part of the filename that I would like to extract from.  
+        indices (list): part of the filename that I would like to extract from, seperated buy "_".  
     
     Returns:
         desired_filename (str): the desired filename with only the most important elements.
