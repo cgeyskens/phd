@@ -86,7 +86,7 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
     post_mean_puncta_size_um = post_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
     
     # make dictionary for all metrics
-    d = {"pre_puncta_nr": pre_puncta_nr,
+    return {"pre_puncta_nr": pre_puncta_nr,
          "pre_puncta_density_per_100_um2": pre_puncta_density_per_100_um2,
          "post_puncta_nr": post_puncta_nr,
          "post_puncta_density_per_100_um2": post_puncta_density_per_100_um2,
@@ -99,8 +99,6 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
          "post_mean_puncta_size_pix": post_mean_puncta_size_pix,
          "post_mean_puncta_size_um2": post_mean_puncta_size_um
         }
-
-    return d
 
 
 

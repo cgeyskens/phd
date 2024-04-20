@@ -17,7 +17,6 @@ args = parser.parse_args()
 input_folder = args.input_dir
 output_folder = args.output_dir
 
-
 # specifying the path to the csv file that needs to be imported (the overlap.csv)
 input_file_path = input_folder + "overlap.csv"
 df = pd.read_csv(input_file_path)
