@@ -26,27 +26,27 @@ print(name_segments)
 
 # the operation
 @dask.delayed
-def measure_image_manders(filename, name_segments):
+def measure_image_overlap(filename, name_segments):
     """
-    Measure colocalization of pre and postsynaptic markers using Manders. Decorated by dask delayed for parrellel processing. 
+    Measure colocalization of pre and postsynaptic markers using overlap. Decorated by dask delayed for parrellel processing. 
     """    
     if filename.endswith(".czi"):
         # getting the filepath
         file_path = os.path.join(input_folder, filename)
+        # extract metadata for pixel_size parameter in overlap_um2_coloc
+        pixel_size_um, _ , _ = metadata.extract_metadata(file_path)
         # preprocessing
         pre, post = preprocessing.extract_and_split(file_path)
-        p = preprocessing.ImagePreprocessing(include_rolling_ball=True, include_blur=True, include_clahe=True, include_tophat=True)
+        p = preprocessing.ImagePreprocessing(include_rolling_ball=True, include_blur=True, include_clahe=True, include_tophat=False)
         pre_1, post_1 = p.preprocess(pre, post)
         # getting the data
-        overlap_coeff, overlap_coeff_rot, presynapse_threshold, postsynapse_threshold = calc_synaptic_coloc.manders_coloc(pre_1, post_1)
+        overlap_um, overlap_um_rot = calc_synaptic_coloc.overlap_um2_coloc(pre_1, post_1, pixel_size_um)
         # getting the right filename
-        img_filename = metadata.image_filename(filename, name_segments) 
+        img_filename = metadata.image_filename(filename, name_segments)
         return {
             "img_filename": img_filename,
-            "overlap_coeff": overlap_coeff,
-            "overlap_coeff_rot": overlap_coeff_rot,
-            "presynapse_threshold": presynapse_threshold,
-            "postsynapse_threshold": postsynapse_threshold
+            "overlap_um": overlap_um,
+            "overlap_um_rot": overlap_um_rot,
         }
     else:
         return None
@@ -55,10 +55,10 @@ def measure_image_manders(filename, name_segments):
 file_list = os.listdir(input_folder)
 
 # compute the results using a dask delayed object
-delayed_results = [measure_image_manders(filename, name_segments) for filename in file_list]
+delayed_results = [measure_image_overlap(filename, name_segments) for filename in file_list]
 results = dask.compute(*delayed_results)
 
 # reading out the results into a csv
 df = pd.DataFrame(results)
-output_csv_path = os.path.join(output_folder, "manders_results.csv")
+output_csv_path = os.path.join(output_folder, "overlap_results.csv")
 df.to_csv(output_csv_path)

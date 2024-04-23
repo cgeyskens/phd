@@ -47,10 +47,8 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
                 pre_mean_puncta_size: presynapse mean puncta size in pixels
                 pre_mean_puncta_size_um2: presynapse mean puncta size in um2
                 post_mean_puncta_size: postsynapse mean puncta size in pixels
-                post_mean_puncta_size_um2: ostsynapse mean puncta size in um2
-    
+                post_mean_puncta_size_um2: postsynapse mean puncta size in um2
     """
-
 
     # thresholding
     if threshold_algorithm == "otsu":

@@ -26,14 +26,14 @@ print(name_segments)
 
 # the operation
 @dask.delayed
-def process_image_pearson(filename, name_segments):
+def measure_image_pearson(filename, name_segments):
     """
-    Processes synaptic colocalization of pre and postsynaptic markers. Decorated by dask delayed for parrellel processing. 
+    Measure colocalization of pre and postsynaptic markers using Pearsons. Decorated by dask delayed for parrellel processing. 
     """    
     if filename.endswith(".czi"):
         # getting the filepath
         file_path = os.path.join(input_folder, filename)
-        # preprocessing
+        # preprocessing 
         pre, post = preprocessing.extract_and_split(file_path)
         p = preprocessing.ImagePreprocessing(include_rolling_ball=True, include_blur=True, include_clahe=True, include_tophat=True)
         pre_1, post_1 = p.preprocess(pre, post)
@@ -55,7 +55,7 @@ def process_image_pearson(filename, name_segments):
 file_list = os.listdir(input_folder)
 
 # compute the results using a dask delayed object
-delayed_results = [process_image_pearson(filename, name_segments) for filename in file_list]
+delayed_results = [measure_image_pearson(filename, name_segments) for filename in file_list]
 results = dask.compute(*delayed_results)
 
 # reading out the results into a csv
