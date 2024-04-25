@@ -13,6 +13,9 @@ nextflow -log /var/log/nextflow.log run test.nf -profile conda
 rm -r work/
 rm nextflow.log.*
 
+### this command will let you also produce a flowchart
+nextflow run scripts/run-pipeline.nf -with-dag nextflow_flowchart.png
+
 ### presistent issues
 - For some reason nextflow can't find the scripts into the bin directory, temp fix with ${baseDir}/bin/
 
@@ -45,7 +48,7 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - modularize your code: make a /src file for modules and code and then a seperate folder for the scripts
     module for: metadata, preprocessing, calc_synaptic_coloc, calc_synaptic_metrics, visualization
 - make a full basic pipeline without parameter optimization so you can get the first results
-- benchmark the preprocessing
+- benchmark the preprocessing with parameter optimization
 - customizability: go over the pipeline and scripts try to customize it
     - export the intermediate images with the detected synaptic puncta on it for inspection
     - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 

@@ -61,4 +61,4 @@ results = dask.compute(*delayed_results)
 # reading out the results into a csv
 df = pd.DataFrame(results)
 output_csv_path = os.path.join(output_folder, "pearson_results.csv")
-df.to_csv(output_csv_path)
+df.to_csv(output_csv_path, encoding = "utf-8")
