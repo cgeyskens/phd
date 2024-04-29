@@ -40,13 +40,13 @@ def measure_image_overlap(filename, name_segments):
         p = preprocessing.ImagePreprocessing(include_rolling_ball=True, include_blur=True, include_clahe=True, include_tophat=False)
         pre_1, post_1 = p.preprocess(pre, post)
         # getting the data
-        overlap_um, overlap_um_rot = calc_synaptic_coloc.overlap_um2_coloc(pre_1, post_1, pixel_size_um)
+        overlap_um2, overlap_um2_rot = calc_synaptic_coloc.overlap_um2_coloc(pre_1, post_1, pixel_size_um)
         # getting the right filename
         img_filename = metadata.image_filename(filename, name_segments)
         return {
             "img_filename": img_filename,
-            "overlap_um": overlap_um,
-            "overlap_um_rot": overlap_um_rot,
+            "overlap_um2": overlap_um2,
+            "overlap_um2_rot": overlap_um2_rot,
         }
     else:
         return None

@@ -100,7 +100,7 @@ def overlap_um2_coloc(presynapse_image, postsynapse_image, pixel_size_in_um, thr
     overlap_pix_rot = np.sum(overlap_rot)
 
     # overlap in um
-    overlap_um = overlap_pix * pixel_size_in_um * pixel_size_in_um
-    overlap_um_rot = overlap_pix_rot * pixel_size_in_um * pixel_size_in_um
+    overlap_um2 = overlap_pix * pixel_size_in_um * pixel_size_in_um
+    overlap_um2_rot = overlap_pix_rot * pixel_size_in_um * pixel_size_in_um
 
-    return overlap_um, overlap_um_rot
+    return overlap_um2, overlap_um2_rot

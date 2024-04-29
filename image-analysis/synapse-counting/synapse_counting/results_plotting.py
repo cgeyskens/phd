@@ -1,5 +1,6 @@
 import pandas as pd
 import seaborn as sns
+import matplotlib as plt
 
 def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition"):
         """
@@ -20,15 +21,26 @@ def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition")
         df_melted["hippocampal layer"] = df_melted[id_vars[0]].apply(lambda x: " ".join(x.split("_")[-2:]))
         return df_melted
 
-def plot_data(df, x, y, extra_y, title):  
+def plot_data(df, x, y, extra_y_upper, title, extra_y_lower = 0, ax = None):
+    if ax is None:
+        fig, ax = plt.subplots()
     p = sns.swarmplot(x=x, y=y, hue = "condition",
                     data = df,
                     # jitter = False,
                     dodge = True,
                     marker = "o",
-                    alpha = 0.5)
+                    alpha = 0.5,
+                    ax = ax)
     max_y = df[y].max()
-    y_upper_limit = max_y + extra_y
+    min_y = df[y].min()
+
+    y_upper_limit = max_y + extra_y_upper
+    
+    if min_y < 0:
+        y_lower_limit = min_y + extra_y_lower
+    else:
+        y_lower_limit = 0
+    
     p.set_title(title)
-    p.set_ylim(0, y_upper_limit)
+    p.set_ylim(y_lower_limit, y_upper_limit)
     return p
