@@ -39,6 +39,7 @@ for filename in all_files[1:]: # loop through the csv and merge with the base_df
 merged_df = base_df.drop(["Unnamed: 0"], axis = 1)
 merged_df = merged_df.reset_index() # this is the final df with all the data
 
+### ---------------------------- Plotting the internal rotated controls vs actual --------------------------------- ###
 # formats the data in the right format for the plots
 df_melted_overlap_um2 = results_plotting.data_formatting(df = merged_df, 
                                                          id_vars = ["img_filename"], 
@@ -62,24 +63,63 @@ plot_overlap = results_plotting.plot_data(df = df_melted_overlap_um2,
                                           y = "overlap in um2", 
                                           extra_y_upper = 100, 
                                           title = 'Overlap by hippocampal Layer and condition', 
+                                          hue = "condition",
                                           ax=axes[0])
 plot_pearson = results_plotting.plot_data(df = df_melted_pearson, 
                                           x = "hippocampal layer", 
                                           y = "pearsons correlation", 
                                           extra_y_upper = 0.1, 
                                           title = 'Pearsons correlation by hippocampal Layer and condition', 
+                                          hue = "condition",
                                           extra_y_lower = -0.05, 
                                           ax=axes[1])
 plot_manders = results_plotting.plot_data(df = df_melted_manders, 
                                           x = "hippocampal layer", 
                                           y = "Manders overlap coefficient", 
                                           extra_y_upper = 0.1, 
-                                          title = 'Manders overlap coefficient by hippocampal Layer and condition', 
+                                          title = 'Manders overlap coefficient by hippocampal Layer and condition',
+                                          hue = "condition", 
                                           ax=axes[2])
 
 # saving the combined plots into one file
-combined_plots_figure = plt.gcf()  
+internal_control = plt.gcf()  
 plt.tight_layout()  
-output_plot_path = os.path.join(output_folder, "combined_plots.png")
-combined_plots_figure.savefig(output_plot_path, dpi = 300)  
+output_internal_control_plot_path = os.path.join(output_folder, "internal_control.png")
+internal_control.savefig(output_internal_control_plot_path, dpi = 300)  
+
+### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA --------------------------------- ###
+# formatting the data
+gRNA_data = merged_df
+gRNA_data['gRNA'] = gRNA_data['img_filename'].apply(lambda x: x.split('_')[-3:-2]).apply(lambda x: '_'.join(x))
+gRNA_data['hippocampal_layer'] = gRNA_data['img_filename'].apply(lambda x: x.split('_')[-2:]).apply(lambda x: ' '.join(x))
+
+# plotting the results
+# Create the figure object
+fig, axes = plt.subplots(nrows=6, ncols=2, figsize=(15, 30))
+
+# colocalization metrics
+plot_overlap = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_um2", extra_y_upper=50, title='Overlap by hippocampal Layer and condition', ax=axes[0,0])
+plot_pearson = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pearson_cor", extra_y_upper=0.1, title='Pearsons correlation by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[0,1])
+plot_manders = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_coeff", extra_y_upper=0.1, title='Manders overlap coefficient by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[1,0])
+
+# single synapse marker metrics
+plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="presynapse_image_mfi", extra_y_upper=200, title='Presynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,0])
+plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="postsynapse_image_mfi", extra_y_upper=200, title='Postsynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,1])
+plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_puncta_density_per_100_um2", extra_y_upper=100, title='Presynaptic puncta density MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,0])
+plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
+plot_pre_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_staining_area_um2", extra_y_upper=50, title='Presynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,0])
+plot_post_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_staining_area_um2", extra_y_upper=50, title='Postsynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,1])
+plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
+plot_post_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_mean_puncta_size_um2", extra_y_upper=0.05, title='Postsynaptic puncta area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,1])
+
+# Save the figure explicitly
+combined_plots_figure = plt.gcf()  # Get the current figure object
+plt.tight_layout()  # Adjust layout to prevent overlap
+output_combined_plot_path = os.path.join(output_folder, "combined_plots.png")
+combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
+plt.show()
+
+# save the merged_df 
+output_csv_path = os.path.join(output_folder, "results.csv")
+merged_df.to_csv(output_csv_path)
 

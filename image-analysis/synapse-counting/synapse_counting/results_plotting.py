@@ -21,10 +21,10 @@ def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition")
         df_melted["hippocampal layer"] = df_melted[id_vars[0]].apply(lambda x: " ".join(x.split("_")[-2:]))
         return df_melted
 
-def plot_data(df, x, y, extra_y_upper, title, extra_y_lower = 0, ax = None):
+def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, ax = None):
     if ax is None:
         fig, ax = plt.subplots()
-    p = sns.swarmplot(x=x, y=y, hue = "condition",
+    p = sns.swarmplot(x=x, y=y, hue = hue,
                     data = df,
                     # jitter = False,
                     dodge = True,
