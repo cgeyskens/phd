@@ -109,15 +109,14 @@ plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer
 plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
 plot_pre_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_staining_area_um2", extra_y_upper=50, title='Presynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,0])
 plot_post_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_staining_area_um2", extra_y_upper=50, title='Postsynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,1])
-plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
-plot_post_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_mean_puncta_size_um2", extra_y_upper=0.05, title='Postsynaptic puncta area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,1])
+plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
+plot_post_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_mean_puncta_size_um2", extra_y_upper=0.05, title='Postsynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,1])
 
 # Save the figure explicitly
 combined_plots_figure = plt.gcf()  # Get the current figure object
 plt.tight_layout()  # Adjust layout to prevent overlap
 output_combined_plot_path = os.path.join(output_folder, "combined_plots.png")
 combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
-plt.show()
 
 # save the merged_df 
 output_csv_path = os.path.join(output_folder, "results.csv")

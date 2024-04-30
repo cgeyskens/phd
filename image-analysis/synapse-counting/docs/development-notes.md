@@ -43,12 +43,18 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - include and test suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
 - try to run the different coloc analysis workflows parralell
 - implement the pipeline with GPUs on HPC or with Dask on CPUs as scikitimage cannot run on GPUs
-
-### Next-up
 - modularize your code: make a /src file for modules and code and then a seperate folder for the scripts
     module for: metadata, preprocessing, calc_synaptic_coloc, calc_synaptic_metrics, visualization
 - make a full basic pipeline without parameter optimization so you can get the first results
-- benchmark the preprocessing with parameter optimization
+- benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
+
+### Next-up
+- adjust exsiting standard pipeline:
+    - dynamic with "Lac-Z-gRNA" vs "candidate-gRNA"
+    - also plot lines between data points that originates form the same section
+    - add also statistics 
+- Add local maxima detection with best parameter to metrics.
+- make a full pipeline WITH parameter optimization, this needs to be run on HPC.
 - customizability: go over the pipeline and scripts try to customize it
     - export the intermediate images with the detected synaptic puncta on it for inspection
     - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
@@ -58,7 +64,6 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - incorporate docker in the pipeline
 - do the actual analysis
 
-
 ### working test-pipeline
 Working nextflow script:
 test.nf
@@ -67,9 +72,6 @@ test-1-threshold.py (threshold-&-different-analysis.ipynb)
 test-2-mean-thresholds.py (test-2-mean-thresholds.ipynb)
 test-3-overlap.py (test-3-overlap.ipynb)
 test-4-figure.py (test-4-figure.ipynb)
-
-
-
 
 ### Benchmarking coloc analyses
 1. Original: local maxima detection + searching best parameters space with actual vs rotated + distance based colocalization (based on pixel intensity) - need high computing power
