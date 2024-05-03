@@ -53,8 +53,8 @@ last part: small adjustments & make the code clean: (29/08/2023)
     - dynamic with "Lac-Z-gRNA" vs "candidate-gRNA"
     - also plot lines between data points that originates form the same section
     - add also statistics 
-- Add local maxima detection with best parameter to metrics.
-- make a full pipeline WITH parameter optimization, this needs to be run on HPC.
+- Add local maxima detection with best parameter to metrics
+- make a full pipeline WITH parameter optimization, this needs to be run on HPC
 - customizability: go over the pipeline and scripts try to customize it
     - export the intermediate images with the detected synaptic puncta on it for inspection
     - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
@@ -86,8 +86,6 @@ test-4-figure.py (test-4-figure.ipynb)
 2. puncta nr or puncta density (puncta nr per 100 um2)
 3. staining area
 4. punta size (Bosworth et al. 2024)
-
-
 
 
 ### When finished:

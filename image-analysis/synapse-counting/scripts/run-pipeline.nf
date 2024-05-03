@@ -3,10 +3,10 @@
 nextflow.enable.dsl = 2
 
 // specifying the input and output directories
-input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images-B"
+input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/images-VCAM1-LacZ"
 intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/intermediate_data"
 output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/output_data"
-name_segments = "0 1 2 3 4 5 8 12 13"
+name_segments = "0 1 2 3 6 8 9"
 
 process RunPearsonsAnalysis {
     input:

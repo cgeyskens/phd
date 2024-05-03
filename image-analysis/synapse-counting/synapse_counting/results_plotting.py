@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib as plt
+import scipy
 
 def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition"):
         """
@@ -43,4 +44,14 @@ def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, a
     
     p.set_title(title)
     p.set_ylim(y_lower_limit, y_upper_limit)
+
     return p
+
+
+def check_statistics(df, hippocampal_layer, metric, candidate_gRNA, control_gRNA = "LacZ-gRNA"):
+    filtered_df_hip_layer = df[df["hippocampal_layer"].str.contains(hippocampal_layer)]
+    ReplicateAverages = filtered_df_hip_layer.groupby(["gRNA","Brain"], as_index=False).agg({metric:"mean"})
+    ReplicateAveragesPivot = ReplicateAverages.pivot_table(columns="gRNA", values=metric, index="Brain")
+    statistic, pvalue = scipy.stats.ttest_rel(ReplicateAveragesPivot[control_gRNA], ReplicateAveragesPivot[candidate_gRNA])
+    
+    return filtered_df_hip_layer, ReplicateAveragesPivot, statistic, pvalue

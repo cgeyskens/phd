@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import glob
@@ -105,8 +106,8 @@ plot_manders = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y
 # single synapse marker metrics
 plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="presynapse_image_mfi", extra_y_upper=200, title='Presynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,0])
 plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="postsynapse_image_mfi", extra_y_upper=200, title='Postsynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,1])
-plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_puncta_density_per_100_um2", extra_y_upper=100, title='Presynaptic puncta density MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,0])
-plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
+plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_puncta_density_per_100_um2", extra_y_upper=100, title='Presynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,0])
+plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
 plot_pre_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_staining_area_um2", extra_y_upper=50, title='Presynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,0])
 plot_post_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_staining_area_um2", extra_y_upper=50, title='Postsynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,1])
 plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
@@ -121,4 +122,32 @@ combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure obje
 # save the merged_df 
 output_csv_path = os.path.join(output_folder, "results.csv")
 merged_df.to_csv(output_csv_path)
+
+### -------------------------------------------- calculate statistics ----------------------------------------------- ###
+merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2] # create new column with brain replicates
+
+hippocampal_layers = ["CA1 SLM", "CA1 SR", "CA1 SO", "CA3 SO", "CA3 SL", "CA3 SR", "DG ML", "DG Hilus"]
+metrics = ["overlap_um2", "pearson_cor", "overlap_coeff", "presynapse_image_mfi", "postsynapse_image_mfi", "pre_puncta_density_per_100_um2", "post_puncta_density_per_100_um2", "pre_staining_area_um2", "post_staining_area_um2", "pre_mean_puncta_size_um2", "post_mean_puncta_size_um2"]
+
+# calculate the statistics with a t-test
+statistics_results = []
+for hippocampal_layer in hippocampal_layers:
+    for metric in metrics:
+        _ , table, _ , p_value = results_plotting.check_statistics(merged_df, hippocampal_layer = hippocampal_layer, metric = metric, candidate_gRNA = "VCAM1-gRNA")
+        statistics_results.append({"hippocampal_layer": hippocampal_layer, "metric": metric, "p_value": p_value})
+
+# add another column if the results are significant or not
+df_statistics_results = pd.DataFrame(statistics_results) 
+df_statistics_results['statistical significant?'] = np.where(df_statistics_results["p_value"] <= 0.05, 'Yes', 'No')
+
+# create a new dataframe with only the significant results
+p_value_threshold = 0.05  # significant results
+df_significant_statistics_results = df_statistics_results[df_statistics_results["p_value"] <= p_value_threshold]
+
+# save the statistics 
+output_all_statistics_path = os.path.join(output_folder, "all_statistics.csv")
+df_statistics_results.to_csv(output_all_statistics_path)
+
+output_significant_statistics_path = os.path.join(output_folder, "significant_statistics.csv")
+df_significant_statistics_results.to_csv(output_significant_statistics_path)
 
