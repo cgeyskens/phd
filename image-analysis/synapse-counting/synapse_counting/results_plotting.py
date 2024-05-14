@@ -4,34 +4,51 @@ import matplotlib as plt
 import scipy
 
 def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition"):
-        """
-        Wrapper function for formating the data for plotting into seaborn swarmplot.
+    """
+    Wrapper function for formating the data for plotting into seaborn swarmplot.
 
-        Args:
-           df: the dataframe from which to plot
-           id_vars: column with the image filename containing text for plotting on the x-axis (eg CA1 SR, CA1 SLM, ...)
-           value_vars: columns to unpivot (see documentation pd.melt)
-           value_name: the name on the y-axis
-           var_name: the condition of rotated vs actual in synaptic marker colocalization
+    Args:
+        df: the dataframe from which to plot
+        id_vars: column with the image filename containing text for plotting on the x-axis (eg CA1 SR, CA1 SLM, ...)
+        value_vars: columns to unpivot (see documentation pd.melt)
+        value_name: the name on the y-axis
+        var_name: the condition of rotated vs actual in synaptic marker colocalization
 
-        Returns:
-           df_melted: a dataframe pivoted and ready as input into seaborn swarmplot.
-        """
-        df_melted = pd.melt(df, id_vars = id_vars, value_vars = value_vars, var_name = var_name, value_name = value_name)
-        df_melted["condition"] = df_melted[var_name].apply(lambda x: "rotated" if value_vars[1] in x else "actual")
-        df_melted["hippocampal layer"] = df_melted[id_vars[0]].apply(lambda x: " ".join(x.split("_")[-2:]))
-        return df_melted
+    Returns:
+        df_melted: a dataframe pivoted and ready as input into seaborn swarmplot.
+    """
+    df_melted = pd.melt(df, id_vars = id_vars, value_vars = value_vars, var_name = var_name, value_name = value_name)
+    df_melted["condition"] = df_melted[var_name].apply(lambda x: "rotated" if value_vars[1] in x else "actual")
+    df_melted["hippocampal layer"] = df_melted[id_vars[0]].apply(lambda x: " ".join(x.split("_")[-2:]))
+    return df_melted
+
 
 def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, ax = None):
+    """
+    Wrapper function for custom swarmplot from seaborn.
+
+    Args:
+        df: the dataframe outputted from the data_formatting function.
+        x: data for x-axis
+        y: the metric analyzed
+        extra_y_upper: how much extra space above the highest y value in all conditions
+        title: title of the plot
+        hue: in this case always gRNA
+        extra_y_lower: how much extra space below the lowest y value in all conditions
+    
+    Returns:
+        p: a custom swarmplot.
+    """
     if ax is None:
         fig, ax = plt.subplots()
-    p = sns.swarmplot(x=x, y=y, hue = hue,
-                    data = df,
-                    # jitter = False,
-                    dodge = True,
-                    marker = "o",
-                    alpha = 0.5,
-                    ax = ax)
+    p = sns.swarmplot(x = x, 
+                      y = y, 
+                      hue = hue,
+                      data = df,
+                      dodge = True,
+                      marker = "o",
+                      alpha = 0.5,
+                      ax = ax)
     max_y = df[y].max()
     min_y = df[y].min()
 
@@ -49,6 +66,22 @@ def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, a
 
 
 def check_statistics(df, hippocampal_layer, metric, candidate_gRNA, control_gRNA = "LacZ-gRNA"):
+    """
+    This function checks the different between hemispheres per brain. Uses a paired t-test to compare the means.
+
+    Args:
+        df: the dataframe with all the data
+        hippocampal_layer: which hippocampal layer to check the statistics from
+        metric: whichc metric to check the statistics from
+        candidate_gRNA: which is the candidate_gRNA from which you want to check the statistics
+        control_gRNA: is standard LacZ-gRNA
+    
+    Returns:
+        filtered_df_hip_layer: the filtered dataframe with the hippocampal layer
+        ReplicateAveragesPivot: dataframe with the means calculated from each brain
+        statistic: the T statistic of the paired t-test
+        pvalue: the accompanying p-value of the paired t-test
+    """
     filtered_df_hip_layer = df[df["hippocampal_layer"].str.contains(hippocampal_layer)]
     ReplicateAverages = filtered_df_hip_layer.groupby(["gRNA","Brain"], as_index=False).agg({metric:"mean"})
     ReplicateAveragesPivot = ReplicateAverages.pivot_table(columns="gRNA", values=metric, index="Brain")

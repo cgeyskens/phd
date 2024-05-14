@@ -12,10 +12,10 @@ sys.path.append(project_root)
 from synapse_counting import metadata, preprocessing, calc_synaptic_coloc
 
 # adding parser arguments
-parser = argparse.ArgumentParser(description="process input files")
-parser.add_argument("input_dir", type=str, help="directory to input files")
-parser.add_argument("output_dir", type=str, help="directory to output folder")
-parser.add_argument('name_segments', type=int, nargs='+', help='Comma separated list of name segments to use seperated by "_"')
+parser = argparse.ArgumentParser(description = "process input files")
+parser.add_argument("input_dir", type = str, help = "directory to input files")
+parser.add_argument("output_dir", type = str, help = "directory to output folder")
+parser.add_argument('name_segments', type = int, nargs = '+', help = 'Comma separated list of name segments to use seperated by "_"')
 args = parser.parse_args()
 
 # assigning the parser arguments
@@ -37,7 +37,7 @@ def measure_image_overlap(filename, name_segments):
         pixel_size_um, _ , _ = metadata.extract_metadata(file_path)
         # preprocessing
         pre, post = preprocessing.extract_and_split(file_path)
-        p = preprocessing.ImagePreprocessing(include_rolling_ball=True, include_blur=True, include_clahe=True, include_tophat=False)
+        p = preprocessing.ImagePreprocessing(include_rolling_ball = True, include_blur = True, include_clahe = True, include_tophat = False)
         pre_1, post_1 = p.preprocess(pre, post)
         # getting the data
         overlap_um2, overlap_um2_rot = calc_synaptic_coloc.overlap_um2_coloc(pre_1, post_1, pixel_size_um)

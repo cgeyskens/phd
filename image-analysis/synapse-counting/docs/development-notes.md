@@ -40,21 +40,24 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - update the ppt file for meeting with Joris
 - update the yml file
 
+(03/05/2024)
 - include and test suggestions of Benjamin into the original ipynb and py script (CLAHE, tophat filter)
 - try to run the different coloc analysis workflows parralell
 - implement the pipeline with GPUs on HPC or with Dask on CPUs as scikitimage cannot run on GPUs
 - modularize your code: make a /src file for modules and code and then a seperate folder for the scripts
     module for: metadata, preprocessing, calc_synaptic_coloc, calc_synaptic_metrics, visualization
 - make a full basic pipeline without parameter optimization so you can get the first results
-- benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
 
 ### Next-up
 - adjust exsiting standard pipeline:
-    - dynamic with "Lac-Z-gRNA" vs "candidate-gRNA"
-    - also plot lines between data points that originates form the same section
-    - add also statistics 
+    - dynamic with "LacZ-gRNA" vs "candidate-gRNA"
+    - plot lines between data points that originates form the same section
+    - plot also statistics
+    - create seperate directories when running the pipeline
+    - customize which analysis to do (in case of C1q or GLT1) 
 - Add local maxima detection with best parameter to metrics
 - make a full pipeline WITH parameter optimization, this needs to be run on HPC
+    - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
 - customizability: go over the pipeline and scripts try to customize it
     - export the intermediate images with the detected synaptic puncta on it for inspection
     - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 

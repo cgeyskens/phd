@@ -86,22 +86,3 @@ workflow {
     puncta_ch = PunctaAnalysis(input_ch)
     ResultsPlots(pearson_ch, manders_ch, overlap_ch, puncta_ch)
 }
-
-
-
-
-    // RunPearsonsAnalysis(
-    //     input_ch = input_dir
-    //     )
-    // RunMandersAnalysis(
-    //     input_ch = input_dir
-    //     )
-    // OverlapAnalysis(
-    //     input_ch = input_dir
-    // )
-    // PunctaAnalysis(
-    //     input_ch = input_dir
-    // )
-    // ResultsPlots(
-    //     input_ch = intermediate_dir
-    // )
