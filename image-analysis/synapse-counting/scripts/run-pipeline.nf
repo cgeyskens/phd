@@ -3,10 +3,21 @@
 nextflow.enable.dsl = 2
 
 // specifying the input and output directories
-input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/images-VCAM1-LacZ"
-intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/intermediate_data"
-output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/output_data"
+input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/images_VCAM1-LacZ_VGLUT1-PSD95"
+intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_intermediate_data"
+output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data"
 name_segments = "0 1 2 3 6 8 9"
+
+process CreateDirectories {
+    script:
+    """
+    mkdir -p ${intermediate_dir}
+    mkdir -p ${output_dir}
+    """ 
+
+    output:
+    stdout
+}
 
 process RunPearsonsAnalysis {
     input:
@@ -80,6 +91,7 @@ process ResultsPlots {
 
 workflow {
     input_ch = input_dir
+    CreateDirectories()
     pearson_ch = RunPearsonsAnalysis(input_ch)
     manders_ch = RunMandersAnalysis(input_ch)
     overlap_ch = OverlapAnalysis(input_ch)
