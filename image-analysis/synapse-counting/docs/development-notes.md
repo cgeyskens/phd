@@ -47,23 +47,24 @@ last part: small adjustments & make the code clean: (29/08/2023)
 - modularize your code: make a /src file for modules and code and then a seperate folder for the scripts
     module for: metadata, preprocessing, calc_synaptic_coloc, calc_synaptic_metrics, visualization
 - make a full basic pipeline without parameter optimization so you can get the first results
+(16/05/2024)
+Adjust existing pipeline
+- create seperate directories when running the pipelin    
+- Instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers)
+- Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
+- Customize the names from the file input that should be stored for analysis
 
 ### Next-up
-- adjust exsiting standard pipeline:
+- adjust exsiting standard pipeline/customizability:
     - dynamic with "LacZ-gRNA" vs "candidate-gRNA"
-    - plot lines between data points that originates form the same section
+    - plot lines between data points that originates form the same brain
     - plot also statistics
-    - create seperate directories when running the pipeline
-    - customize which analysis to do (in case of C1q or GLT1) 
+    - customize which analysis to do (in case of SPO or GLT1)
+    - export the intermediate images with the detected synaptic puncta on it for inspection
+    - Customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline)
 - Add local maxima detection with best parameter to metrics
 - make a full pipeline WITH parameter optimization, this needs to be run on HPC
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
-- customizability: go over the pipeline and scripts try to customize it
-    - export the intermediate images with the detected synaptic puncta on it for inspection
-    - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
-    - Customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline)
-    - Instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers).
-    - Customize the names from the file input that should be stored for analysis
 - incorporate docker in the pipeline
 - do the actual analysis
 
