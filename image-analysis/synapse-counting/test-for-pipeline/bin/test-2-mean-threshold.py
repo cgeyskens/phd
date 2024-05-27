@@ -27,7 +27,7 @@ df = pd.read_csv(input_file_path)
 df_threshold_means = df.groupby("image file name").agg({"vglut1_threshold": "mean", "psd95_threshold": "mean"})
 
 # writing to a csv file
-output_filename = "mean_threshold_values.csv"
+output_filename = "/mean_threshold_values.csv"
 output_path = output_folder + output_filename
 df_threshold_means.to_csv(output_path)        
 

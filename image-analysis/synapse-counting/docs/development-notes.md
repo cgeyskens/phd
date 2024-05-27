@@ -56,17 +56,18 @@ Adjust existing pipeline
 
 ### Next-up
 - adjust exsiting standard pipeline/customizability:
-    - dynamic with "LacZ-gRNA" vs "candidate-gRNA"
-    - plot lines between data points that originates form the same brain
-    - plot also statistics
-    - customize which analysis to do (in case of SPO or GLT1)
+    - dynamic with "LacZ-gRNA" vs "candidate-gRNA", sometimes have VCAM1-gRNA, be carefull.
+    - plot lines between data points that originates form the same brain.
+    - plot also statistics above plots.
+    - customize which analysis to do: if only one image_channel (in case of SPO or GLT1), perform if statements in the nextflow scipt.
+    - add extra parameter in nextflow scripts, if whether in which channel is pre or post synapse. This is coded in python.
     - export the intermediate images with the detected synaptic puncta on it for inspection
-    - Customize the nextflow inputs with the params. variable (also go over the nextflow carpentries again that could be useful for this pipeline)
-- Add local maxima detection with best parameter to metrics
-- make a full pipeline WITH parameter optimization, this needs to be run on HPC
+    - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
+- Add local maxima detection with best parameter to metrics.
+- make a full pipeline WITH parameter optimization, this needs to be run on HPC.
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
-- incorporate docker in the pipeline
-- do the actual analysis
+- after pipeline is run, remove all the work files.
+- do the actual analysis.
 
 ### working test-pipeline
 Working nextflow script:

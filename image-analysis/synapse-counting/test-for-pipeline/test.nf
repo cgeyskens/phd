@@ -3,9 +3,20 @@
 nextflow.enable.dsl = 2
 
 // specifying the input and output directories
-input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images-VLGUT1-PSD95-A/"
-intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/intermediate_data/"
-output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/output_data/"
+input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images/test-images-VLGUT1-PSD95-A"
+intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images/test-images-VLGUT1-PSD95-A_intermediate_data"
+output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/test-images/test-images-VLGUT1-PSD95-A/output_data"
+
+process CreateDirectories {
+    script:
+    """
+    mkdir -p ${intermediate_dir}
+    mkdir -p ${output_dir}
+    """ 
+
+    output:
+    stdout
+}
 
 process calculateThresholds {
     input:
@@ -59,6 +70,7 @@ process makeFigure {
 
 workflow {
     input_ch = input_dir
+    CreateDirectories()
     threshold_ch = calculateThresholds(input_ch)
     meanThreshold_ch = calculateMeanThresholds(threshold_ch)
     overlap_ch = calculateOverlap(meanThreshold_ch)

@@ -2,17 +2,12 @@
 
 nextflow.enable.dsl = 2
 
-// specifying the input and output directories
-input_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_images"
-intermediate_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_intermediate_data"
-output_dir = "/Volumes/KINGSTON/code/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data"
-name_segments = "0 1 2 3 6 8 9"
-
+// the pipeline
 process CreateDirectories {
     script:
     """
-    mkdir -p ${intermediate_dir}
-    mkdir -p ${output_dir}
+    mkdir -p ${params.intermediate_dir}
+    mkdir -p ${params.output_dir}
     """ 
 
     output:
@@ -21,11 +16,11 @@ process CreateDirectories {
 
 process RunPearsonsAnalysis {
     input:
-    path x
+    path input
 
     script:
     """
-    python ${baseDir}/pearsons.py ${input_dir} ${intermediate_dir} ${name_segments}
+    python ${baseDir}/pearsons.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
     """ 
 
     output:
@@ -34,11 +29,11 @@ process RunPearsonsAnalysis {
 
 process RunMandersAnalysis {
     input:
-    path x
+    path input
 
     script:
     """
-    python ${baseDir}/manders.py ${input_dir} ${intermediate_dir} ${name_segments}
+    python ${baseDir}/manders.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
     """ 
 
     output:
@@ -47,11 +42,11 @@ process RunMandersAnalysis {
 
 process OverlapAnalysis {
     input:
-    path x
+    path input
 
     script:
     """
-    python ${baseDir}/overlap.py ${input_dir} ${intermediate_dir} ${name_segments}
+    python ${baseDir}/overlap.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
     """ 
 
     output:
@@ -60,11 +55,11 @@ process OverlapAnalysis {
 
 process PunctaAnalysis {
     input:
-    path x
+    path input
 
     script:
     """
-    python ${baseDir}/puncta.py ${input_dir} ${intermediate_dir} ${name_segments}
+    python ${baseDir}/puncta.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
     """
 
     output:
@@ -81,7 +76,7 @@ process ResultsPlots {
 
     script:
     """
-    python ${baseDir}/results.py ${intermediate_dir} ${output_dir}
+    python ${baseDir}/results.py ${params.intermediate_dir} ${params.output_dir}
     """
 
     output:
@@ -90,7 +85,7 @@ process ResultsPlots {
 
 
 workflow {
-    input_ch = input_dir
+    input_ch = Channel.fromPath(params.input_dir)
     CreateDirectories()
     pearson_ch = RunPearsonsAnalysis(input_ch)
     manders_ch = RunMandersAnalysis(input_ch)

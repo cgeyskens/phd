@@ -133,7 +133,7 @@ metrics = ["overlap_um2", "pearson_cor", "overlap_coeff", "presynapse_image_mfi"
 statistics_results = []
 for hippocampal_layer in hippocampal_layers:
     for metric in metrics:
-        _ , table, _ , p_value = results_plotting.check_statistics(merged_df, hippocampal_layer = hippocampal_layer, metric = metric, candidate_gRNA = "VCAM1-gRNA")
+        _ , table, _ , p_value = results_plotting.check_statistics(merged_df, hippocampal_layer = hippocampal_layer, metric = metric, candidate_gRNA = "VCAM1-gRNA", control_gRNA = "LacZ-gRNA")
         statistics_results.append({"hippocampal_layer": hippocampal_layer, "metric": metric, "p_value": p_value})
 
 # add another column if the results are significant or not
