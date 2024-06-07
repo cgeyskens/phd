@@ -13,16 +13,19 @@ from synapse_counting import metadata, preprocessing, calc_synaptic_coloc
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description = "process input files")
-parser.add_argument("input_dir", type = str, help = "directory to input files")
-parser.add_argument("output_dir", type = str, help = "directory to output folder")
-parser.add_argument('name_segments', type = int, nargs = '+', help = 'Comma separated list of name segments to use seperated by "_"')
+parser.add_argument("--input_dir", type = str, help = "directory to input files")
+parser.add_argument("--output_dir", type = str, help = "directory to output folder")
+parser.add_argument('--name_segments', type = int, nargs = '+', help = 'Comma separated list of name segments to use seperated by "_"')
+parser.add_argument("--presynapse_channel", type=int, help="number of presynapse channel")
+parser.add_argument("--postsynapse_channel", type=int, help="number of postsynapse channel")
 args = parser.parse_args()
 
 # assigning the parser arguments
 input_folder = args.input_dir
 output_folder = args.output_dir
 name_segments = args.name_segments
-print(name_segments)
+presynapse_channel = args.presynapse_channel
+postsynapse_channel = args.postsynapse_channel
 
 # the operation
 @dask.delayed
@@ -36,7 +39,7 @@ def measure_image_overlap(filename, name_segments):
         # extract metadata for pixel_size parameter in overlap_um2_coloc
         pixel_size_um, _ , _ = metadata.extract_metadata(file_path)
         # preprocessing
-        pre, post = preprocessing.extract_and_split(file_path)
+        pre, post = preprocessing.extract_and_split(file_path, presynapse_channel = presynapse_channel, postsynapse_channel = postsynapse_channel)
         p = preprocessing.ImagePreprocessing(include_rolling_ball = True, include_blur = True, include_clahe = True, include_tophat = False)
         pre_1, post_1 = p.preprocess(pre, post)
         # getting the data

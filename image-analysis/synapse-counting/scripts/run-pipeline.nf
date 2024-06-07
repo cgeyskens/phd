@@ -20,7 +20,12 @@ process RunPearsonsAnalysis {
 
     script:
     """
-    python ${baseDir}/pearsons.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
+    python ${baseDir}/pearsons.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --name_segments ${params.name_segments} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel}
     """ 
 
     output:
@@ -33,7 +38,12 @@ process RunMandersAnalysis {
 
     script:
     """
-    python ${baseDir}/manders.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
+    python ${baseDir}/manders.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --name_segments ${params.name_segments} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel}
     """ 
 
     output:
@@ -46,7 +56,12 @@ process OverlapAnalysis {
 
     script:
     """
-    python ${baseDir}/overlap.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
+    python ${baseDir}/overlap.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --name_segments ${params.name_segments} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel}
     """ 
 
     output:
@@ -59,7 +74,12 @@ process PunctaAnalysis {
 
     script:
     """
-    python ${baseDir}/puncta.py ${params.input_dir} ${params.intermediate_dir} ${params.name_segments}
+    python ${baseDir}/puncta.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --name_segments ${params.name_segments} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel}
     """
 
     output:
@@ -76,7 +96,10 @@ process ResultsPlots {
 
     script:
     """
-    python ${baseDir}/results.py ${params.intermediate_dir} ${params.output_dir}
+    python ${baseDir}/results.py \
+    --input_dir ${params.intermediate_dir} \
+    --output_dir ${params.output_dir} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
     """
 
     output:

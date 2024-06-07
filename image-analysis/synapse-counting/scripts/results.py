@@ -20,8 +20,9 @@ from synapse_counting import results_plotting
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description="process input files")
-parser.add_argument("input_dir", type=str, help="directory to input files")
-parser.add_argument("output_dir", type=str, help="directory to output folder")
+parser.add_argument("--input_dir", type=str, help="directory to input files")
+parser.add_argument("--output_dir", type=str, help="directory to output folder")
+parser.add_argument("--protein_and_synaptic_marker", type=str, help="protein that you are interested in")
 args = parser.parse_args()
 
 # suppress future warnings
@@ -30,6 +31,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # assigning the parser arguments
 input_folder = args.input_dir
 output_folder = args.output_dir
+protein_and_synaptic_marker = args.protein_and_synaptic_marker
 
 
 ### ---------------------------------------------- data wrangling ------------------------------------------------- ###
@@ -49,9 +51,10 @@ merged_df = merged_df.reset_index() # this is the final df with all the data
 # formatting the data, to include a column of gRNA and hippocampal layer, important for calculating statistics
 merged_df['gRNA'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-3:-2]).apply(lambda x: '_'.join(x))
 merged_df['hippocampal_layer'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-2:]).apply(lambda x: ' '.join(x))
+merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2]
 
 # save the merged_df 
-output_csv_path = os.path.join(output_folder, "metric_results.csv")
+output_csv_path = os.path.join(output_folder, protein_and_synaptic_marker + "_metric_results.csv")
 merged_df.to_csv(output_csv_path)
 
 
@@ -100,7 +103,7 @@ plot_manders = results_plotting.plot_data(df = df_melted_manders,
 # saving the combined plots into one file
 internal_control = plt.gcf()  
 plt.tight_layout()
-output_internal_control_plot_path = os.path.join(output_folder, "coloc_metric_internal_controls.png")
+output_internal_control_plot_path = os.path.join(output_folder, protein_and_synaptic_marker + "_coloc_metric_internal_controls.png")
 internal_control.savefig(output_internal_control_plot_path, dpi = 300)  
 
 ### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA (swarm plot) --------------------------------- ###
@@ -131,17 +134,29 @@ internal_control.savefig(output_internal_control_plot_path, dpi = 300)
 # combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
 
 
-### ----------------------- pre data wrangling for statistics and plotting per brain -------------------------------------- ###
-merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2] # create new column with brain replicates
+### ----------------------- dynamically getting the hippocampal layers and setting the metrics -------------------------------------- ###
 
-hippocampal_layers = ["CA1 SLM", "CA1 SR", "CA1 SO", "CA3 SO", "CA3 SL", "CA3 SR", "DG ML", "DG Hilus"]
+# dynamically getting the hippocampal layers into a list from the merged_df & sorting them according to a predefined list
+unique_hippocampal_layers = merged_df["hippocampal_layer"].unique().tolist()
+desired_order = ["CA1 SO", "CA1 SP", "CA1 SR", "CA1 SLM", 
+                 "CA2 SO", "CA2 SP", "CA2 SR", 
+                 "CA3 SO", "CA3 SP", "CA3 SL", "CA3 SR",
+                 "DG Hilus", "DG GC", "DG ML",
+                 "Subiculum PCL", "Cortex L4"]
+order_dict = {area: index for index, area in enumerate(desired_order)}
+hippocampal_layers = sorted(unique_hippocampal_layers, key=lambda x: order_dict.get(x, float('inf')))
+
+# metrics are hardcoded
 metrics = ["overlap_um2", "pearson_cor", "overlap_coeff", "presynapse_image_mfi", "postsynapse_image_mfi", "pre_puncta_density_per_100_um2", "post_puncta_density_per_100_um2", "pre_staining_area_um2", "post_staining_area_um2", "pre_mean_puncta_size_um2", "post_mean_puncta_size_um2"]
 
 
 ### ------------------------------------------------ calculate statistics ------------------------------------------------- ###
 
+# getting the protein name from the protein_and_synaptic_marker parser argument
+protein_of_interest = protein_and_synaptic_marker.split("_")[0]
+
 # calculate the statistics with a t-test
-statistcs_instance = results_plotting.PlotResults(df = merged_df, candidate_gRNA = "GPR37L1-gRNA", name_of_plot = "doesnt_matter")
+statistcs_instance = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = "doesnt_matter")
 statistics_results = []
 for hippocampal_layer in hippocampal_layers:
     for metric in metrics:
@@ -157,19 +172,19 @@ p_value_threshold = 0.05  # significant results
 df_significant_statistics_results = df_statistics_results[df_statistics_results["p_value"] <= p_value_threshold]
 
 # save the statistics 
-output_all_statistics_path = os.path.join(output_folder, "all_statistics.csv")
+output_all_statistics_path = os.path.join(output_folder, protein_and_synaptic_marker + "_all_statistics.csv")
 df_statistics_results.to_csv(output_all_statistics_path)
 
-output_significant_statistics_path = os.path.join(output_folder, "significant_statistics.csv")
+output_significant_statistics_path = os.path.join(output_folder, protein_and_synaptic_marker + "_significant_statistics.csv")
 df_significant_statistics_results.to_csv(output_significant_statistics_path)
 
 
 ### --- Plotting the LacZ-gRNA vs the candidate-gRNA (strip plot that shows the means of each brain connected through lines) --- ###
 
 # path to save the combined_plots
-output_png_path = os.path.join(output_folder, "combined_plots")
+output_png_path = os.path.join(output_folder, protein_and_synaptic_marker + "_combined_plots")
 
 # make the plot
-i = results_plotting.PlotResults(df = merged_df, candidate_gRNA= "GPR37L1-gRNA", name_of_plot = output_png_path)
+i = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = output_png_path)
 i.save_figure(hippocampal_layer_list = hippocampal_layers, metric_list = metrics)
 
