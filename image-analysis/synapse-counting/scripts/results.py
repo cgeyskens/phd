@@ -8,6 +8,9 @@ import argparse
 import sys
 import warnings
 
+
+### --------------------------------- parser arguments and loading custom library --------------------------------- ###
+
 # with this peice of code, it will recognize the custom modules
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
@@ -28,6 +31,9 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 input_folder = args.input_dir
 output_folder = args.output_dir
 
+
+### ---------------------------------------------- data wrangling ------------------------------------------------- ###
+
 # getting the merged dataframe with all the data
 all_files = glob.glob(f"{input_folder}/*.csv") # getting all files in the folder
 base_df = pd.read_csv(all_files[0]) # read in the first .csv from the folder
@@ -39,6 +45,15 @@ for filename in all_files[1:]: # loop through the csv and merge with the base_df
   base_df = pd.concat([base_df, df], axis=1)
 merged_df = base_df.drop(["Unnamed: 0"], axis = 1)
 merged_df = merged_df.reset_index() # this is the final df with all the data
+
+# formatting the data, to include a column of gRNA and hippocampal layer, important for calculating statistics
+merged_df['gRNA'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-3:-2]).apply(lambda x: '_'.join(x))
+merged_df['hippocampal_layer'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-2:]).apply(lambda x: ' '.join(x))
+
+# save the merged_df 
+output_csv_path = os.path.join(output_folder, "metric_results.csv")
+merged_df.to_csv(output_csv_path)
+
 
 ### ---------------------------- Plotting the internal rotated controls vs actual --------------------------------- ###
 # formats the data in the right format for the plots
@@ -84,56 +99,53 @@ plot_manders = results_plotting.plot_data(df = df_melted_manders,
 
 # saving the combined plots into one file
 internal_control = plt.gcf()  
-plt.tight_layout()  
-output_internal_control_plot_path = os.path.join(output_folder, "internal_control.png")
+plt.tight_layout()
+output_internal_control_plot_path = os.path.join(output_folder, "coloc_metric_internal_controls.png")
 internal_control.savefig(output_internal_control_plot_path, dpi = 300)  
 
-### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA --------------------------------- ###
-# formatting the data
-gRNA_data = merged_df
-gRNA_data['gRNA'] = gRNA_data['img_filename'].apply(lambda x: x.split('_')[-3:-2]).apply(lambda x: '_'.join(x))
-gRNA_data['hippocampal_layer'] = gRNA_data['img_filename'].apply(lambda x: x.split('_')[-2:]).apply(lambda x: ' '.join(x))
+### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA (swarm plot) --------------------------------- ###
 
-# plotting the results
-# Create the figure object
-fig, axes = plt.subplots(nrows=6, ncols=2, figsize=(15, 30))
+# # plotting the results
+# # Create the figure object
+# fig, axes = plt.subplots(nrows=6, ncols=2, figsize=(15, 30))
 
-# colocalization metrics
-plot_overlap = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_um2", extra_y_upper=50, title='Overlap by hippocampal Layer and condition', ax=axes[0,0])
-plot_pearson = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pearson_cor", extra_y_upper=0.1, title='Pearsons correlation by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[0,1])
-plot_manders = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_coeff", extra_y_upper=0.1, title='Manders overlap coefficient by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[1,0])
+# # colocalization metrics
+# plot_overlap = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_um2", extra_y_upper=50, title='Overlap by hippocampal Layer and condition', ax=axes[0,0])
+# plot_pearson = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pearson_cor", extra_y_upper=0.1, title='Pearsons correlation by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[0,1])
+# plot_manders = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="overlap_coeff", extra_y_upper=0.1, title='Manders overlap coefficient by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[1,0])
 
-# single synapse marker metrics
-plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="presynapse_image_mfi", extra_y_upper=200, title='Presynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,0])
-plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="postsynapse_image_mfi", extra_y_upper=200, title='Postsynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,1])
-plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_puncta_density_per_100_um2", extra_y_upper=100, title='Presynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,0])
-plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
-plot_pre_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_staining_area_um2", extra_y_upper=50, title='Presynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,0])
-plot_post_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_staining_area_um2", extra_y_upper=50, title='Postsynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,1])
-plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
-plot_post_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_mean_puncta_size_um2", extra_y_upper=0.05, title='Postsynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,1])
+# # single synapse marker metrics
+# plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="presynapse_image_mfi", extra_y_upper=200, title='Presynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,0])
+# plot_pre_mfi = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="postsynapse_image_mfi", extra_y_upper=200, title='Postsynaptic MFI by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[2,1])
+# plot_pre_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_puncta_density_per_100_um2", extra_y_upper=100, title='Presynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,0])
+# plot_post_density = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_puncta_density_per_100_um2", extra_y_upper=100, title='Postsynaptic puncta density by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[3,1])
+# plot_pre_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_staining_area_um2", extra_y_upper=50, title='Presynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,0])
+# plot_post_area = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_staining_area_um2", extra_y_upper=50, title='Postsynaptic staining area by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[4,1])
+# plot_pre_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="pre_mean_puncta_size_um2", extra_y_upper=0.05, title='Presynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,0])
+# plot_post_puncta_size = results_plotting.plot_data(df=gRNA_data, x="hippocampal_layer", y="post_mean_puncta_size_um2", extra_y_upper=0.05, title='Postsynaptic puncta size (um2) by hippocampal Layer and condition', extra_y_lower=-0.05, ax=axes[5,1])
 
-# Save the figure explicitly
-combined_plots_figure = plt.gcf()  # Get the current figure object
-plt.tight_layout()  # Adjust layout to prevent overlap
-output_combined_plot_path = os.path.join(output_folder, "combined_plots.png")
-combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
+# # Save the figure explicitly
+# combined_plots_figure = plt.gcf()  # Get the current figure object
+# plt.tight_layout()  # Adjust layout to prevent overlap
+# output_combined_plot_path = os.path.join(output_folder, "combined_plots.png")
+# combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
 
-# save the merged_df 
-output_csv_path = os.path.join(output_folder, "results.csv")
-merged_df.to_csv(output_csv_path)
 
-### -------------------------------------------- calculate statistics ----------------------------------------------- ###
+### ----------------------- pre data wrangling for statistics and plotting per brain -------------------------------------- ###
 merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2] # create new column with brain replicates
 
 hippocampal_layers = ["CA1 SLM", "CA1 SR", "CA1 SO", "CA3 SO", "CA3 SL", "CA3 SR", "DG ML", "DG Hilus"]
 metrics = ["overlap_um2", "pearson_cor", "overlap_coeff", "presynapse_image_mfi", "postsynapse_image_mfi", "pre_puncta_density_per_100_um2", "post_puncta_density_per_100_um2", "pre_staining_area_um2", "post_staining_area_um2", "pre_mean_puncta_size_um2", "post_mean_puncta_size_um2"]
 
+
+### ------------------------------------------------ calculate statistics ------------------------------------------------- ###
+
 # calculate the statistics with a t-test
+statistcs_instance = results_plotting.PlotResults(df = merged_df, candidate_gRNA = "GPR37L1-gRNA", name_of_plot = "doesnt_matter")
 statistics_results = []
 for hippocampal_layer in hippocampal_layers:
     for metric in metrics:
-        _ , table, _ , p_value = results_plotting.check_statistics(merged_df, hippocampal_layer = hippocampal_layer, metric = metric, candidate_gRNA = "VCAM1-gRNA", control_gRNA = "LacZ-gRNA")
+        _ , _, table , _ , p_value = statistcs_instance.check_statistics(hippocampal_layer = hippocampal_layer, metric = metric)
         statistics_results.append({"hippocampal_layer": hippocampal_layer, "metric": metric, "p_value": p_value})
 
 # add another column if the results are significant or not
@@ -150,4 +162,14 @@ df_statistics_results.to_csv(output_all_statistics_path)
 
 output_significant_statistics_path = os.path.join(output_folder, "significant_statistics.csv")
 df_significant_statistics_results.to_csv(output_significant_statistics_path)
+
+
+### --- Plotting the LacZ-gRNA vs the candidate-gRNA (strip plot that shows the means of each brain connected through lines) --- ###
+
+# path to save the combined_plots
+output_png_path = os.path.join(output_folder, "combined_plots")
+
+# make the plot
+i = results_plotting.PlotResults(df = merged_df, candidate_gRNA= "GPR37L1-gRNA", name_of_plot = output_png_path)
+i.save_figure(hippocampal_layer_list = hippocampal_layers, metric_list = metrics)
 

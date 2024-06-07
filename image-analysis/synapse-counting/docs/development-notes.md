@@ -53,19 +53,22 @@ Adjust existing pipeline
 - Instead of using the names vglut1 and psd95, use presynaptic and postsynaptic (in case of inhibitory markers)
 - Specified from the nextflow script: the working folders, can you create the folders from nextflow, this way you only need to specify the the folder with the input images 
 - Customize the names from the file input that should be stored for analysis
-
-### Next-up
-- adjust exsiting standard pipeline/customizability:
-    - dynamic with "LacZ-gRNA" vs "candidate-gRNA", sometimes have VCAM1-gRNA, be carefull.
+- adjust/customize existing standard pipeline:
     - plot lines between data points that originates form the same brain.
     - plot also statistics above plots.
+
+### Next-up
+- adjust /customize exsiting standard pipeline:
+    - dynamic with "LacZ-gRNA" vs "candidate-gRNA", sometimes have VCAM1-gRNA, be carefull (line 136 in results.py). 
+    - dynamic with hippocampal layers (in case of VGAT-Gephyrin and VGLUT2-PSD95 combinations)
+    - dynamically code wich segment of the name has the Brain nr, now it is hard coded as the second python element [2]
     - customize which analysis to do: if only one image_channel (in case of SPO or GLT1), perform if statements in the nextflow scipt.
-    - add extra parameter in nextflow scripts, if whether in which channel is pre or post synapse. This is coded in python.
-    - export the intermediate images with the detected synaptic puncta on it for inspection
+    - add extra parameter in nextflow scripts, if whether in which channel is pre or post synapse. This is coded in python, but needs arguments.
+    - export the intermediate images with the detected synaptic puncta on it for inspection.
     - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
 - Add local maxima detection with best parameter to metrics.
-- make a full pipeline WITH parameter optimization, this needs to be run on HPC.
-    - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch)
+- make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
+    - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 - after pipeline is run, remove all the work files.
 - do the actual analysis.
 
