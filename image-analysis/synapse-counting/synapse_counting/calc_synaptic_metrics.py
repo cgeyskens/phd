@@ -62,7 +62,8 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
         postsynapse_threshold = filters.threshold_triangle(postsynapse_image)
     
     # presynapse
-    pre_labeled = measure.label(presynapse_image > presynapse_threshold, connectivity = 1) # 2 for 2d image
+    presynapse_thresholded = presynapse_image > presynapse_threshold
+    pre_labeled = measure.label(presynapse_thresholded, connectivity = 1) # 2 for 2d image
     pre_prop = measure.regionprops_table(pre_labeled, properties = ["area"]) # only calculates one property, is faster
     df_pre_prop = pd.DataFrame(pre_prop)
     pre_puncta_nr = df_pre_prop.shape[0] # puncta nr
@@ -73,7 +74,8 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
     pre_mean_puncta_size_um = pre_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
 
     # postsynapse
-    post_labeled = measure.label(postsynapse_image > postsynapse_threshold, connectivity = 1) # 2 for 2d image
+    postsynapse_thresholded = postsynapse_image > postsynapse_threshold
+    post_labeled = measure.label(postsynapse_thresholded , connectivity = 1) # 2 for 2d image
     post_prop = measure.regionprops_table(post_labeled, properties = ["area"]) # only calculates one property, is faster
     df_post_prop = pd.DataFrame(post_prop)
     post_puncta_nr = df_post_prop.shape[0] # puncta_nr
@@ -84,19 +86,22 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
     post_mean_puncta_size_um = post_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
     
     # make dictionary for all metrics
-    return {"pre_puncta_nr": pre_puncta_nr,
-         "pre_puncta_density_per_100_um2": pre_puncta_density_per_100_um2,
-         "post_puncta_nr": post_puncta_nr,
-         "post_puncta_density_per_100_um2": post_puncta_density_per_100_um2,
-         "pre_staining_area_pix": pre_staining_area_pix,
-         "pre_staining_area_um2": pre_staining_area_um,
-         "post_staining_area_pix": post_staining_area_pix,
-         "post_staining_area_um2": post_staining_area_um,
-         "pre_mean_puncta_size_pix": pre_mean_puncta_size_pix,
-         "pre_mean_puncta_size_um2": pre_mean_puncta_size_um,
-         "post_mean_puncta_size_pix": post_mean_puncta_size_pix,
-         "post_mean_puncta_size_um2": post_mean_puncta_size_um
-        }
+    metrics =   {"pre_puncta_nr": pre_puncta_nr,
+                "pre_puncta_density_per_100_um2": pre_puncta_density_per_100_um2,
+                "post_puncta_nr": post_puncta_nr,
+                "post_puncta_density_per_100_um2": post_puncta_density_per_100_um2,
+                "pre_staining_area_pix": pre_staining_area_pix,
+                "pre_staining_area_um2": pre_staining_area_um,
+                "post_staining_area_pix": post_staining_area_pix,
+                "post_staining_area_um2": post_staining_area_um,
+                "pre_mean_puncta_size_pix": pre_mean_puncta_size_pix,
+                "pre_mean_puncta_size_um2": pre_mean_puncta_size_um,
+                "post_mean_puncta_size_pix": post_mean_puncta_size_pix,
+                "post_mean_puncta_size_um2": post_mean_puncta_size_um
+    }
+    return metrics, presynapse_thresholded, postsynapse_thresholded
+
+
 
 
 

@@ -104,7 +104,7 @@ process ResultsPlots {
 
     output:
     stdout
-    }
+}
 
 
 workflow {

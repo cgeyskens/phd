@@ -44,7 +44,7 @@ def measure_image_puncta(filename, name_segments):
         pre_1, post_1 = p.preprocess(pre, post)
         # getting the data
         presynapse_image_mfi, postsynapse_image_mfi = calc_synaptic_metrics.mfi_synapse(pre, post)
-        puncta_results = calc_synaptic_metrics.puncta_metrics(pre_1, post_1, image_size_um, pixel_size_um)
+        puncta_results, _ , _ = calc_synaptic_metrics.puncta_metrics(pre_1, post_1, image_size_um, pixel_size_um)
         # getting the right filename
         img_filename = metadata.image_filename(filename, name_segments)
         return {

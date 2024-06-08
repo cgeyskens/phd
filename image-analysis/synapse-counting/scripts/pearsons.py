@@ -52,7 +52,7 @@ def measure_image_pearson(filename, name_segments):
             "pvalue_rot": pvalue_rot
         }
     else:
-        return None
+        raise Warning("not all files inside {input_folder} are .czi files")
     
 # get a list of files in that input_folder
 file_list = os.listdir(input_folder)

@@ -60,12 +60,16 @@ Adjust existing pipeline
     - dynamic with hippocampal layers (in case of VGAT-Gephyrin and VGLUT2-PSD95 combinations)
     - add extra parameter in nextflow scripts, if whether in which channel is pre or post synapse. This is coded in python, but needs arguments
     - more defined parameters in nextflow script
+    - look into the fluorescence intensity descent when you do binarization of the images: found the error: it was in the argument of the label method
 
 ### Next-up
 - adjust /customize exsiting standard pipeline:
-    - export the intermediate images with the detected synaptic puncta on it for inspection.
-    - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
+    - export the intermediate images with the detected synaptic puncta on it for inspection and adjust a bit the parameters 
+    and do a bit more data exploration of your images -> include watershed. Check all morphological operations again!
+
 - Add local maxima detection with best parameter to metrics.
+
+- customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
 - make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 - after pipeline is run, remove all the work files.

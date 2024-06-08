@@ -52,7 +52,7 @@ def measure_image_manders(filename, name_segments):
             "postsynapse_threshold": postsynapse_threshold
         }
     else:
-        return None
+        raise Warning("not all files inside {input_folder} are .czi files")
     
 # get a list of files in that input_folder
 file_list = os.listdir(input_folder)
