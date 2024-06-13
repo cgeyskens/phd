@@ -23,16 +23,17 @@ def mfi_synapse(presynapse_image, postsynapse_image):
     return presynapse_image_mfi, postsynapse_image_mfi
 
 
-def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_size_um, threshold_algorithm = "otsu"):
+def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_um, pixel_size_um):
     """
     Returns different puncta metrics.
 
     Args:
-        presynapse_image: image of presynapse
-        postsynapse_image: image of postsynapse
+        presynapse_image: thresholded image of presynapse
+        postsynapse_image: thresholded image of postsynapse
         image_size_um: the size of the image in um.
         pixel_size_um: the size of each pixel in um
-        threshold_algorithm: threshold algorithm to choose (default is otsu, can also choose isodata and triangle)
+        threshold_algorithm: threshold algorithm to choose 
+        (default is otsu, can also choose isodata and triangle)
     
     Returns:
         dictionary with different puncta metrics:
@@ -49,20 +50,7 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
                 post_mean_puncta_size: postsynapse mean puncta size in pixels
                 post_mean_puncta_size_um2: postsynapse mean puncta size in um2
     """
-
-    # thresholding
-    if threshold_algorithm == "otsu":
-        presynapse_threshold = filters.threshold_otsu(presynapse_image)
-        postsynapse_threshold = filters.threshold_otsu(postsynapse_image)
-    elif threshold_algorithm == "isodata":
-        presynapse_threshold = filters.threshold_isodata(presynapse_image)
-        postsynapse_threshold = filters.threshold_isodata(postsynapse_image)
-    elif threshold_algorithm == "triangle":
-        presynapse_threshold = filters.threshold_triangle(presynapse_image)
-        postsynapse_threshold = filters.threshold_triangle(postsynapse_image)
-    
     # presynapse
-    presynapse_thresholded = presynapse_image > presynapse_threshold
     pre_labeled = measure.label(presynapse_thresholded, connectivity = 1) # 2 for 2d image
     pre_prop = measure.regionprops_table(pre_labeled, properties = ["area"]) # only calculates one property, is faster
     df_pre_prop = pd.DataFrame(pre_prop)
@@ -74,7 +62,6 @@ def puncta_metrics(presynapse_image, postsynapse_image, image_size_um, pixel_siz
     pre_mean_puncta_size_um = pre_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
 
     # postsynapse
-    postsynapse_thresholded = postsynapse_image > postsynapse_threshold
     post_labeled = measure.label(postsynapse_thresholded , connectivity = 1) # 2 for 2d image
     post_prop = measure.regionprops_table(post_labeled, properties = ["area"]) # only calculates one property, is faster
     df_post_prop = pd.DataFrame(post_prop)

@@ -1,6 +1,13 @@
 import numpy as np
 import czifile
 from skimage import restoration, exposure, morphology, filters
+from skimage.filters import gaussian, sobel
+from skimage import measure, filters
+from skimage.feature import peak_local_max
+from scipy import ndimage as ndi
+from skimage.measure import label
+from skimage.morphology import binary_opening
+from skimage.segmentation import watershed
 
 
 def extract_and_split(path, presynapse_channel = 0, postsynapse_channel = 1):
@@ -109,3 +116,42 @@ class ImagePreprocessing:
         presynapse_image = filters.gaussian(presynapse_image, sigma = self.sigma, preserve_range = self.preserve_range)
         postsynapse_image = filters.gaussian(postsynapse_image, sigma = self.sigma, preserve_range = self.preserve_range)
         return presynapse_image, postsynapse_image
+
+
+def thresholding(presynapse_image, postsynapse_image, threshold_algorithm="triangle"):
+    if threshold_algorithm == "otsu":
+        presynapse_threshold = filters.threshold_otsu(presynapse_image)
+        postsynapse_threshold = filters.threshold_otsu(postsynapse_image)
+    elif threshold_algorithm == "isodata":
+        presynapse_threshold = filters.threshold_isodata(presynapse_image)
+        postsynapse_threshold = filters.threshold_isodata(postsynapse_image)
+    elif threshold_algorithm == "triangle":
+        presynapse_threshold = filters.threshold_triangle(presynapse_image)
+        postsynapse_threshold = filters.threshold_triangle(postsynapse_image)
+    
+    presynapse_image_threshold = presynapse_image >= presynapse_threshold
+    postsynapse_image_threshold = postsynapse_image >= postsynapse_threshold
+    
+    return presynapse_image_threshold, postsynapse_image_threshold
+
+
+def custom_watershed(thresholded_image, sigma):
+    """
+    Wrapper for watershed segmentation, copied from Robert Haase notebook:
+    https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/20h_segmentation_post_processing/mimicking_imagej_watershed.html?highlight=watershed
+    """
+    distance = ndi.distance_transform_edt(thresholded_image) # calculate distance image
+    blurred_distance = gaussian(distance, sigma = sigma) # gaussian blur
+    fp = np.ones((3,) * thresholded_image.ndim) # neighbourhood size to find local maxima
+    coords = peak_local_max(blurred_distance, footprint=fp, labels=thresholded_image) # find local maxima
+    mask = np.zeros(distance.shape, dtype=bool)
+    mask[tuple(coords.T)] = True
+    markers = label(mask)
+    labels = watershed(-blurred_distance, markers, mask=thresholded_image) # actual watershed
+    edges_labels = sobel(labels)
+    edges_binary = sobel(thresholded_image)
+    edges = np.logical_xor(edges_labels != 0, edges_binary != 0)
+    almost = np.logical_not(edges) * thresholded_image
+    watershedded_image = binary_opening(almost)
+
+    return watershedded_image

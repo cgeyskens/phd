@@ -43,7 +43,7 @@ def measure_image_manders(filename, name_segments):
         # getting the data
         overlap_coeff, overlap_coeff_rot, presynapse_threshold, postsynapse_threshold = calc_synaptic_coloc.manders_coloc(pre_1, post_1)
         # getting the right filename
-        img_filename = metadata.image_filename(filename, name_segments) 
+        img_filename = metadata.image_filename(filename, name_segments)
         return {
             "img_filename": img_filename,
             "overlap_coeff": overlap_coeff,
