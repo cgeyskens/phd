@@ -62,12 +62,16 @@ Adjust existing pipeline
     - more defined parameters in nextflow script
     - look into the fluorescence intensity descent when you do binarization of the images: found the error: it was in the argument of the label method
     - include watershed for binarized images
-
-### Next-up
-- adjust /customize exsiting standard pipeline:
-    - adjust preprocessing parameters for every hippocampal layer.
+    - adjust preprocessing parameters for every hippocampal layer in every synaptic combination:
+        - VGLUT1-PSD95
+        - VGLUT2-PSD95 (PSD95 only optimized for Cortex L4)
     - creating some sort of "preprocess profiles" whether VGLUT1-PSD95, VGLUT2-PSD95 and VGAT-Gephyrin
 
+### Next-up
+- adjust preprocessing parameters for every hippocampal layer in every synaptic combination:
+    - VGAT-Gephyrin
+    
+    - idea: filter out puncta smaller then... , before puncta analysis and after binarization
 - Add local maxima detection 
 - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
 - make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
