@@ -43,7 +43,8 @@ process RunMandersAnalysis {
     --output_dir ${params.intermediate_dir} \
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
-    --postsynapse_channel ${params.postsynapse_channel}
+    --postsynapse_channel ${params.postsynapse_channel} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
     """ 
 
     output:
@@ -61,7 +62,8 @@ process OverlapAnalysis {
     --output_dir ${params.intermediate_dir} \
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
-    --postsynapse_channel ${params.postsynapse_channel}
+    --postsynapse_channel ${params.postsynapse_channel} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
     """ 
 
     output:

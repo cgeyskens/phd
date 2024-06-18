@@ -46,24 +46,24 @@ def measure_image_puncta(filename, name_segments):
     file_path = os.path.join(input_folder, filename)
     parts = filename.split('_')[-2:]
     result = "_".join(parts)
-    print(result)
+    
     # for each synaptic_marker combination and layer, I handcrafted the preprocessing parameters for best segmentation
     if synaptic_marker == "VGLUT1_PSD95":
         if result in {"CA3_SL.czi", "DG_Hilus.czi"}:
-            radius, element_size, blur_sigma, watershed_sigma = 15, 20, 2, 3
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 15, 20, 2, 3, 50
         elif result in {"CA1_SO.czi", "CA3_SO.czi"}:
-            radius, element_size, blur_sigma, watershed_sigma = 5, 10, 2, 3
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 5, 10, 2, 3, 20
         elif result in {"CA1_SR.czi", "CA3_SR.czi"}:
-            radius, element_size, blur_sigma, watershed_sigma = 10, 10, 2, 3
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 10, 10, 2, 3, 20
         elif result == "CA1_SLM.czi":
-            radius, element_size, blur_sigma, watershed_sigma = 5, 5, 2, 3
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 5, 5, 2, 3, 20
         elif result == "DG_ML.czi":
-            radius, element_size, blur_sigma, watershed_sigma = 5, 15, 2, 3
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 5, 15, 2, 3, 20
     elif synaptic_marker == "VGLUT2_PSD95":
-        if result in {"Cortex_L4.czi", "Subiculum_SP.czi"}:
-            radius, element_size, blur_sigma, watershed_sigma = 10, 10, 2, 3
-        elif result in {"CA2_SP.czi", "DG_GC.czi"}:
-            radius, element_size, blur_sigma, watershed_sigma = 15, 10, 2, 3
+        if result in {"Cortex_L4.czi"}:
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 10, 10, 2, 3, 20
+        elif result in {"CA2_SP.czi", "DG_GC.czi", "Subiculum_SP.czi"}:
+            radius, element_size, blur_sigma, watershed_sigma, puncta_size_threshold = 15, 10, 2, 3, 50
     
     # extract metadata
     pixel_size_um, _ , image_size_um = metadata.extract_metadata(file_path)
@@ -86,7 +86,8 @@ def measure_image_puncta(filename, name_segments):
     
     # getting the data
     presynapse_image_mfi, postsynapse_image_mfi = calc_synaptic_metrics.mfi_synapse(pre, post)
-    puncta_results, _ , _ , _ , _= calc_synaptic_metrics.puncta_metrics(presynapse_watersheded, postsynapse_watersheded, image_size_um, pixel_size_um)
+    puncta_results, _ , _ , _ , _= calc_synaptic_metrics.puncta_metrics(presynapse_watersheded, postsynapse_watersheded, image_size_um, pixel_size_um, puncta_size_threshold=puncta_size_threshold)
+       
     # getting the right filename
     img_filename = metadata.image_filename(filename, name_segments)
     
