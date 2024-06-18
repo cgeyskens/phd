@@ -52,7 +52,7 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
     """
     # presynapse
     pre_labeled = measure.label(presynapse_thresholded, connectivity = 1) # 2 for 2d image
-    pre_prop = measure.regionprops_table(pre_labeled, properties = ["area"]) # only calculates one property, is faster
+    pre_prop = measure.regionprops_table(pre_labeled, properties = ["label", "area"]) # only calculates one property, is faster
     df_pre_prop = pd.DataFrame(pre_prop)
     pre_puncta_nr = df_pre_prop.shape[0] # puncta nr
     pre_puncta_density_per_100_um2 = (pre_puncta_nr / (image_size_um)**2) * 100 # puncta density per 100 um2
@@ -63,7 +63,7 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
 
     # postsynapse
     post_labeled = measure.label(postsynapse_thresholded , connectivity = 1) # 2 for 2d image
-    post_prop = measure.regionprops_table(post_labeled, properties = ["area"]) # only calculates one property, is faster
+    post_prop = measure.regionprops_table(post_labeled, properties = ["label", "area"]) # only calculates one property, is faster
     df_post_prop = pd.DataFrame(post_prop)
     post_puncta_nr = df_post_prop.shape[0] # puncta_nr
     post_puncta_density_per_100_um2 = (post_puncta_nr / (image_size_um)**2) * 100 # puncta density per 100 um2
@@ -86,7 +86,7 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
                 "post_mean_puncta_size_pix": post_mean_puncta_size_pix,
                 "post_mean_puncta_size_um2": post_mean_puncta_size_um
     }
-    return metrics, presynapse_thresholded, postsynapse_thresholded
+    return metrics, pre_labeled, post_labeled, df_pre_prop, df_post_prop
 
 
 

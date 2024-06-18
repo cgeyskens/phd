@@ -73,12 +73,14 @@ Adjust existing pipeline
     
     - idea: filter out puncta smaller then... , before puncta analysis and after binarization
 - Add local maxima detection 
+- how to pass on images in a pipeline?
 - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
 - make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 - after pipeline is run, remove all the work files.
 - do the actual analysis.
 - check pylint for right styling of code.
+- as a control in supplemental figure; can do some clustering with feature from the region_props_table.
 
 ### working test-pipeline
 Working nextflow script:
