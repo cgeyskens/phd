@@ -79,6 +79,7 @@ Adjust existing pipeline
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 - after pipeline is run, remove all the work files.
 - do the actual analysis.
+- make heatmap
 - check pylint for right styling of code.
 - as a control in supplemental figure; can do some clustering with features from the region_props_table.
 
