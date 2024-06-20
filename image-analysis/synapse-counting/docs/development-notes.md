@@ -71,17 +71,25 @@ Adjust existing pipeline
 ### Next-up
 - adjust preprocessing parameters for every hippocampal layer in every synaptic combination:
     - VGAT-Gephyrin
+- local maxima detection:
+    V- try out optuna per image
+    V- arrange the output of the optimization
+    V- optuna per hippocampal layer; set the ranges for each hippocampal layer
+    V- try different optimizers; other ones where having issues
+    V- dask-optuna?
+    - test the output of the ranges of the hippocampal layers
+    - include it into the nextflow pipeline and check for the optimization efficiency(graph)
 
-- Add local maxima detection 
 - how to pass on images in a pipeline?
 - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
 - make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
-- after pipeline is run, remove all the work files.
-- do the actual analysis.
+
+For next, after all prelimary data
+- do the actual analysis
 - make heatmap
-- check pylint for right styling of code.
-- as a control in supplemental figure; can do some clustering with features from the region_props_table.
+- check pylint for right styling of code
+- as a control in supplemental figure; can do some clustering with features from the region_props_table
 
 ### working test-pipeline
 Working nextflow script:
