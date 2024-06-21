@@ -96,7 +96,6 @@ def measure_image_overlap(filename, name_segments):
         "overlap_um2_rot": overlap_um2_rot,
     }
 
-   
 # get a list of files in that input_folder
 file_list = os.listdir(input_folder)
 
