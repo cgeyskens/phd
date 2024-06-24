@@ -14,6 +14,46 @@ process CreateDirectories {
     stdout
 }
 
+process RunLocalPeaksOptimization {
+    input:
+    path input
+
+    script:
+    """
+    python ${baseDir}/local_peaks_optimize.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --nr_of_optimization_trials ${params.nr_of_optimization_trials}
+    """ 
+
+    output:
+    stdout
+}
+
+process RunLocalPeaksColocalization {
+    input:
+    path input
+    file from_local_peaks
+
+    script:
+    """
+    python ${baseDir}/local_peaks_coloc.py \
+    --input_dir ${params.input_dir} \
+    --output_dir ${params.intermediate_dir} \
+    --name_segments ${params.name_segments} \
+    --presynapse_channel ${params.presynapse_channel} \
+    --postsynapse_channel ${params.postsynapse_channel} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --nr_of_optimization_trials ${params.nr_of_optimization_trials} \
+    --optimized_params_df ${optimized_params_df.csv}
+    """ 
+    output:
+    stdout
+}
+
 process RunPearsonsAnalysis {
     input:
     path input
@@ -89,13 +129,13 @@ process PunctaAnalysis {
     stdout
 }
 
-
 process ResultsPlots {
     input:
     file from_pearson
     file from_manders
     file from_overlap
     file from_puncta
+    file from_local_peaks
 
     script:
     """
@@ -113,9 +153,11 @@ process ResultsPlots {
 workflow {
     input_ch = Channel.fromPath(params.input_dir)
     CreateDirectories()
+    optimized_params_ch = RunLocalPeaksOptimization(input_ch)
+    local_peaks_coloc_ch = RunLocalPeaksColocalization(input_ch, optimized_params_ch)
     pearson_ch = RunPearsonsAnalysis(input_ch)
     manders_ch = RunMandersAnalysis(input_ch)
     overlap_ch = OverlapAnalysis(input_ch)
     puncta_ch = PunctaAnalysis(input_ch)
-    ResultsPlots(pearson_ch, manders_ch, overlap_ch, puncta_ch)
+    ResultsPlots(pearson_ch, manders_ch, overlap_ch, puncta_ch, local_peaks_coloc_ch)
 }

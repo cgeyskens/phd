@@ -78,11 +78,12 @@ Adjust existing pipeline
     V- try different optimizers; other ones where having issues
     V- dask-optuna?
     V- test the output of the ranges of the hippocampal layers
-    - recheck your code and make .py files
+    V- recheck your code and make .py files
     - include it into the nextflow pipeline and check for the optimization efficiency(graph)
     - try the nextflow pipeline locally
     - from conda to docker, publish in dockerhub
     - try the pipeline on HPC
+    - make histogram of you p-values! To see if the distribution is alright.
 
 - how to pass on images in a pipeline?
 - customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
