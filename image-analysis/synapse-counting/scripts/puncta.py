@@ -14,7 +14,6 @@ from synapse_counting import metadata, preprocessing, calc_synaptic_metrics
 # adding parser arguments
 parser = argparse.ArgumentParser(description="process input files")
 parser.add_argument("--input_dir", type=str, help="directory to input files")
-parser.add_argument("--output_dir", type=str, help="directory to output folder")
 parser.add_argument('--name_segments', type=int, nargs='+', help='Comma separated list of name segments to use seperated by "_"')
 parser.add_argument("--presynapse_channel", type=int, help="number of presynapse channel")
 parser.add_argument("--postsynapse_channel", type=int, help="number of postsynapse channel")
@@ -23,7 +22,6 @@ args = parser.parse_args()
 
 # assigning the parser arguments
 input_folder = args.input_dir
-output_folder = args.output_dir
 name_segments = args.name_segments
 presynapse_channel = args.presynapse_channel
 postsynapse_channel = args.postsynapse_channel
@@ -112,5 +110,5 @@ results = dask.compute(*delayed_results)
 
 # reading out the results into a csv
 df = pd.DataFrame(results)
-output_csv_path = os.path.join(output_folder, "puncta_results.csv")
+output_csv_path = "puncta_results.csv"
 df.to_csv(output_csv_path, encoding = "utf-8")

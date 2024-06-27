@@ -20,8 +20,11 @@ from synapse_counting import results_plotting
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description="process input files")
-parser.add_argument("--input_dir", type=str, help="directory to input files")
-parser.add_argument("--output_dir", type=str, help="directory to output folder")
+parser.add_argument("--local_peaks_df",type=str, help="dataframe with local peaks results for each hippcampal layer")
+parser.add_argument("--manders_df",type=str, help="dataframe with manders results for each hippcampal layer")
+parser.add_argument("--overlap_df",type=str, help="dataframe with overlap results for each hippcampal layer")
+parser.add_argument("--pearson_df",type=str, help="dataframe with pearson results for each hippcampal layer")
+parser.add_argument("--puncta_df",type=str, help="dataframe with puncta results for each hippcampal layer")
 parser.add_argument("--protein_and_synaptic_marker", type=str, help="protein that you are interested in")
 args = parser.parse_args()
 
@@ -29,31 +32,28 @@ args = parser.parse_args()
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 # assigning the parser arguments
-input_folder = args.input_dir
-output_folder = args.output_dir
 protein_and_synaptic_marker = args.protein_and_synaptic_marker
+
+# reading in the dataframes
+local_peaks_df = pd.read_csv(args.local_peaks_df)
+manders_df = pd.read_csv(args.manders_df)
+overlap_df = pd.read_csv(args.overlap_df)
+pearson_df = pd.read_csv(args.pearson_df)
+puncta_df = pd.read_csv(args.puncta_df)
+
+# same index
+local_peaks_df.set_index("img_filename", inplace=True)
+manders_df.set_index("img_filename", inplace=True)
+overlap_df.set_index("img_filename", inplace=True)
+pearson_df.set_index("img_filename", inplace=True)
+puncta_df.set_index("img_filename", inplace=True)
 
 
 ### ---------------------------------------------- data wrangling ------------------------------------------------- ###
 
 # getting the merged dataframe with all the data
-
-# specific files to read in
-result_files = [
-    "local_peak_coloc.csv",
-    "manders_results.csv",
-    "overlap_results.csv",
-    "pearson_results.csv",
-    "puncta_results.csv"
-]
-result_file_paths = [os.path.join(input_folder, filename) for filename in result_files]
-base_df = pd.read_csv(result_file_paths[0]) # read in the first .csv from the folder
-base_df.set_index("img_filename", inplace = True) # setting the index for common column such that we can merge the following dataframes based on the index
-for filename in result_file_paths[1:]: # loop through the csv and merge with the base_df based on the index
-  df = pd.read_csv(filename)
-  df.set_index("img_filename", inplace = True)
-  base_df = pd.concat([base_df, df], axis=1)
-merged_df = base_df.drop(["Unnamed: 0"], axis = 1)
+merged_df = pd.concat([local_peaks_df, manders_df, overlap_df, pearson_df, puncta_df], axis=1)
+merged_df = merged_df.drop(["Unnamed: 0"], axis = 1)
 merged_df = merged_df.reset_index() # this is the final df with all the data
 
 # formatting the data, to include a column of gRNA and hippocampal layer, important for calculating statistics
@@ -62,7 +62,7 @@ merged_df['hippocampal_layer'] = merged_df['img_filename'].apply(lambda x: x.spl
 merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2]
 
 # save the merged_df 
-output_csv_path = os.path.join(output_folder, protein_and_synaptic_marker + "_metric_results.csv")
+output_csv_path = os.path.join(protein_and_synaptic_marker + "_metric_results.csv")
 merged_df.to_csv(output_csv_path)
 
 
@@ -123,7 +123,7 @@ plot_local_peaks = results_plotting.plot_data(df = df_melted_local_peaks,
 # saving the combined plots into one file
 internal_control = plt.gcf()  
 plt.tight_layout()
-output_internal_control_plot_path = os.path.join(output_folder, protein_and_synaptic_marker + "_coloc_metric_internal_controls.png")
+output_internal_control_plot_path = os.path.join(protein_and_synaptic_marker + "_coloc_metric_internal_controls.png")
 internal_control.savefig(output_internal_control_plot_path, dpi = 300)  
 
 ### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA (swarm plot) --------------------------------- ###
@@ -150,7 +150,7 @@ internal_control.savefig(output_internal_control_plot_path, dpi = 300)
 # # Save the figure explicitly
 # combined_plots_figure = plt.gcf()  # Get the current figure object
 # plt.tight_layout()  # Adjust layout to prevent overlap
-# output_combined_plot_path = os.path.join(output_folder, "combined_plots.png")
+# output_combined_plot_path = os.path.join("combined_plots.png")
 # combined_plots_figure.savefig(output_combined_plot_path)  # Save the figure object
 
 
@@ -203,17 +203,17 @@ p_value_threshold = 0.05  # significant results
 df_significant_statistics_results = df_statistics_results[df_statistics_results["p_value"] <= p_value_threshold]
 
 # save the statistics 
-output_all_statistics_path = os.path.join(output_folder, protein_and_synaptic_marker + "_all_statistics.csv")
+output_all_statistics_path = os.path.join(protein_and_synaptic_marker + "_all_statistics.csv")
 df_statistics_results.to_csv(output_all_statistics_path)
 
-output_significant_statistics_path = os.path.join(output_folder, protein_and_synaptic_marker + "_significant_statistics.csv")
+output_significant_statistics_path = os.path.join(protein_and_synaptic_marker + "_significant_statistics.csv")
 df_significant_statistics_results.to_csv(output_significant_statistics_path)
 
 
 ### --- Plotting the LacZ-gRNA vs the candidate-gRNA (strip plot that shows the means of each brain connected through lines) --- ###
 
 # path to save the combined_plots
-output_png_path = os.path.join(output_folder, protein_and_synaptic_marker + "_combined_plots")
+output_png_path = os.path.join(protein_and_synaptic_marker + "_combined_plots")
 
 # make the plot
 i = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = output_png_path)

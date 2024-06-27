@@ -80,18 +80,20 @@ Adjust existing pipeline
     V- test the output of the ranges of the hippocampal layers
     V- recheck your code and make .py files
     V- include it into the nextflow pipeline and check for the optimization efficiency(graph)
+- last adjustments pipeline: 
     V- try the nextflow pipeline locally
-    - simplify the pipeline with the directories structure (no intermediate structure)
-    - make the pipeline a bit nicer
+    V- simplify the pipeline with the directories structure (no intermediate structure)
+    V- make the pipeline a bit nicer, with logfile when you run it, leave out the create directories
     - include two JSON files as input for the pipeline: one for handcrafted parameters ranges for local peaks optimization and one for the handcrafted preprocessing parameters
+    - include more parameter ranges when you have the data
     - reassess the handcrafted parameters
-    - from conda to docker, publish in dockerhub
+    - from conda to docker, publish in dockerhub, add profiles
     - try the pipeline on HPC with a lot of trials, with apptainer
     - make histogram of you p-values! To see if the distribution is alright.
+    - meet with Pavie
+    - make documentation
 
 - how to pass on images in a pipeline?
-- customize the pipeline dynamically with the nextflow.config file (folders, docker/apptainer, publishDir, name segments, nr_of_image_channels, profiles for running local or HPC). Check the VIB nextflow course again and the carpentries.
-- make a full pipeline WITH parameter optimization (checkout optuna library), this needs to be run on HPC.
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 
 For next, after all prelimary data

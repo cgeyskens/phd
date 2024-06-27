@@ -19,7 +19,6 @@ from synapse_counting import metadata, preprocessing, calc_synaptic_coloc
 # adding parser arguments
 parser = argparse.ArgumentParser(description = "process input files")
 parser.add_argument("--input_dir", type = str, help = "directory to input files")
-parser.add_argument("--output_dir", type = str, help = "directory to output folder")
 parser.add_argument("--presynapse_channel", type=int, help="number of presynapse channel")
 parser.add_argument("--postsynapse_channel", type=int, help="number of postsynapse channel")
 parser.add_argument("--protein_and_synaptic_marker", type=str, help="protein that you are interested in")
@@ -30,7 +29,6 @@ args = parser.parse_args()
 
 # assigning the parser arguments
 input_folder = args.input_dir
-output_folder = args.output_dir
 presynapse_channel = args.presynapse_channel
 postsynapse_channel = args.postsynapse_channel
 protein_and_synaptic_marker = args.protein_and_synaptic_marker
@@ -339,10 +337,10 @@ best_params_df, trial_df, all_df = optimize_parameters_for_hippocampal_layer(
 output_best_params = "local_peak_best_optimization_params.csv"
 best_params_df.to_csv(output_best_params, encoding = "utf-8")
 
-output_trials_data = os.path.join(output_folder, "local_peak_optimization_trial_data.csv")
+output_trials_data = "local_peak_optimization_trial_data.csv"
 trial_df.to_csv(output_trials_data, encoding = "utf-8")
 
-output_all_data = os.path.join(output_folder, "local_peak_optimization_all_data.csv")
+output_all_data = "local_peak_optimization_all_data.csv"
 all_df.to_csv(output_all_data, encoding = "utf-8")
 
 

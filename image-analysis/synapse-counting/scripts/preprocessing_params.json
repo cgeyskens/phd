@@ -1,0 +1,53 @@
+
+{
+    "VGLUT1_PSD95": {
+        "CA1_SO": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 10
+        },
+        "CA1_SR": {
+            "include_rolling_ball": "True", "radius": 10,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 10
+        },
+        "CA1_SLM": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 5
+        },
+        "CA3_SO": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 10
+        },
+        "CA3_SL": {
+            "include_rolling_ball": "True", "radius": 15,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 20
+        },
+        "CA3_SR": {
+            "include_rolling_ball": "True", "radius": 10,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 10
+        },
+        "DG_Hilus": {
+            "include_rolling_ball": "True", "radius": 15,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 20
+        },
+        "DG_ML": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "False",
+            "include_tophat": "True", "element_size": 15
+        }
+    }
+}
