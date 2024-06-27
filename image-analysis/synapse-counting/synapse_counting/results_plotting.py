@@ -46,7 +46,7 @@ def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, a
     """
     if ax is None:
         fig, ax = plt.subplots()
-    p = sns.swarmplot(x = x, 
+    p = sns.stripplot(x = x, 
                       y = y, 
                       hue = hue,
                       data = df,

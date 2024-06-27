@@ -37,12 +37,20 @@ protein_and_synaptic_marker = args.protein_and_synaptic_marker
 ### ---------------------------------------------- data wrangling ------------------------------------------------- ###
 
 # getting the merged dataframe with all the data
-all_files = glob.glob(f"{input_folder}/*.csv") # getting all files in the folder
-base_df = pd.read_csv(all_files[0]) # read in the first .csv from the folder
+
+# specific files to read in
+result_files = [
+    "local_peak_coloc.csv",
+    "manders_results.csv",
+    "overlap_results.csv",
+    "pearson_results.csv",
+    "puncta_results.csv"
+]
+result_file_paths = [os.path.join(input_folder, filename) for filename in result_files]
+base_df = pd.read_csv(result_file_paths[0]) # read in the first .csv from the folder
 base_df.set_index("img_filename", inplace = True) # setting the index for common column such that we can merge the following dataframes based on the index
-for filename in all_files[1:]: # loop through the csv and merge with the base_df based on the index
+for filename in result_file_paths[1:]: # loop through the csv and merge with the base_df based on the index
   df = pd.read_csv(filename)
-  print(df.columns)
   df.set_index("img_filename", inplace = True)
   base_df = pd.concat([base_df, df], axis=1)
 merged_df = base_df.drop(["Unnamed: 0"], axis = 1)
@@ -74,13 +82,14 @@ df_melted_manders = results_plotting.data_formatting(df = merged_df,
                                                      id_vars = ["img_filename"],
                                                      value_vars = ["overlap_coeff", "overlap_coeff_rot"],
                                                      value_name = "Manders overlap coefficient")
-df_melted_manders = results_plotting.data_formatting(df = merged_df, 
+
+df_melted_local_peaks = results_plotting.data_formatting(df = merged_df, 
                                                      id_vars = ["img_filename"],
                                                      value_vars = ["local_peak_colocalized_spots", "local_peak_colocalized_spots_rot"],
                                                      value_name = "Local peaks colozalized spots")
 
 # plotting the results
-fig, axes = plt.subplots(nrows=4, ncols = 1, figsize=(10, 15))
+fig, axes = plt.subplots(nrows=4, ncols = 1, figsize=(10, 25))
 plot_overlap = results_plotting.plot_data(df = df_melted_overlap_um2, 
                                           x = "hippocampal layer", 
                                           y = "overlap in um2", 
@@ -103,10 +112,10 @@ plot_manders = results_plotting.plot_data(df = df_melted_manders,
                                           title = 'Manders overlap coefficient by hippocampal Layer and condition',
                                           hue = "condition", 
                                           ax=axes[2])
-plot_manders = results_plotting.plot_data(df = df_melted_manders, 
+plot_local_peaks = results_plotting.plot_data(df = df_melted_local_peaks, 
                                           x = "hippocampal layer", 
                                           y = "Local peaks colozalized spots", 
-                                          extra_y_upper = 0.1, 
+                                          extra_y_upper = 100, 
                                           title = 'Local peaks colozalized spots by hippocampal Layer and condition',
                                           hue = "condition", 
                                           ax=axes[3])

@@ -336,7 +336,7 @@ best_params_df, trial_df, all_df = optimize_parameters_for_hippocampal_layer(
     plot_coord = False
     )
 
-output_best_params = os.path.join(output_folder, "local_peak_best_optimization_params.csv")
+output_best_params = "local_peak_best_optimization_params.csv"
 best_params_df.to_csv(output_best_params, encoding = "utf-8")
 
 output_trials_data = os.path.join(output_folder, "local_peak_optimization_trial_data.csv")

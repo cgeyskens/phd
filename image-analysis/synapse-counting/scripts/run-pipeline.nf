@@ -16,7 +16,7 @@ process CreateDirectories {
 
 process RunLocalPeaksOptimization {
     input:
-    path input
+    path input_images
 
     script:
     """
@@ -30,13 +30,14 @@ process RunLocalPeaksOptimization {
     """ 
 
     output:
+    path "local_peak_best_optimization_params.csv", emit: local_peaks_optimized
     stdout
 }
 
 process RunLocalPeaksColocalization {
     input:
-    path input
-    file from_local_peaks
+    path input_images
+    path local_peaks_csv
 
     script:
     """
@@ -47,16 +48,16 @@ process RunLocalPeaksColocalization {
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
     --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
-    --nr_of_optimization_trials ${params.nr_of_optimization_trials} \
-    --optimized_params_df ${optimized_params_df.csv}
+    --optimized_params_df $local_peaks_csv
     """ 
+    
     output:
     stdout
 }
 
 process RunPearsonsAnalysis {
     input:
-    path input
+    path input_images
 
     script:
     """
@@ -74,7 +75,7 @@ process RunPearsonsAnalysis {
 
 process RunMandersAnalysis {
     input:
-    path input
+    path input_images
 
     script:
     """
@@ -91,9 +92,9 @@ process RunMandersAnalysis {
     stdout
 }
 
-process OverlapAnalysis {
+process RunOverlapAnalysis {
     input:
-    path input
+    path input_images
 
     script:
     """
@@ -110,9 +111,9 @@ process OverlapAnalysis {
     stdout
 }
 
-process PunctaAnalysis {
+process RunPunctaAnalysis {
     input:
-    path input
+    path input_images
 
     script:
     """
@@ -135,7 +136,7 @@ process ResultsPlots {
     file from_manders
     file from_overlap
     file from_puncta
-    file from_local_peaks
+    file from_local_peaks_calc
 
     script:
     """
@@ -153,11 +154,11 @@ process ResultsPlots {
 workflow {
     input_ch = Channel.fromPath(params.input_dir)
     CreateDirectories()
-    optimized_params_ch = RunLocalPeaksOptimization(input_ch)
-    local_peaks_coloc_ch = RunLocalPeaksColocalization(input_ch, optimized_params_ch)
+    RunLocalPeaksOptimization(input_ch)
+    local_peaks_ch = RunLocalPeaksColocalization(input_ch, RunLocalPeaksOptimization.out.local_peaks_optimized)
     pearson_ch = RunPearsonsAnalysis(input_ch)
     manders_ch = RunMandersAnalysis(input_ch)
-    overlap_ch = OverlapAnalysis(input_ch)
-    puncta_ch = PunctaAnalysis(input_ch)
-    ResultsPlots(pearson_ch, manders_ch, overlap_ch, puncta_ch, local_peaks_coloc_ch)
+    overlap_ch = RunOverlapAnalysis(input_ch)
+    puncta_ch = RunPunctaAnalysis(input_ch)
+    ResultsPlots(pearson_ch, manders_ch, overlap_ch, puncta_ch, local_peaks_ch)
 }

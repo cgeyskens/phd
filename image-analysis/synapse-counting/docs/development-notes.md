@@ -79,10 +79,14 @@ Adjust existing pipeline
     V- dask-optuna?
     V- test the output of the ranges of the hippocampal layers
     V- recheck your code and make .py files
-    - include it into the nextflow pipeline and check for the optimization efficiency(graph)
-    - try the nextflow pipeline locally
+    V- include it into the nextflow pipeline and check for the optimization efficiency(graph)
+    V- try the nextflow pipeline locally
+    - simplify the pipeline with the directories structure (no intermediate structure)
+    - make the pipeline a bit nicer
+    - include two JSON files as input for the pipeline: one for handcrafted parameters ranges for local peaks optimization and one for the handcrafted preprocessing parameters
+    - reassess the handcrafted parameters
     - from conda to docker, publish in dockerhub
-    - try the pipeline on HPC
+    - try the pipeline on HPC with a lot of trials, with apptainer
     - make histogram of you p-values! To see if the distribution is alright.
 
 - how to pass on images in a pipeline?
