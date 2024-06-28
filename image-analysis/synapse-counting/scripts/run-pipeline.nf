@@ -23,6 +23,8 @@ process RunLocalPeaksOptimization {
     
     input:
     path input_images
+    path preprocess_params
+    path optimization_params
 
     script:
     """
@@ -31,7 +33,9 @@ process RunLocalPeaksOptimization {
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
     --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
-    --nr_of_optimization_trials ${params.nr_of_optimization_trials}
+    --nr_of_optimization_trials ${params.nr_of_optimization_trials} \
+    --preprocessing_params $preprocess_params \
+    --opt_param_ranges $optimization_params 
     """ 
 
     output:
@@ -44,6 +48,7 @@ process RunLocalPeaksColocalization {
     input:
     path input_images
     path local_peaks_opt_csv
+    path preprocess_params
 
     script:
     """
@@ -53,9 +58,10 @@ process RunLocalPeaksColocalization {
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
     --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
-    --optimized_params_df $local_peaks_opt_csv
+    --preprocessing_params $preprocess_params \
+    --optimized_params_df $local_peaks_opt_csv 
     """ 
-    
+
     output:
     path "local_peak_coloc.csv"
 }
@@ -63,6 +69,7 @@ process RunLocalPeaksColocalization {
 process RunPearsonsAnalysis {
     input:
     path input_images
+    path preprocess_params
 
     script:
     """
@@ -70,7 +77,9 @@ process RunPearsonsAnalysis {
     --input_dir ${params.input_dir} \
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
-    --postsynapse_channel ${params.postsynapse_channel}
+    --postsynapse_channel ${params.postsynapse_channel} \
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --preprocessing_params $preprocess_params
     """ 
 
     output:
@@ -80,6 +89,7 @@ process RunPearsonsAnalysis {
 process RunMandersAnalysis {
     input:
     path input_images
+    path preprocess_params
 
     script:
     """
@@ -88,7 +98,8 @@ process RunMandersAnalysis {
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
-    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --preprocessing_params $preprocess_params
     """ 
 
     output:
@@ -98,6 +109,7 @@ process RunMandersAnalysis {
 process RunOverlapAnalysis {
     input:
     path input_images
+    path preprocess_params
 
     script:
     """
@@ -106,7 +118,8 @@ process RunOverlapAnalysis {
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
-    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --preprocessing_params $preprocess_params
     """ 
 
     output:
@@ -116,6 +129,7 @@ process RunOverlapAnalysis {
 process RunPunctaAnalysis {
     input:
     path input_images
+    path preprocess_params
 
     script:
     """
@@ -124,7 +138,8 @@ process RunPunctaAnalysis {
     --name_segments ${params.name_segments} \
     --presynapse_channel ${params.presynapse_channel} \
     --postsynapse_channel ${params.postsynapse_channel} \
-    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
+    --protein_and_synaptic_marker ${params.protein_and_synaptic_marker} \
+    --preprocessing_params $preprocess_params
     """
 
     output:
@@ -151,18 +166,32 @@ process ResultsPlots {
     --puncta_df $from_puncta \
     --protein_and_synaptic_marker ${params.protein_and_synaptic_marker}
     """
+
+    output:
+    path "metric_results.csv"
+    path "coloc_metric_internal_controls.png"
+    path "all_statistics.csv"
+    path "significant_statistics.csv"
+    path "combined_plots.png"
 }
 
 
 workflow {
     input_images = Channel.fromPath(params.input_dir)
+    preprocess_params = Channel.fromPath(params.preprocessing_params)
+    optimization_params = Channel.fromPath(params.optimization_params)
 
-    RunLocalPeaksOptimization(input_images)
-    local_peaks_ch = RunLocalPeaksColocalization(input_images, RunLocalPeaksOptimization.out.local_peaks_optimized)
-    manders_ch = RunMandersAnalysis(input_images)
-    overlap_ch = RunOverlapAnalysis(input_images)
-    pearson_ch = RunPearsonsAnalysis(input_images)
-    puncta_ch = RunPunctaAnalysis(input_images)
+    RunLocalPeaksOptimization(input_images, preprocess_params, optimization_params)
+    local_peaks_ch = RunLocalPeaksColocalization(
+                    input_images, 
+                    RunLocalPeaksOptimization.out.local_peaks_optimized, 
+                    preprocess_params
+                    )
+    
+    manders_ch = RunMandersAnalysis(input_images, preprocess_params)
+    overlap_ch = RunOverlapAnalysis(input_images, preprocess_params)
+    pearson_ch = RunPearsonsAnalysis(input_images, preprocess_params)
+    puncta_ch = RunPunctaAnalysis(input_images, preprocess_params)
 
     ResultsPlots(local_peaks_ch, manders_ch, overlap_ch, pearson_ch, puncta_ch)
 }

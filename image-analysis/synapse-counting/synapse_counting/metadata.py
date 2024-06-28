@@ -70,4 +70,3 @@ def image_filename(path, indices):
     desired_filename = "_".join(desired_parts)
 
     return desired_filename
-

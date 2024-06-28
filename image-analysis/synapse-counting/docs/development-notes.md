@@ -84,14 +84,16 @@ Adjust existing pipeline
     V- try the nextflow pipeline locally
     V- simplify the pipeline with the directories structure (no intermediate structure)
     V- make the pipeline a bit nicer, with logfile when you run it, leave out the create directories
-    - include two JSON files as input for the pipeline: one for handcrafted parameters ranges for local peaks optimization and one for the handcrafted preprocessing parameters
-    - include more parameter ranges when you have the data
+    V- include two JSON files as input for the pipeline: one for handcrafted parameters ranges for local peaks optimization and one for the handcrafted preprocessing parameters. PREPROCESS PARAMS is all the same except for CLAHE in local peaks! 
+    - go over the scripts and clean it up more and make helper functions
     - reassess the handcrafted parameters
+    
     - from conda to docker, publish in dockerhub, add profiles
     - try the pipeline on HPC with a lot of trials, with apptainer
     - make histogram of you p-values! To see if the distribution is alright.
     - meet with Pavie
     - make documentation
+    - include more parameter ranges when you have the data
 
 - how to pass on images in a pipeline?
     - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)

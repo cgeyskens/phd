@@ -4,6 +4,7 @@ import dask
 import pandas as pd
 import numpy as np
 import argparse
+import json
 
 
 ### --------------------------------- parser arguments and loading custom library --------------------------------- ###
@@ -22,6 +23,7 @@ parser.add_argument("--name_segments", type = int, nargs = '+', help = 'Comma se
 parser.add_argument("--presynapse_channel", type=int, help="number of presynapse channel")
 parser.add_argument("--postsynapse_channel", type=int, help="number of postsynapse channel")
 parser.add_argument("--protein_and_synaptic_marker", type=str, help="protein that you are interested in")
+parser.add_argument("--preprocessing_params", type=str, required=True, help="path to preprocessing params JSON file")
 parser.add_argument("--optimized_params_df",type=str, help="dataframe with optimized parameters for each hippcampal layer")
 
 #nr of trials
@@ -33,37 +35,20 @@ name_segments = args.name_segments
 presynapse_channel = args.presynapse_channel
 postsynapse_channel = args.postsynapse_channel
 protein_and_synaptic_marker = args.protein_and_synaptic_marker
+
 # optimized_params_df = args.optimized_params_df
 optimized_params_df = pd.read_csv(args.optimized_params_df)
 # set the index of the best_params_df
 optimized_params_df.set_index('index', inplace=True)
 
+# load the preprocessing params JSON file
+with open(args.preprocessing_params, "r" ) as file:
+    preprocess_params_dict = json.load(file)
+
 # create synaptic_marker variable
 synaptic_marker_string = protein_and_synaptic_marker.split("_")[-2:]
 synaptic_marker = "_".join(synaptic_marker_string)
 
-
-
-### -------------------------------------- preprocessing parameters -------------------------------------- ###
-
-preprocessing_params = {
-    "VGLUT1_PSD95": {
-        "CA3_SL": {"radius": 15, "element_size": 20, "blur_sigma": 2},
-        "DG_Hilus": {"radius": 15, "element_size": 20, "blur_sigma": 2},
-        "CA1_SO": {"radius": 5, "element_size": 10, "blur_sigma": 2},
-        "CA3_SO": {"radius": 5, "element_size": 10, "blur_sigma": 2},
-        "CA1_SR": {"radius": 10, "element_size": 10, "blur_sigma": 2},
-        "CA3_SR": {"radius": 10, "element_size": 10, "blur_sigma": 2},
-        "CA1_SLM": {"radius": 5, "element_size": 5, "blur_sigma": 2},
-        "DG_ML": {"radius": 5, "element_size": 15, "blur_sigma": 2}
-    },
-    "VGLUT2_PSD95": {
-        "Cortex_L4": {"radius": 10, "element_size": 10, "blur_sigma": 2},
-        "CA2_SP": {"radius": 15, "element_size": 10, "blur_sigma": 2},
-        "DG_GC": {"radius": 15, "element_size": 10, "blur_sigma": 2},
-        "Subiculum_SP": {"radius": 15, "element_size": 10, "blur_sigma": 2}
-    }
-}
 
 ### --------------------------------- the calculation of colocalized spots --------------------------------- ###
 
@@ -83,16 +68,13 @@ def local_peak_colocalizaion(filename, input_folder, preprocessing_params, synap
     Returns:
         A dictionary containing the filename, the local peak colocalized spot and the 
         local peak colocalized spots when rotated.
-    """    
-    if not filename.endswith(".czi"):
-        return None
-    #extract the layer from the filename
+    """   
     file_path = os.path.join(input_folder, filename)
-    parts = filename.split('_')[-2:]
+    parts = file_path.split('_')[-2:]
     result = "_".join(parts)
     layer = result[:-4]
-
-    # getting only the params from a distinct layer
+    
+    # getting the hippocampal_layer specific preprocessing parameters from the dictionary
     params = preprocessing_params.get(synaptic_marker, {}).get(layer, {})
 
     # ectracting the best params for the handcrafted preprocessing params and the optimized colocalization params
@@ -100,7 +82,7 @@ def local_peak_colocalizaion(filename, input_folder, preprocessing_params, synap
         return {
             "radius": params.get("radius"),
             "element_size": params.get("element_size"),
-            "blur_sigma":  params.get("blur_sigma"),
+            "sigma":  params.get("sigma"),
             "presynapse_distance": optimzed_coloc_params_df.at[layer, "pre_distance"],
             "postsynapse_distance": optimzed_coloc_params_df.at[layer, "post_distance"],
             "presynapse_threshold": optimzed_coloc_params_df.at[layer, "pre_threshold"],
@@ -120,8 +102,8 @@ def local_peak_colocalizaion(filename, input_folder, preprocessing_params, synap
     # preprocessing
     p = preprocessing.ImagePreprocessing(
         include_rolling_ball=True, radius=all_param_values["radius"],
-        include_blur=True, sigma = all_param_values["blur_sigma"], preserve_range = True,
-        include_clahe=False,
+        include_blur=True, sigma = all_param_values["sigma"], preserve_range = True,
+        include_clahe=False, #!!! this is different from other processes, otherwise we got no values
         include_tophat=True, element_size = all_param_values["element_size"]
         )
     pre_1, post_1 = p.preprocess(pre, post)
@@ -164,7 +146,7 @@ file_list = os.listdir(input_folder)
 # compute the results using a dask delayed object
 delayed_results = [local_peak_colocalizaion(filename = file_name, 
                                             input_folder = input_folder,
-                                            preprocessing_params = preprocessing_params,
+                                            preprocessing_params = preprocess_params_dict,
                                             synaptic_marker = synaptic_marker,
                                             optimzed_coloc_params_df = optimized_params_df,
                                             name_segments = name_segments) for file_name in file_list]

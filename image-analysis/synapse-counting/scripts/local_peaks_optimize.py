@@ -5,7 +5,7 @@ import dask
 import pandas as pd
 import numpy as np
 import argparse
-
+import json
 
 ### --------------------------------- parser arguments and loading custom library --------------------------------- ###
 
@@ -23,6 +23,8 @@ parser.add_argument("--presynapse_channel", type=int, help="number of presynapse
 parser.add_argument("--postsynapse_channel", type=int, help="number of postsynapse channel")
 parser.add_argument("--protein_and_synaptic_marker", type=str, help="protein that you are interested in")
 parser.add_argument("--nr_of_optimization_trials",type=int, help="number of trials requested for optimization of parameters")
+parser.add_argument("--preprocessing_params", type=str, required=True, help="path to preprocessing params JSON file")
+parser.add_argument("--opt_param_ranges", type=str, required=True, help="path to optimization param ranges JSON file")
 
 #nr of trials
 args = parser.parse_args()
@@ -34,14 +36,33 @@ postsynapse_channel = args.postsynapse_channel
 protein_and_synaptic_marker = args.protein_and_synaptic_marker
 nr_of_optimization_trials = args.nr_of_optimization_trials
 
+# load the preprocessing params JSON file
+with open(args.preprocessing_params, "r" ) as file:
+    preprocess_params_dict = json.load(file)
+# load the optimization param ranges JSON file
+with open(args.opt_param_ranges, "r" ) as file:
+    opt_param_ranges_dict = json.load(file)
+
 # create synaptic_marker variable
 synaptic_marker_string = protein_and_synaptic_marker.split("_")[-2:]
 synaptic_marker = "_".join(synaptic_marker_string)
+
+# getting the hippocampal_layer specific preprocessing parameters from the dictionary
+preprocessing_params_synaptic_marker = preprocess_params_dict.get(synaptic_marker, {})
+opt_param_ranges_synaptic_marker = opt_param_ranges_dict.get(synaptic_marker, {})
 
 
 ### -------------------------------------- custom definitions for optimization ------------------------------------------ ###
 
 def load_and_preprocess(file_path, presynapse_channel, postsynapse_channel, preprocess_params):
+    
+    parts = file_path.split('_')[-2:]
+    result = "_".join(parts)
+    layer = result[:-4]
+    
+    # getting the hippocampal_layer specific preprocessing parameters from the dictionary
+    preprocess_params = preprocess_params_dict.get(synaptic_marker, {}).get(layer, {})
+    
     # extract metadata
     pixel_size_um, _ , _ = metadata.extract_metadata(file_path)
     # extract channels
@@ -52,7 +73,7 @@ def load_and_preprocess(file_path, presynapse_channel, postsynapse_channel, prep
     p = preprocessing.ImagePreprocessing(
         include_rolling_ball=preprocess_params['include_rolling_ball'], radius=preprocess_params['radius'],
         include_blur=preprocess_params['include_blur'], sigma=preprocess_params['sigma'], preserve_range=True,
-        include_clahe=preprocess_params['include_clahe'],
+        include_clahe=False, #!!! this is different from other processes, otherwise we got no values
         include_tophat=preprocess_params['include_tophat'], element_size=preprocess_params['element_size']
     )
     pre_processed, post_processed = p.preprocess(pre, post)
@@ -60,7 +81,7 @@ def load_and_preprocess(file_path, presynapse_channel, postsynapse_channel, prep
 
 
 def objective(trial, presynapse_preprocessed, postsynapse_preprocessed, pixel_size_um, param_ranges):
-    
+
     pre_distance = trial.suggest_int("pre_distance", *param_ranges['pre_distance'])
     post_distance = trial.suggest_int("post_distance", *param_ranges['post_distance'])
     pre_threshold = trial.suggest_float("pre_threshold", *param_ranges['pre_threshold'])
@@ -203,133 +224,31 @@ def optimize_parameters_for_hippocampal_layer(file_list,
     return best_params_by_hippocampal_layer_df, final_df_optuna, final_df
 
 
+### ------------------------------------------ The actual optimization ------------------------------------------- ###
 
-### ---------------------- All the parameters needed depending on synaptic marker combination ----------------------- ###
-
+# additional parameters for master definition
 file_list = os.listdir(input_folder)
 
+# getting the hippocampal layers dynamically
+def get_regions(data, key):
+    if key in data:
+        return list(data[key].keys())
+    else:
+        return []
+    
 if synaptic_marker == "VGLUT1_PSD95":
-    hippocampal_layers = ["CA1_SO", "CA1_SR", "CA1_SLM", "CA3_SO", "CA3_SL", "CA3_SR", "DG_Hilus", "DG_ML"] 
-    # handcrafted preprocessing parameters
-    preprocess_params_by_hippocampal_layer = {
-        'CA1_SO': {
-            'include_rolling_ball': True, 'radius': 5,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 10
-        },
-        'CA1_SR': {
-            'include_rolling_ball': True, 'radius': 10,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 10
-        },
-        'CA1_SLM': {
-            'include_rolling_ball': True, 'radius': 5,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 5
-        },
-        'CA3_SO': {
-            'include_rolling_ball': True, 'radius': 5,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 10
-        },
-        'CA3_SL': {
-            'include_rolling_ball': True, 'radius': 15,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 20
-        },
-        'CA3_SR': {
-            'include_rolling_ball': True, 'radius': 10,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 10
-        },
-        'DG_Hilus': {
-            'include_rolling_ball': True, 'radius': 15,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 20
-        },
-        'DG_ML': {
-            'include_rolling_ball': True, 'radius': 5,
-            'include_blur': True, 'sigma': 2,
-            'include_clahe': False,
-            'include_tophat': True, 'element_size': 15
-        },
-    }
-    # handcrafted parameters ranges
-    param_ranges = {
-        'CA1_SO': {
-            'pre_distance': (1, 5),
-            'post_distance': (1,5),
-            'pre_threshold': (500, 900),
-            'post_threshold': (100, 150),
-            'max_distance_um': (0.01, 1)
-        },
-        'CA1_SR': {
-            'pre_distance': (1, 5),
-            'post_distance': (1,5),
-            'pre_threshold': (300, 500),
-            'post_threshold': (100, 200),
-            'max_distance_um': (0.01, 1)
-        },
-        'CA1_SLM': {
-            'pre_distance': (1, 5),
-            'post_distance': (1,5),
-            'pre_threshold': (150, 250),
-            'post_threshold': (50, 80),
-            'max_distance_um': (0.01, 1)
-        },
-        'CA3_SO': {
-            'pre_distance': (1, 5),
-            'post_distance': (1,5),
-            'pre_threshold': (500, 1200),
-            'post_threshold': (100, 160),
-            'max_distance_um': (0.01, 1)
-        },
-        'CA3_SL': {
-            'pre_distance': (1, 10),
-            'post_distance': (1, 10),
-            'pre_threshold': (1000, 2000),
-            'post_threshold': (250, 400),
-            'max_distance_um': (0.01, 1)
-        },
-        'CA3_SR': {
-            'pre_distance': (1, 5),
-            'post_distance': (1, 5),
-            'pre_threshold': (500, 1000),
-            'post_threshold': (100, 200),
-            'max_distance_um': (0.01, 1)
-        },
-        'DG_Hilus': {
-            'pre_distance': (1, 10),
-            'post_distance': (1, 10),
-            'pre_threshold': (1000, 3000),
-            'post_threshold': (300, 500),
-            'max_distance_um': (0.01, 1)
-        },
-        'DG_ML': {
-            'pre_distance': (1, 10),
-            'post_distance': (1, 10),
-            'pre_threshold': (500, 1000),
-            'post_threshold': (100, 200),
-            'max_distance_um': (0.01, 1)
-        }
-    }
-
-
-### ------------------------------------------ The actual optimization ------------------------------------------- ###
+    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGLUT1_PSD95")
+if synaptic_marker == "VGLUT2_PSD95":
+    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGLUT2_PSD95")
+if synaptic_marker == "VGAT_GPHN":
+    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGAT_GPHN")
 
 best_params_df, trial_df, all_df = optimize_parameters_for_hippocampal_layer(
     file_list = file_list, 
     input_folder = input_folder, 
     hippocampal_layers = hippocampal_layers, 
-    preprocess_params_by_hippocampal_layer = preprocess_params_by_hippocampal_layer, 
-    param_ranges = param_ranges, 
+    preprocess_params_by_hippocampal_layer = preprocessing_params_synaptic_marker, 
+    param_ranges = opt_param_ranges_synaptic_marker, 
     nr_of_trials = nr_of_optimization_trials,
     plot_coord = False
     )

@@ -62,8 +62,7 @@ merged_df['hippocampal_layer'] = merged_df['img_filename'].apply(lambda x: x.spl
 merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2]
 
 # save the merged_df 
-output_csv_path = os.path.join(protein_and_synaptic_marker + "_metric_results.csv")
-merged_df.to_csv(output_csv_path)
+merged_df.to_csv("metric_results.csv")
 
 
 ### ---------------------------- Plotting the internal rotated controls vs actual --------------------------------- ###
@@ -123,8 +122,7 @@ plot_local_peaks = results_plotting.plot_data(df = df_melted_local_peaks,
 # saving the combined plots into one file
 internal_control = plt.gcf()  
 plt.tight_layout()
-output_internal_control_plot_path = os.path.join(protein_and_synaptic_marker + "_coloc_metric_internal_controls.png")
-internal_control.savefig(output_internal_control_plot_path, dpi = 300)  
+internal_control.savefig("coloc_metric_internal_controls.png", dpi = 300)  
 
 ### ------------------------------ Plotting the LacZ-gRNA vs the candidate-gRNA (swarm plot) --------------------------------- ###
 
@@ -203,19 +201,13 @@ p_value_threshold = 0.05  # significant results
 df_significant_statistics_results = df_statistics_results[df_statistics_results["p_value"] <= p_value_threshold]
 
 # save the statistics 
-output_all_statistics_path = os.path.join(protein_and_synaptic_marker + "_all_statistics.csv")
-df_statistics_results.to_csv(output_all_statistics_path)
-
-output_significant_statistics_path = os.path.join(protein_and_synaptic_marker + "_significant_statistics.csv")
-df_significant_statistics_results.to_csv(output_significant_statistics_path)
+df_statistics_results.to_csv("all_statistics.csv")
+df_significant_statistics_results.to_csv("significant_statistics.csv")
 
 
 ### --- Plotting the LacZ-gRNA vs the candidate-gRNA (strip plot that shows the means of each brain connected through lines) --- ###
 
-# path to save the combined_plots
-output_png_path = os.path.join(protein_and_synaptic_marker + "_combined_plots")
-
 # make the plot
-i = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = output_png_path)
+i = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = "combined_plots")
 i.save_figure(hippocampal_layer_list = hippocampal_layers, metric_list = metrics)
 
