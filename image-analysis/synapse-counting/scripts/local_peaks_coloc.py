@@ -14,7 +14,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 # custom modules
-from synapse_counting import metadata, preprocessing, calc_synaptic_coloc
+from synapse_counting import metadata, preprocessing, calc_synaptic_coloc, helpers
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description = "process input files")
@@ -45,15 +45,19 @@ optimized_params_df.set_index('index', inplace=True)
 with open(args.preprocessing_params, "r" ) as file:
     preprocess_params_dict = json.load(file)
 
-# create synaptic_marker variable
-synaptic_marker_string = protein_and_synaptic_marker.split("_")[-2:]
-synaptic_marker = "_".join(synaptic_marker_string)
+# get the synaptic marker
+synaptic_marker = helpers.get_synaptic_marker(protein_and_synaptic_marker)
 
 
 ### --------------------------------- the calculation of colocalized spots --------------------------------- ###
 
 @dask.delayed
-def local_peak_colocalizaion(filename, input_folder, preprocessing_params, synaptic_marker, optimzed_coloc_params_df, name_segments):
+def local_peak_colocalizaion(filename, 
+                             input_folder, 
+                             preprocessing_params, 
+                             synaptic_marker, 
+                             optimzed_coloc_params_df, 
+                             name_segments):
     """
     Measure colocalized local peaks with optimized parameters. Decorated by dask delayed for parrellel processing. 
 
@@ -69,10 +73,9 @@ def local_peak_colocalizaion(filename, input_folder, preprocessing_params, synap
         A dictionary containing the filename, the local peak colocalized spot and the 
         local peak colocalized spots when rotated.
     """   
+    # make file_path and extract hippocampal layer
     file_path = os.path.join(input_folder, filename)
-    parts = file_path.split('_')[-2:]
-    result = "_".join(parts)
-    layer = result[:-4]
+    layer = helpers.get_hippocampal_layer(file_path)
     
     # getting the hippocampal_layer specific preprocessing parameters from the dictionary
     params = preprocessing_params.get(synaptic_marker, {}).get(layer, {})

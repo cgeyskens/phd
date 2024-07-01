@@ -1,6 +1,12 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 
+// helpers for visualization
+def input = params.protein_and_synaptic_marker
+def parts = input.split('_')
+def protein = parts[0] + "_" + parts[1]
+def synapse_marker = parts[2] + "_" + parts[3]
+
 // info about run
 log.info """\
          =====================================================================
@@ -10,8 +16,12 @@ log.info """\
          Input from         : ${params.input_dir}
          Output to          : ${params.output_dir}
          ----------------------------
-         Synaptic marker combo      : ${params.protein_and_synaptic_marker}
+         Synaptic markers           : $synapse_marker
+         Protein & Control          : $protein
          Nr of optimization trials  : ${params.nr_of_optimization_trials}
+         ----------------------------
+         Preprocessing params JSON file       : ${params.preprocessing_params}
+         Optimization param ranges JSON file  : ${params.optimization_params}
          ----------------------------
          """
          .stripIndent()
@@ -187,7 +197,7 @@ workflow {
                     RunLocalPeaksOptimization.out.local_peaks_optimized, 
                     preprocess_params
                     )
-    
+
     manders_ch = RunMandersAnalysis(input_images, preprocess_params)
     overlap_ch = RunOverlapAnalysis(input_images, preprocess_params)
     pearson_ch = RunPearsonsAnalysis(input_images, preprocess_params)

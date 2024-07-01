@@ -111,5 +111,7 @@
             "puncta_size_threshold": 50,
             "threshold_algorithm": "triangle"
         }
-    }
+    },
+
+    "VGAT_GPHN": {}
 }

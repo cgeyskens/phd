@@ -10,7 +10,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 # custom modules
-from synapse_counting import metadata, preprocessing, calc_synaptic_metrics
+from synapse_counting import metadata, preprocessing, calc_synaptic_metrics, helpers
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description="process input files")
@@ -33,24 +33,26 @@ protein_and_synaptic_marker = args.protein_and_synaptic_marker
 with open(args.preprocessing_params, "r" ) as file:
     preprocess_params_dict = json.load(file)
 
-# create synaptic_marker variable
-synaptic_marker_string = protein_and_synaptic_marker.split("_")[-2:]
-synaptic_marker = "_".join(synaptic_marker_string)
+# get the synaptic marker
+synaptic_marker = helpers.get_synaptic_marker(protein_and_synaptic_marker)
 
 # the operation
 @dask.delayed
-def measure_image_puncta(filename, name_segments):
+def measure_image_puncta(filename, 
+                          input_folder,
+                          preprocessing_params,
+                          synaptic_marker,
+                          name_segments):
     """
     Measure puncta metrics of both the pre and postsynaptic puncta. Decorated by dask delayed for parrellel processing. 
     Makes also a distinction between big and small synapses.
     """   
+    # make file_path and extract hippocampal layer
     file_path = os.path.join(input_folder, filename)
-    parts = filename.split('_')[-2:]
-    result = "_".join(parts)
-    layer = result[:-4]
+    layer = helpers.get_hippocampal_layer(file_path)
 
     # getting the hippocampal_layer specific preprocessing parameters from the dictionary
-    params = preprocess_params_dict.get(synaptic_marker, {}).get(layer, {})
+    params = preprocessing_params.get(synaptic_marker, {}).get(layer, {})
     # extract metadata
     pixel_size_um, _ , image_size_um = metadata.extract_metadata(file_path)
     # splitting the channels
@@ -105,7 +107,11 @@ def measure_image_puncta(filename, name_segments):
 file_list = os.listdir(input_folder)
 
 # compute the results using a dask delayed object
-delayed_results = [measure_image_puncta(filename, name_segments) for filename in file_list]
+delayed_results = [measure_image_puncta(filename = filename, 
+                          input_folder = input_folder,
+                          preprocessing_params = preprocess_params_dict,
+                          synaptic_marker = synaptic_marker,
+                          name_segments = name_segments) for filename in file_list]
 results = dask.compute(*delayed_results)
 
 # reading out the results into a csv

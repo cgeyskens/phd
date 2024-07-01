@@ -14,7 +14,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 # custom modules
-from synapse_counting import metadata, preprocessing, calc_synaptic_coloc
+from synapse_counting import metadata, preprocessing, calc_synaptic_coloc, helpers
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description = "process input files")
@@ -43,9 +43,8 @@ with open(args.preprocessing_params, "r" ) as file:
 with open(args.opt_param_ranges, "r" ) as file:
     opt_param_ranges_dict = json.load(file)
 
-# create synaptic_marker variable
-synaptic_marker_string = protein_and_synaptic_marker.split("_")[-2:]
-synaptic_marker = "_".join(synaptic_marker_string)
+# get the synaptic marker
+synaptic_marker = helpers.get_synaptic_marker(protein_and_synaptic_marker)
 
 # getting the hippocampal_layer specific preprocessing parameters from the dictionary
 preprocessing_params_synaptic_marker = preprocess_params_dict.get(synaptic_marker, {})
@@ -56,9 +55,7 @@ opt_param_ranges_synaptic_marker = opt_param_ranges_dict.get(synaptic_marker, {}
 
 def load_and_preprocess(file_path, presynapse_channel, postsynapse_channel, preprocess_params):
     
-    parts = file_path.split('_')[-2:]
-    result = "_".join(parts)
-    layer = result[:-4]
+    layer = helpers.get_hippocampal_layer(file_path)
     
     # getting the hippocampal_layer specific preprocessing parameters from the dictionary
     preprocess_params = preprocess_params_dict.get(synaptic_marker, {}).get(layer, {})
@@ -139,7 +136,8 @@ def optimize_parameters_for_hippocampal_layer(file_list,
     
     @dask.delayed
     def process_hippocampal_layer(hippocampal_layer):
-        images = [f for f in file_list if hippocampal_layer in f and "LacZ-gRNA" in f] # only taking control (LacZ-images) images for setting the parameters
+        # only taking control (LacZ-images) images for setting the parameters
+        images = [f for f in file_list if hippocampal_layer in f and "LacZ-gRNA" in f] 
     
         preprocess_params = preprocess_params_by_hippocampal_layer[hippocampal_layer]
         
@@ -228,20 +226,13 @@ def optimize_parameters_for_hippocampal_layer(file_list,
 
 # additional parameters for master definition
 file_list = os.listdir(input_folder)
-
-# getting the hippocampal layers dynamically
-def get_regions(data, key):
-    if key in data:
-        return list(data[key].keys())
-    else:
-        return []
     
 if synaptic_marker == "VGLUT1_PSD95":
-    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGLUT1_PSD95")
+    hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGLUT1_PSD95")
 if synaptic_marker == "VGLUT2_PSD95":
-    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGLUT2_PSD95")
+    hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGLUT2_PSD95")
 if synaptic_marker == "VGAT_GPHN":
-    hippocampal_layers = get_regions(opt_param_ranges_dict, "VGAT_GPHN")
+    hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGAT_GPHN")
 
 best_params_df, trial_df, all_df = optimize_parameters_for_hippocampal_layer(
     file_list = file_list, 
