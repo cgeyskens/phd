@@ -112,11 +112,11 @@ def local_peak_detection(presynapse_preprocessed, postsynapse_preprocessed, pres
         fig, axs = plt.subplots(2, 2, figsize=(30, 30))
 
         axs[0,0].imshow(presynapse_preprocessed, cmap='gray')
-        # axs[0,0].plot(vglut1_coord[:, 1], vglut1_coord[:, 0], 'c.')
+        #axs[0,0].plot(presynapse_coord[:, 1], presynapse_coord[:, 0], 'c.')
         axs[0,0].set_title('vglut1_pre')
 
         axs[0,1].imshow(postsynapse_preprocessed, cmap='gray')
-        # axs[0,1].plot(psd95_coord[:, 1], psd95_coord[:, 0], 'm.')
+        #axs[0,1].plot(postsynapse_coord[:, 1], postsynapse_coord[:, 0], 'm.')
         axs[0,1].set_title('psd95_pre')
 
         axs[1,0].imshow(presynapse_preprocessed, cmap='gray')

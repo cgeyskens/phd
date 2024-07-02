@@ -81,7 +81,7 @@ def measure_image_puncta(filename,
     
     # getting the data
     presynapse_image_mfi, postsynapse_image_mfi = calc_synaptic_metrics.mfi_synapse(pre, post)
-    puncta_results, _ , _ , _ , _= calc_synaptic_metrics.puncta_metrics(
+    puncta_results, _ , _ , _ , _, _, _= calc_synaptic_metrics.puncta_metrics(
         presynapse_watersheded, 
         postsynapse_watersheded, 
         image_size_um, 

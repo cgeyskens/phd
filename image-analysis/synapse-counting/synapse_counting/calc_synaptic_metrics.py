@@ -63,6 +63,9 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
     pre_mean_puncta_size_pix = df_pre_prop_filtered["area"].mean() # mean puncta size in pixels
     pre_mean_puncta_size_um = pre_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
 
+    filtered_pre_puncta = np.isin(pre_labeled, df_pre_prop_filtered["label"].values) * pre_labeled # for visualization
+
+
     # postsynapse
     post_labeled = measure.label(postsynapse_thresholded , connectivity = 1) # 2 for 2d image
     post_prop = measure.regionprops_table(post_labeled, properties = ["label", "area"]) # only calculates one property, is faster
@@ -74,6 +77,8 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
     post_staining_area_um = post_staining_area_pix*(pixel_size_um)**2 # staining area in um2
     post_mean_puncta_size_pix = df_post_prop_filtered["area"].mean() # mean puncta size in pixels in um2
     post_mean_puncta_size_um = post_mean_puncta_size_pix*(pixel_size_um)**2 # mean puncta size in um2
+
+    filtered_post_puncta = np.isin(post_labeled, df_post_prop_filtered["label"].values) * post_labeled # for visualization
     
     # make dictionary for all metrics
     metrics =   {"pre_puncta_nr": pre_puncta_nr,
@@ -89,7 +94,7 @@ def puncta_metrics(presynapse_thresholded, postsynapse_thresholded, image_size_u
                 "post_mean_puncta_size_pix": post_mean_puncta_size_pix,
                 "post_mean_puncta_size_um2": post_mean_puncta_size_um
     }
-    return metrics, pre_labeled, post_labeled, df_pre_prop, df_post_prop
+    return metrics, pre_labeled, post_labeled, df_pre_prop, df_post_prop, filtered_pre_puncta, filtered_post_puncta
 
 
 def filter_out_small_puncta(binary_image, prop_df_with_area, labeled_image, puncta_size_threshold):

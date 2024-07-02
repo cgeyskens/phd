@@ -87,19 +87,18 @@ Adjust existing pipeline
     V- include two JSON files as input for the pipeline: one for handcrafted parameters ranges for local peaks optimization and one for the handcrafted preprocessing parameters. PREPROCESS PARAMS is all the same except for CLAHE in local peaks! 
     V- go over the scripts and clean it up more and make helper functions, check out the nextflow 
         make helper functions for:
-            - the hippocampal layer extraction from the filename
-            - extract the synaptic marker from the filename
-    - reassess the handcrafted parameters
-    
+            V- the hippocampal layer extraction from the filename
+            V- extract the synaptic marker from the filename
+    V- reassess the handcrafted preprocessing parameters
+    V- reassess the handcrafted parameter ranges for optimization
+
     - from conda to docker, publish in dockerhub, add profiles to config file 
     - try the pipeline on HPC with a lot of trials, with apptainer pulling from dockerhub
     - make histogram of you p-values! To see if the distribution is alright.
-    - meet with Pavie
+    - meet with Pavie, to look over the code
+        - CLAHE not working for local peaks?
     - make documentation
-    - include more parameter ranges when you have the data
 
-- how to pass on images in a pipeline?
-    - benchmark the preprocessing with parameter optimization (sk-learn.gridsearch or optuna)
 
 For next, after all prelimary data
 - do the actual analysis

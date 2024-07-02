@@ -4,8 +4,8 @@
             "include_rolling_ball": "True", "radius": 5,
             "include_blur": "True", "sigma": 2,
             "include_clahe": "True",
-            "include_tophat": "True", "element_size": 10,
-            "watershed_sigma": 3,
+            "include_tophat": "True", "element_size": 5,
+            "watershed_sigma": 1,
             "puncta_size_threshold": 20, 
             "threshold_algorithm": "triangle"
         },
@@ -37,12 +37,12 @@
             "threshold_algorithm": "triangle"
         },
         "CA3_SL": {
-            "include_rolling_ball": "True", "radius": 15,
+            "include_rolling_ball": "True", "radius": 10,
             "include_blur": "True", "sigma": 2,
             "include_clahe": "True",
             "include_tophat": "True", "element_size": 20,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 50,
+            "puncta_size_threshold": 40,
             "threshold_algorithm": "triangle"
         },
         "CA3_SR": {
@@ -60,7 +60,7 @@
             "include_clahe": "True",
             "include_tophat": "True", "element_size": 20,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 50,
+            "puncta_size_threshold": 40,
             "threshold_algorithm": "triangle"
         },
         "DG_ML": {
@@ -81,16 +81,16 @@
             "include_clahe": "True",
             "include_tophat": "True", "element_size": 10,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 20,
+            "puncta_size_threshold": 40,
             "threshold_algorithm": "triangle"
         },
         "CA2_SP": {
             "include_rolling_ball": "True", "radius": 15,
             "include_blur": "True", "sigma": 2,
             "include_clahe": "True",
-            "include_tophat": "True", "element_size": 10,
+            "include_tophat": "True", "element_size": 20,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 50,
+            "puncta_size_threshold": 100,
             "threshold_algorithm": "triangle"
         },
         "DG_GC": {
@@ -99,7 +99,7 @@
             "include_clahe": "True",
             "include_tophat": "True", "element_size": 10,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 50,
+            "puncta_size_threshold": 100,
             "threshold_algorithm": "triangle"
         },
         "Subiculum_SP": {
@@ -108,10 +108,10 @@
             "include_clahe": "True",
             "include_tophat": "True", "element_size": 10,
             "watershed_sigma": 3,
-            "puncta_size_threshold": 50,
+            "puncta_size_threshold": 100,
             "threshold_algorithm": "triangle"
         }
     },
 
-    "VGAT_GPHN": {}
+    "VGAT_GEPHN": {}
 }
