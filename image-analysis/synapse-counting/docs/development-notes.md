@@ -95,9 +95,9 @@ Adjust existing pipeline
     - from conda to docker, publish in dockerhub, add profiles to config file 
     - try the pipeline on HPC with a lot of trials, with apptainer pulling from dockerhub
     - make histogram of you p-values! To see if the distribution is alright.
+    - make documentation
     - meet with Pavie, to look over the code
         - CLAHE not working for local peaks?
-    - make documentation
 
 
 For next, after all prelimary data
