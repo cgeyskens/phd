@@ -92,7 +92,11 @@ Adjust existing pipeline
     V- reassess the handcrafted preprocessing parameters
     V- reassess the handcrafted parameter ranges for optimization
 
-    - from conda to docker, publish in dockerhub, add profiles to config file 
+    - ERROR when running with docker. from conda to docker, publish in dockerhub, add profiles to config file 
+        V- update nextflow to latest stable version
+        - make a python package
+        - try to put the scripts into a bin
+        - see MasOS VM from nextflow documentation: mounting your local Users directory
     - try the pipeline on HPC with a lot of trials, with apptainer pulling from dockerhub
     - make histogram of you p-values! To see if the distribution is alright.
     - make documentation

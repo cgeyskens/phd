@@ -1,23 +1,76 @@
+# # Use the official Miniconda3 image as the base
+# FROM continuumio/miniconda3:24.5.0-0
+
+# # copy the conda environment file
+# COPY synapse-counting-env-2.yml /opt
+
+# # initialize Conda
+# RUN conda init bash
+
+# # create the environment and install required packages
+# RUN conda env create -f /opt/synapse-counting-env-2.yml
+# RUN echo "conda activate synapse-counting-2" >> ~/.bashrc 
+# RUN /bin/bash -c "source ~/.bashrc"
+
+# # debugging statement
+# RUN echo "Contents of ~/.bashrc:" && cat ~/.bashrc
+
+# ENV PATH="/opt/conda/bin:/opt/condabin:${PATH}"
+
+# # # start bash shell with activated Conda environment
+# # CMD ["conda", "run", "-n", "synapse-counting-2", "/bin/bash"]
+
+
+
+
+
+# # Use the official Miniconda3 image as the base
+# FROM continuumio/miniconda3:24.5.0-0
+
+# # copy the conda environment file
+# COPY synapse-counting-env-2.yml /opt
+
+# # initialize Conda
+# RUN conda init bash
+
+# # create the environment and install required packages
+# RUN conda env create -f /opt/synapse-counting-env-2.yml
+# RUN echo "conda activate synapse-counting-2" >> ~/.bashrc 
+# RUN /bin/bash -c "source ~/.bashrc"
+
+# # Ensure the environment is activated before running any command
+# ENV PATH /opt/conda/envs/synapse-counting-2/bin:$PATH
+
+# # Start bash shell
+# CMD ["conda", "run", "-n", "synapse-counting-2", "/bin/bash"]
+
+
+
+
 # Use the official Miniconda3 image as the base
-FROM continuumio/miniconda3:24.1.2-0
+FROM continuumio/miniconda3:24.5.0-0
 
-# Set the working directory
-WORKDIR /app
+# Install Bash (version 3.x or later) and ps
+RUN apt-get update && \
+    apt-get install -y bash procps && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy the environment.yml file into the Docker image
-COPY synapse-counting-env.yml .
+# Copy the conda environment file
+COPY synapse-counting-env-2.yml /opt
 
-# Install the conda environment specified in the environment.yml file
-RUN conda env create -f synapse-counting-env.yml
+# Initialize Conda
+RUN conda init bash
 
-# Make RUN commands use the new environment
-SHELL ["conda", "run", "-n", "my_environment", "/bin/bash", "-c"]
+# Create the environment and install required packages
+RUN conda env create -f /opt/synapse-counting-env-2.yml
+RUN echo "conda activate synapse-counting-2" >> ~/.bashrc 
 
-# Ensure the environment is activated when a container is started
-ENTRYPOINT ["conda", "run", "-n", "my_environment", "/bin/bash", "-c"]
+# Ensure the environment is activated before running any command
+ENV PATH="/opt/conda/bin:/opt/condabin:${PATH}"
 
-# Copy the application code into the Docker image
-COPY . .
+# Set the entrypoint to Bash
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
 
-# Define the default command to run when the container starts
-CMD ["your_command_here"]
+# Command to start the container
+CMD ["-c", "source ~/.bashrc && exec /bin/bash"]
+

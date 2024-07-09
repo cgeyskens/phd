@@ -73,7 +73,7 @@ process RunLocalPeaksColocalization {
     """ 
 
     output:
-    path "local_peak_coloc.csv"
+    path "local_peak_coloc.csv", emit: local_peaks_ch
 }
 
 process RunPearsonsAnalysis {
@@ -93,7 +93,7 @@ process RunPearsonsAnalysis {
     """ 
 
     output:
-    path "pearson_results.csv"
+    path "pearson_results.csv", emit: pearson_ch
 }
 
 process RunMandersAnalysis {
@@ -113,7 +113,7 @@ process RunMandersAnalysis {
     """ 
 
     output:
-    path "manders_results.csv"
+    path "manders_results.csv", emit: manders_ch
 }
 
 process RunOverlapAnalysis {
@@ -133,7 +133,7 @@ process RunOverlapAnalysis {
     """ 
 
     output:
-    path "overlap_results.csv"
+    path "overlap_results.csv", emit: overlap_ch
 }
 
 process RunPunctaAnalysis {
@@ -153,11 +153,11 @@ process RunPunctaAnalysis {
     """
 
     output:
-    path "puncta_results.csv"
+    path "puncta_results.csv", emit: puncta_ch
 }
 
 process ResultsPlots {
-    publishDir "${params.output_dir}", mode: 'move'
+    publishDir "${params.output_dir}", mode: 'copy'
     
     input:
     path from_local_peaks_calc
