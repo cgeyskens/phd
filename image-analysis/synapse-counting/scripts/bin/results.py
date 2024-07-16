@@ -8,18 +8,9 @@ import os
 import argparse
 import sys
 import warnings
-
+from synapse_counting import results_plotting
 
 ### --------------------------------- parser arguments and loading custom library --------------------------------- ###
-
-# # Get the parent directory of scripts (parent_directory)
-# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-# # Get the synapse_counting directory
-# synapse_counting_dir = os.path.join(parent_dir, 'synapse_counting')
-# # Append the synapse_counting directory to sys.path
-# sys.path.append(synapse_counting_dir)
-
-from synapse_counting import results_plotting
 
 # adding parser arguments
 parser = argparse.ArgumentParser(description="process input files")

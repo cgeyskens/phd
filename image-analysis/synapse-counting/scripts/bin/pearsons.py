@@ -5,14 +5,6 @@ import pandas as pd
 import dask
 import argparse
 import json
-
-# # Get the parent directory of scripts (parent_directory)
-# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-# # Get the synapse_counting directory
-# synapse_counting_dir = os.path.join(parent_dir, 'synapse_counting')
-# # Append the synapse_counting directory to sys.path
-# sys.path.append(synapse_counting_dir)
-
 from synapse_counting import metadata, preprocessing, calc_synaptic_coloc, helpers
 
 # adding parser arguments
