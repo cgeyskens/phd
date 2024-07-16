@@ -1,8 +1,9 @@
 from skimage import measure, transform, filters, feature, transform
 import numpy as np
+from scipy.spatial.distance import cdist
+import os 
 import matplotlib.pyplot as plt
 
-from scipy.spatial.distance import cdist
 
 def pearsons_coloc(presynapse_image, postsynapse_image):
     """

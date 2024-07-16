@@ -1,12 +1,12 @@
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
 import scipy
 import numpy as np
 import io
 from PIL import Image
+import os
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-
+import matplotlib.pyplot as plt
 
 def data_formatting(df, id_vars, value_vars, value_name, var_name = "condition"):
     """

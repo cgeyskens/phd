@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import pandas as pd
@@ -5,11 +7,13 @@ import dask
 import argparse
 import json
 
-# with this peice of code, it will recognize the custom modules
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(project_root)
+# # Get the parent directory of scripts (parent_directory)
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# # Get the synapse_counting directory
+# synapse_counting_dir = os.path.join(parent_dir, 'synapse_counting')
+# # Append the synapse_counting directory to sys.path
+# sys.path.append(synapse_counting_dir)
 
-# custom modules
 from synapse_counting import metadata, preprocessing, calc_synaptic_metrics, helpers
 
 # adding parser arguments

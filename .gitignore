@@ -19,3 +19,6 @@ ppi-hpc/
 __pycache__/
 *.py[cod]
 *$py.class
+*dist/
+*build/
+*synapse_counting.egg-info

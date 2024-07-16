@@ -94,10 +94,10 @@ Adjust existing pipeline
 
     - ERROR when running with docker. from conda to docker, publish in dockerhub, add profiles to config file 
         V- update nextflow to latest stable version
-        - make a python package
-        - try to put the scripts into a bin
-        - see MasOS VM from nextflow documentation: mounting your local Users directory
-    - try the pipeline on HPC with a lot of trials, with apptainer pulling from dockerhub
+        V- make a python package in conda
+        V- try to put the scripts into a bin
+        V- Kris meeting: the problem was with the docker entrypoint inside the dockerfile. For future reference, use just a python environment inside the docker image.
+    - try the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
     - make histogram of you p-values! To see if the distribution is alright.
     - make documentation
     - meet with Pavie, to look over the code

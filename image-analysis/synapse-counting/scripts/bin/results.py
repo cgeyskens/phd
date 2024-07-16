@@ -12,11 +12,13 @@ import warnings
 
 ### --------------------------------- parser arguments and loading custom library --------------------------------- ###
 
-# with this peice of code, it will recognize the custom modules
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(project_root)
+# # Get the parent directory of scripts (parent_directory)
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# # Get the synapse_counting directory
+# synapse_counting_dir = os.path.join(parent_dir, 'synapse_counting')
+# # Append the synapse_counting directory to sys.path
+# sys.path.append(synapse_counting_dir)
 
-# custom modules
 from synapse_counting import results_plotting
 
 # adding parser arguments

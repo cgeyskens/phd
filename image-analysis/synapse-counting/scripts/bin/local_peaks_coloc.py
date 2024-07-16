@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os 
 import sys
 import dask
@@ -9,11 +10,13 @@ import json
 
 ### --------------------------------- parser arguments and loading custom library --------------------------------- ###
 
-# with this peice of code, it will recognize the custom modules
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(project_root)
+# # Get the parent directory of scripts (parent_directory)
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# # Get the synapse_counting directory
+# synapse_counting_dir = os.path.join(parent_dir, 'synapse_counting')
+# # Append the synapse_counting directory to sys.path
+# sys.path.append(synapse_counting_dir)
 
-# custom modules
 from synapse_counting import metadata, preprocessing, calc_synaptic_coloc, helpers
 
 # adding parser arguments
@@ -157,5 +160,4 @@ results = dask.compute(*delayed_results)
 
 # reading out the results into a csv
 df = pd.DataFrame(results)
-output_csv_path = "local_peak_coloc.csv"
-df.to_csv(output_csv_path, encoding = "utf-8")
+df.to_csv("local_peak_coloc.csv", encoding = "utf-8")
