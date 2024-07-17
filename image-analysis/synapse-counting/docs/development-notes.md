@@ -99,9 +99,11 @@ Adjust existing pipeline
         V- Kris meeting: the problem was with the docker entrypoint inside the dockerfile. For future reference, use just a python environment inside the docker image.
     - try the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
     - make histogram of you p-values! To see if the distribution is alright.
+    - make the pipeline graph
     - make documentation
     - meet with Pavie, to look over the code
         - CLAHE not working for local peaks?
+    - make a heatmap of the prelim results
 
 
 For next, after all prelimary data
