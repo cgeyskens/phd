@@ -1,6 +1,6 @@
 # Automated synapse image processing and analysis pipeline
 
-[![Python Version](https://img.shields.io/pypi/pyversions/synapse-counting.svg?color=green)](https://python.org)
+[![Python Version](https://img.shields.io/pypi/pyversions/synapse-counting.svg?color=blue)](https://python.org)
 [![PyPI](https://img.shields.io/pypi/v/synapse-counting.svg?color=green)](https://pypi.org/project/synapse-counting/)
 
 **synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
