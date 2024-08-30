@@ -32,8 +32,28 @@ In our case the image was gathered as below:
 
 ## Input
 ### Image data
+The image files were named as follows: 
+`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the control hemisphere
+`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_GPR37L1-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the gRNA hemisphere
 
-CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi
+Important segments of the filename, that is needed for the analysis are separated by "_",
+we need from this 
+[0] = CRISPR-Exp4, 
+[1] = IHC-Exp2, 
+[2] = Brain-4, 
+[3] = section-1, 
+[6] = LacZ-gRNA, 
+[8] = CA1, 
+[9] = SLM
+you get: CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_CA1_SLM
+in the pipeline we will use certain segments of this filename name, that are hard coded which are the following:
+gRNA column: [6]
+hippocampal layer column: [8] and [9] (last two)
+Brain: [0]
+
+
+
+
 
 ### Preprocessing parameters
 
