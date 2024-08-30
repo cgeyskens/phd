@@ -16,23 +16,22 @@ The pipeline will analyze 12 synapse metrics with 5 processes, 4 metrics assess 
 2. Regular Mander's Coefficient colocalization
 3. Pearsons correlation Coefficient colocalization
 4. Regular pixel overlap after binarization of the images
-5. Puncta analysis include: 
-    a. pre- and postsynapse mean fluorescence intensity (MFI)
-    b. pre- and postsynaptic puncta density per 100 um2
-    c. pre- and postsynaptic staining area 
-    d. pre- and postsynaptic puncta size
+5. Puncta analysis: pre- and postsynapse mean fluorescence intensity (MFI)
+6. Puncta analysis: pre- and postsynaptic puncta density per 100 um2
+7. Puncta analysis: pre- and postsynaptic staining area
+8. Puncta analysis: pre- and postsynaptic puncta size
 
 Python scripts were parallelized with Nextflow, in each script the image data was parallelized using Dask.
 
-## Use case
+## Usage
 In our case the image was gathered as below: 
 
-
-Synaptic combinations assessed in our paper include VGLUT1-PSD95, VGLUT2-PSD95 & VGAT-GEPH
+<p align="center">
+    <img src="image-readme-2.png">
+</p>  
 
 ## Input
 ### Image data
-In our case the image was gathered as below: 
 
 CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi
 
