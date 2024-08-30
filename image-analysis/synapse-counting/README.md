@@ -1,7 +1,7 @@
 # Automated synapse image processing and analysis pipeline
 
 [![PyPI](https://img.shields.io/pypi/v/synapse-counting.svg?color=green)](https://pypi.org/project/synapse-counting/)
-![Development Status](https://img.shields.io/badge/development%20Status-alpha-red)
+![Development Status](https://img.shields.io/badge/development%20status-alpha-red)
 [![License](https://img.shields.io/pypi/l/synapse-counting.svg?color=green)](https://github.com/cgeyskens/phd/image-analysis/synapse-counting/synapse_counnting/blob/main/LICENSE)
 
 **synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
@@ -32,8 +32,13 @@ In our case the image was gathered as below:
     <img src="image-readme-2.png">
 </p>  
 
-## Input
-### Image data naming
+Running the pipeline example: 
+```bash
+nextflow run run-pipeline.nf -profile docker
+```
+
+## Pipeline input
+### A. Image data naming convention
 The image files were named as follows: \
 `CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` \
 for the control hemisphere 
@@ -56,7 +61,7 @@ gRNA column: [6] \
 hippocampal layer column: [8] and [9] (last two) \
 Brain: [0]
 
-### Preprocessing parameters
+### B. Preprocessing parameters
 The processing parameters include: 
 1. background substraction with rolling ball
 2. gaussian blur
@@ -69,7 +74,7 @@ The processing parameters include:
 You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters` \
 Then you can copy these parameters in: `scripts/preprocess_params.json` 
 
-### Parameter ranges for local peak maxima colocalization assessment
+### C. Parameter ranges for local peak maxima colocalization assessment
 For the local peak maxima colocalization, we need to set some ranges for certain parameters to detect local peak maxima's.
 1. pre_distance and post_distance: distance between individual (pre- and post) synaptic local peaks
 2. pre_threshold & post_threshold: threshold at which a local peak is detected
@@ -78,7 +83,7 @@ For the local peak maxima colocalization, we need to set some ranges for certain
 You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima` \
 Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` 
 
-### Other input parameters
+### D. Other input parameters
 Inside the `nextflow.config` file you can the following pipeline parameters:
 1. Whether you would like to run the pipeline inside a conda environment, a docker container or an apptainer container.
 2. your path to the input directory
@@ -90,11 +95,17 @@ Inside the `nextflow.config` file you can the following pipeline parameters:
 8. number of trials for finding the optimal parameters for local peak maxima detection with 
 
 ## Pipeline output
-
+The pipeline will produce following files:
+1. `all_trial_data.csv` contains exhaustive trial data from local peak maxima optimization
+2. `per_trial_data.csv` contains limited data per trial
+3. `optimized_param_ranges.csv` contains the optimized parameters for detecting local peaks and assessing synaptic colocalization
+4. `metric_results.csv` contains exhaustive results from all the metrics
+5. `plotted_data.png` an image that lets you inspect the plotted results
+6. `all_statistics.csv` containes the statistics
+7. `internal_coloc_controls.png` an image that plots the difference between actual and rotated presynapse/postsynapses colocalization images
 
 ## Dependencies
 The pipeline can be run inside a Conda environment or a Docker image. Apptainer can also pull the docker image from DockerHub to run it in a HPC system.
-
 
 ## Limitations
 The pipeline can only be used for ZEISS image format (.czi).
