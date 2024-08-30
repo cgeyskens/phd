@@ -16,8 +16,8 @@ The pipeline will analyze 8 synapse metrics with 5 processes, 4 metrics assess c
 2. Pearsons correlation Coefficient colocalization
 3. Regular pixel overlap after binarization of the images
 4. Local peak maxima colocalization: 
-  * For each batch of presynapse and postsynapse images per hippocampal layer, it will try to optimize the  parameters such that the scaled difference between actual and rotated presynapse/postsynapses images is maximized. 
-  * It uses Tree-structured Parzen Estimator (TPE) from the optuna library to optimize the parameters.
+    * For each batch of presynapse and postsynapse images per hippocampal layer, it will try to optimize the  parameters such that the scaled difference between actual and rotated presynapse/postsynapses images is maximized. 
+    * It uses Tree-structured Parzen Estimator (TPE) from the optuna library to optimize the parameters.
 5. Puncta analysis: pre- and postsynapse mean fluorescence intensity (MFI)
 6. Puncta analysis: pre- and postsynaptic puncta density per 100 um2
 7. Puncta analysis: pre- and postsynaptic staining area
@@ -71,7 +71,7 @@ The processing parameters include:
 6. minimum puncta size threshold
 7. threshold algorithm for binary images
 
-You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters` \
+You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters.ipynb` \
 Then you can copy these parameters in: `scripts/preprocess_params.json` 
 
 ### C. Parameter ranges for local peak maxima colocalization assessment
@@ -80,7 +80,7 @@ For the local peak maxima colocalization, we need to set some ranges for certain
 2. pre_threshold & post_threshold: threshold at which a local peak is detected
 3. max_distance_um: maximum distance at which a pre and postsynaptic local peak is considered a synapse.
 
-You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima` \
+You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima.ipynb` \
 Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` 
 
 ### D. Other input parameters
