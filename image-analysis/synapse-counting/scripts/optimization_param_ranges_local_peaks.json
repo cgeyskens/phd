@@ -88,6 +88,62 @@
             "max_distance_um": [0.01, 1]
         }
     },  
-    "VGAT_GEPHN": {}
-
+    "VGAT_GEPH": {
+        "CA1_SO": {
+            "pre_distance": [1, 5], 
+            "post_distance": [1, 5], 
+            "pre_threshold": [300, 450], 
+            "post_threshold": [250, 400], 
+            "max_distance_um": [0.01, 1]
+        },
+        "CA1_SR": {
+            "pre_distance": [1, 5],
+            "post_distance": [1, 5],
+            "pre_threshold": [300, 450],
+            "post_threshold": [250, 400],
+            "max_distance_um": [0.01, 1]
+        },       
+        "CA1_SLM": {
+            "pre_distance": [1, 5],
+            "post_distance": [1, 5],
+            "pre_threshold": [200, 350],
+            "post_threshold": [200, 300],
+            "max_distance_um": [0.01, 1]
+        },
+        "CA3_SO": {
+            "pre_distance": [1, 5],
+            "post_distance": [1, 5],
+            "pre_threshold": [300, 500],
+            "post_threshold": [300, 500],
+            "max_distance_um": [0.01, 1]
+        },
+        "CA3_SL": {
+            "pre_distance": [10, 15],
+            "post_distance": [5, 15],
+            "pre_threshold": [500, 1000],
+            "post_threshold": [500, 800],
+            "max_distance_um": [0.01, 1]
+        },
+        "CA3_SR": {
+            "pre_distance": [1, 5],
+            "post_distance": [1, 5],
+            "pre_threshold": [300, 450],
+            "post_threshold": [250, 400],
+            "max_distance_um": [0.01, 1]
+        },
+        "DG_Hilus": {
+            "pre_distance": [5, 15],
+            "post_distance": [5, 15],
+            "pre_threshold": [400, 1000],
+            "post_threshold": [400, 1000],
+            "max_distance_um": [0.01, 1]
+        },
+        "DG_ML": {
+            "pre_distance": [1, 5],
+            "post_distance": [1, 5],
+            "pre_threshold": [300, 400],
+            "post_threshold": [300, 400],
+            "max_distance_um": [0.01, 1]
+        }    
+    }
 }

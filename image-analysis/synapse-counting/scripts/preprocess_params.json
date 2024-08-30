@@ -113,5 +113,79 @@
         }
     },
 
-    "VGAT_GEPHN": {}
+    "VGAT_GEPH": {
+        "CA1_SO": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 10,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 40, 
+            "threshold_algorithm": "otsu"
+        },
+        "CA1_SR": {
+            "include_rolling_ball": "True", "radius": 10,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 10,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 40,
+            "threshold_algorithm": "triangle"
+        },
+        "CA1_SLM": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 5,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 20,
+            "threshold_algorithm": "otsu"
+        },
+        "CA3_SO": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 10,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 40, 
+            "threshold_algorithm": "otsu"
+        },
+        "CA3_SL": {
+            "include_rolling_ball": "True", "radius": 10,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 15,
+            "watershed_sigma": 3,
+            "puncta_size_threshold": 60,
+            "threshold_algorithm": "triangle"
+        },
+        "CA3_SR": {
+            "include_rolling_ball": "True", "radius": 10,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 10,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 40,
+            "threshold_algorithm": "triangle"
+        },
+        "DG_Hilus": {
+            "include_rolling_ball": "True", "radius": 15,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 20,
+            "watershed_sigma": 3,
+            "puncta_size_threshold": 40,
+            "threshold_algorithm": "triangle"
+        },
+        "DG_ML": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 2,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 5,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 20,
+            "threshold_algorithm": "otsu"
+        }
+
+    }
 }

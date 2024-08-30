@@ -226,8 +226,8 @@ if synaptic_marker == "VGLUT1_PSD95":
     hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGLUT1_PSD95")
 if synaptic_marker == "VGLUT2_PSD95":
     hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGLUT2_PSD95")
-if synaptic_marker == "VGAT_GPHN":
-    hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGAT_GPHN")
+if synaptic_marker == "VGAT_GEPH":
+    hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGAT_GEPH")
 
 best_params_df, trial_df, all_df = optimize_parameters_for_hippocampal_layer(
     file_list = file_list, 
