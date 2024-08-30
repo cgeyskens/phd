@@ -2,7 +2,9 @@
 
 This repository contains a custom image processing and analysis pipeline to examine 12 metrics from immunostained synapses. 
 
-![workflow](image-readme.png) 
+<p align="center">
+    <img src="image-readme.png" alt="drawing" width="1000" height=800/>
+</p>  
  
 
 ## Limitations
