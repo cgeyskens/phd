@@ -97,13 +97,17 @@ Adjust existing pipeline
         V- make a python package in conda
         V- try to put the scripts into a bin
         V- Kris meeting: the problem was with the docker entrypoint inside the dockerfile. For future reference, use just a python environment inside the docker image.
-    - try the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
-    - make histogram of you p-values! To see if the distribution is alright.
+    - try the pipeline on the HPC
+        V- just make a regular docker image with pip on local
+        V- pull the image from DockHub with Apptainer on HPC  --> PROBLEM: architecture AMD vs ARM, solved; I can shell into the container
+        - copy all the necessary files to the HPC and try out the pipeline
+    - sbatch the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
+    - QC: make histogram of you p-values! To see if the distribution is alright.
+    - change the heatmap of the prelim results to a dotplot (like Dan suggested)
     V- make the pipeline graph
-    - make documentation
+    V- make documentation
     - meet with Pavie, to look over the code
         - CLAHE not working for local peaks?
-    - make a heatmap of the prelim results
 
 
 For next, after all prelimary data

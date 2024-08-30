@@ -1,5 +1,5 @@
-# Use official Python 3.11 image as the base, ensuring the correct architecture
-FROM --platform=linux/amd64 python:3.11-slim
+# Use official Python 3.11 image as the base
+FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
