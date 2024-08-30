@@ -12,10 +12,12 @@
 
 ## Pipeline summary
 The pipeline will analyze 8 synapse metrics with 5 processes, 4 metrics assess colocalization and 4 metrics assess the pre- and postsynaptic puncta, these metrics include the following:
-1. Local peak maxima colocalization: this first optimizes the parameters for detecting local peak maxima's using 90 degrees rotated post-synapse image as comparison using the Optuna library. Then, these parameters are used to calculate 
-2. Regular Mander's Coefficient colocalization
-3. Pearsons correlation Coefficient colocalization
-4. Regular pixel overlap after binarization of the images
+1. Regular Mander's Coefficient colocalization
+2. Pearsons correlation Coefficient colocalization
+3. Regular pixel overlap after binarization of the images
+4. Local peak maxima colocalization: 
+  * For each batch of presynapse and postsynapse images per hippocampal layer, it will try to optimize the  parameters such that the scaled difference between actual and rotated presynapse/postsynapses images is maximized. 
+  * It uses Tree-structured Parzen Estimator (TPE) from the optuna library to optimize the parameters.
 5. Puncta analysis: pre- and postsynapse mean fluorescence intensity (MFI)
 6. Puncta analysis: pre- and postsynaptic puncta density per 100 um2
 7. Puncta analysis: pre- and postsynaptic staining area
@@ -39,7 +41,7 @@ for the control hemisphere
 `CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_GPR37L1-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` \
 for the gRNA hemisphere 
 
-Important segments of the filename, that is needed for the analysis are separated by "_", \
+Important segments of the filename, that are needed for the analysis are separated by "_", \
 we need from this \
 [0] = CRISPR-Exp4, \
 [1] = IHC-Exp2, \
@@ -59,13 +61,13 @@ The processing parameters include:
 1. background substraction with rolling ball
 2. gaussian blur
 3. CLAHE
-4. Tophat
-5. Watershed for binary images
+4. tophat
+5. watershed for binary images
 6. minimum puncta size threshold
 7. threshold algorithm for binary images
 
 You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters` \
-Then you can copy these parameters in: `scripts/preprocess_params.json` \
+Then you can copy these parameters in: `scripts/preprocess_params.json` 
 
 ### Parameter ranges for local peak maxima colocalization assessment
 For the local peak maxima colocalization, we need to set some ranges for certain parameters to detect local peak maxima's.
@@ -74,7 +76,7 @@ For the local peak maxima colocalization, we need to set some ranges for certain
 3. max_distance_um: maximum distance at which a pre and postsynaptic local peak is considered a synapse.
 
 You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima` \
-Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` \
+Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` 
 
 ### Other input parameters
 Inside the `nextflow.config` file you can the following pipeline parameters:
@@ -85,7 +87,7 @@ Inside the `nextflow.config` file you can the following pipeline parameters:
 5. your path to the ocal peak optimization parameters json file
 6. which name segments to use from the image file name
 7. your pre- and postsynapse image channel
-8. nr of trials for finding the optimal parameters for local peak maxima detection
+8. number of trials for finding the optimal parameters for local peak maxima detection with 
 
 ## Pipeline output
 
