@@ -1,7 +1,7 @@
 # Automated synapse image processing and analysis pipeline
 
 [![PyPI](https://img.shields.io/pypi/v/synapse-counting.svg?color=green)](https://pypi.org/project/synapse-counting/)
-![Development Status](https://img.shields.io/badge/Development%20Status-alpha-red)
+![Development Status](https://img.shields.io/badge/development%20Status-alpha-red)
 [![License](https://img.shields.io/pypi/l/synapse-counting.svg?color=green)](https://github.com/cgeyskens/phd/image-analysis/synapse-counting/synapse_counnting/blob/main/LICENSE)
 
 **synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
@@ -11,9 +11,26 @@
 </p>  
 
 ## Pipeline summary
+The pipeline will analyze 12 synapse metrics with 5 processes, 4 metrics assess colocalization and 8 metrics assess the pre- and postsynaptic puncta, these metrics include the following:
+1. Local peak maxima colocalization: this first optimizes the parameters for detecting local peak maxima's using 90 degrees rotated post-synapse image as comparison using the Optuna library. Then, these parameters are used to calculate 
+2. Regular Mander's Coefficient colocalization
+3. Pearsons correlation Coefficient colocalization
+4. Regular pixel overlap after binarization of the images
+5. Puncta analysis include: 
+    a. pre- and postsynapse mean fluorescence intensity (MFI)
+    b. pre- and postsynaptic puncta density per 100 um2
+    c. pre- and postsynaptic staining area 
+    d. pre- and postsynaptic puncta size
+
+Python scripts were parallelized with Nextflow, in each script the image data was parallelized using Dask.
+
+## Use case
+In our case the image was gathered as below: 
 
 
-## Usage
+Synaptic combinations assessed in our paper include VGLUT1-PSD95, VGLUT2-PSD95 & VGAT-GEPH
+
+## Input
 ### Image data
 In our case the image was gathered as below: 
 
