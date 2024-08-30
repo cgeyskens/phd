@@ -11,7 +11,7 @@
 </p>  
 
 ## Pipeline summary
-The pipeline will analyze 12 synapse metrics with 5 processes, 4 metrics assess colocalization and 8 metrics assess the pre- and postsynaptic puncta, these metrics include the following:
+The pipeline will analyze 8 synapse metrics with 5 processes, 4 metrics assess colocalization and 4 metrics assess the pre- and postsynaptic puncta, these metrics include the following:
 1. Local peak maxima colocalization: this first optimizes the parameters for detecting local peak maxima's using 90 degrees rotated post-synapse image as comparison using the Optuna library. Then, these parameters are used to calculate 
 2. Regular Mander's Coefficient colocalization
 3. Pearsons correlation Coefficient colocalization
@@ -31,8 +31,8 @@ In our case the image was gathered as below:
 </p>  
 
 ## Input
-### Image data
-The image files were named as follows: 
+### Image data naming
+The image files were named as follows: \
 `CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` \
 for the control hemisphere 
 
@@ -52,23 +52,46 @@ you get: CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_CA1_SLM \
 in the pipeline we will use certain segments of this filename name, that are hard coded which are the following: \
 gRNA column: [6] \
 hippocampal layer column: [8] and [9] (last two) \
-Brain: [0] \
-
-
-
-
+Brain: [0]
 
 ### Preprocessing parameters
+The processing parameters include: 
+1. background substraction with rolling ball
+2. gaussian blur
+3. CLAHE
+4. Tophat
+5. Watershed for binary images
+6. minimum puncta size threshold
+7. threshold algorithm for binary images
 
-### Parameter ranges
+You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters` \
+Then you can copy these parameters in: `scripts/preprocess_params.json` \
+
+### Parameter ranges for local peak maxima colocalization assessment
+For the local peak maxima colocalization, we need to set some ranges for certain parameters to detect local peak maxima's.
+1. pre_distance and post_distance: distance between individual (pre- and post) synaptic local peaks
+2. pre_threshold & post_threshold: threshold at which a local peak is detected
+3. max_distance_um: maximum distance at which a pre and postsynaptic local peak is considered a synapse.
+
+You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima` \
+Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` \
 
 ### Other input parameters
+Inside the `nextflow.config` file you can the following pipeline parameters:
+1. Whether you would like to run the pipeline inside a conda environment, a docker container or an apptainer container.
+2. your path to the input directory
+3. your path to the output directory
+4. your path to the preprocessing parameters json file
+5. your path to the ocal peak optimization parameters json file
+6. which name segments to use from the image file name
+7. your pre- and postsynapse image channel
+8. nr of trials for finding the optimal parameters for local peak maxima detection
 
 ## Pipeline output
 
 
 ## Dependencies
-The pipeline can be run inside a Conda environment or a Docker image. Apptainer can also pull the docker image from DockerHub.
+The pipeline can be run inside a Conda environment or a Docker image. Apptainer can also pull the docker image from DockerHub to run it in a HPC system.
 
 
 ## Limitations
