@@ -32,11 +32,11 @@ In our case the image was gathered as below:
 
 ## Input
 ### Image data
-The image files were named as follows: 
-`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the control hemisphere
-`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_GPR37L1-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the gRNA hemisphere
+The image files were named as follows: \
+`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_LacZ-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the control hemisphere \
+`CRISPR-Exp4_IHC-Exp2_Brain-4_section-1_488-VGLUT1_647-PSD95_GPR37L1-gRNA_63X&3XzoomAiryscan_CA1_SLM.czi` for the gRNA hemisphere \
 
-Important segments of the filename, that is needed for the analysis are separated by "_",
+Important segments of the filename, that is needed for the analysis are separated by "_", 
 we need from this 
 [0] = CRISPR-Exp4, 
 [1] = IHC-Exp2, 
