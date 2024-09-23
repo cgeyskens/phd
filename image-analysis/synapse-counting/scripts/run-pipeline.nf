@@ -61,7 +61,7 @@ process RunLocalPeaksOptimization {
     val protein_and_synaptic_marker
     val nr_of_optimization_trials
     path preprocess_params
-    val optimization_params
+    path optimization_params
 
     output:
     path "local_peak_best_optimization_params.csv", emit: local_peaks_optimized

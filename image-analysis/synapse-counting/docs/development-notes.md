@@ -97,17 +97,32 @@ Adjust existing pipeline
         V- make a python package in conda
         V- try to put the scripts into a bin
         V- Kris meeting: the problem was with the docker entrypoint inside the dockerfile. For future reference, use just a python environment inside the docker image.
-    - try the pipeline on the HPC
+    V- try the pipeline on the HPC
+    - was having this issue: https://github.com/conda/conda/issues/7980
         V- just make a regular docker image with pip on local
         V- pull the image from DockHub with Apptainer on HPC  --> PROBLEM: architecture AMD vs ARM, solved; I can shell into the container
-        - copy all the necessary files to the HPC and try out the pipeline
-    - sbatch the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
+        V- copy all the necessary files to the HPC and try out the pipeline
+    V- sbatch the pipeline on HPC with a 100 trials for optimization, with apptainer pulling from dockerhub
     - QC: make histogram of you p-values! To see if the distribution is alright.
+    - p-value adjustment by Hochberg or Bonferroni; 
+        - which p values to group for this? Grouped on hippocampal layer or metric assessed?
+    - How to show effect size? Cohen's d
     - change the heatmap of the prelim results to a dotplot (like Dan suggested)
     V- make the pipeline graph
     V- make documentation
     - meet with Pavie, to look over the code
         - CLAHE not working for local peaks?
+    - Watchout with CLAHE and local peaks
+    - Benjamin Pavie will look at the code
+    - Setup a meeting with the statistics consultancy of KU Leuven
+        - look into multivariate models (mixed models)
+        - Cohen's D is alright for effect size
+        - paired t-test is alright, no p adjustment needs to be made
+        - for the direction analysis: can take the difference between each brains mean
+    - Do Cohen's D for effect size
+    - Do PCA analysis/DBSCAN of the features/metric and samples
+    - make heatmap of Z-scores normalization of metrics
+    - Dan's suggestion: compare the LacZ between samples
 
 
 For next, after all prelimary data
