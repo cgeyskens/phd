@@ -110,19 +110,24 @@ Adjust existing pipeline
     - change the heatmap of the prelim results to a dotplot (like Dan suggested)
     V- make the pipeline graph
     V- make documentation
-    - meet with Pavie, to look over the code
+    V- meet with Pavie, to look over the code
         - CLAHE not working for local peaks?
-    - Watchout with CLAHE and local peaks
+    V- Watchout with CLAHE and local peaks
     - Benjamin Pavie will look at the code
-    - Setup a meeting with the statistics consultancy of KU Leuven
-        - look into multivariate models (mixed models)
-        - Cohen's D is alright for effect size
-        - paired t-test is alright, no p adjustment needs to be made
-        - for the direction analysis: can take the difference between each brains mean
-    - Do Cohen's D for effect size
-    - Do PCA analysis/DBSCAN of the features/metric and samples
-    - make heatmap of Z-scores normalization of metrics
-    - Dan's suggestion: compare the LacZ between samples
+    V- Setup a meeting with the statistics consultancy of KU Leuven
+        V- look into multivariate models (mixed models)
+        V- Cohen's D is alright for effect size
+        V- paired t-test is alright, no p adjustment needs to be made
+        V- for the direction analysis: can take the difference between each brains mean
+    V- Do Cohen's D for effect size
+Downstream analyses to be performed:
+    - check for outliers (box plots, Z-scores, robust PCA)
+    - differential or paired PCA: across hemisphere: VCAM1-gRNA, LacZ-gRNA (not on individual images, but on brain means)
+    - Cluster analysis: hierarchical clustering or k-means clustering/gaussian mixture models. First PCA/TSNE then k means.
+    - Correlation analysis: between parameters and inter-region correlation
+    - Network analysis: to assess the how features co-vary
+    - Mixed effect models; can account for multiple regions or replicates
+    - Random Forest for feature importance
 
 
 For next, after all prelimary data
