@@ -70,7 +70,7 @@ Adjust existing pipeline
 
 ### Next-up
 - adjust preprocessing parameters for every hippocampal layer in every synaptic combination:
-    - VGAT-Gephyrin
+    V- VGAT-Gephyrin
 - local maxima detection:
     V- try out optuna per image
     V- arrange the output of the optimization
@@ -106,7 +106,7 @@ Adjust existing pipeline
     - QC: make histogram of you p-values! To see if the distribution is alright.
     - p-value adjustment by Hochberg or Bonferroni; 
         - which p values to group for this? Grouped on hippocampal layer or metric assessed?
-    - How to show effect size? Cohen's d
+    V- How to show effect size? Cohen's d
     - change the heatmap of the prelim results to a dotplot (like Dan suggested)
     V- make the pipeline graph
     V- make documentation
@@ -122,12 +122,22 @@ Adjust existing pipeline
     V- Do Cohen's D for effect size
 Downstream analyses to be performed:
     - check for outliers (box plots, Z-scores, robust PCA)
-    - differential or paired PCA: across hemisphere: VCAM1-gRNA, LacZ-gRNA (not on individual images, but on brain means)
-    - Cluster analysis: hierarchical clustering or k-means clustering/gaussian mixture models. First PCA/TSNE then k means.
+    X- differential or paired PCA: across hemisphere: VCAM1-gRNA, LacZ-gRNA (not on individual images, but on brain means)
+    X- Cluster analysis: hierarchical clustering or k-means clustering/gaussian mixture models. First PCA/TSNE then k means.
     - Correlation analysis: between parameters and inter-region correlation
     - Network analysis: to assess the how features co-vary
     - Mixed effect models; can account for multiple regions or replicates
     - Random Forest for feature importance
+Adjustments & problems to the pipeline:
+    - New features: 
+            - for individual images: 
+            - for individual puncta: puncta intensity, puncta shape, 
+            - colocalization: synaptic distance
+    - Problem: preprocessing-induced bias in your dim reduction analysis
+            - Adaptive thresholding techniques: Otsu or CLAHE
+            - Before applying preprocessing: intensity normalization
+            - parameter harmonization, eg for VGLUT1-PSD95 use CA1 SR as reference
+
 
 
 For next, after all prelimary data
