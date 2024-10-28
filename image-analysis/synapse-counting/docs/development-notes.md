@@ -122,8 +122,8 @@ Adjust existing pipeline
     V- Do Cohen's D for effect size
 Downstream analyses to be performed:
     - check for outliers (box plots, Z-scores, robust PCA)
-    X- differential or paired PCA: across hemisphere: VCAM1-gRNA, LacZ-gRNA (not on individual images, but on brain means)
-    X- Cluster analysis: hierarchical clustering or k-means clustering/gaussian mixture models. First PCA/TSNE then k means.
+    V- differential or paired PCA: across hemisphere: VCAM1-gRNA, LacZ-gRNA (not on individual images, but on brain means)
+    V- Cluster analysis: hierarchical clustering or k-means clustering/gaussian mixture models. First PCA/TSNE then k means.
     - Correlation analysis: between parameters and inter-region correlation
     - Network analysis: to assess the how features co-vary
     - Mixed effect models; can account for multiple regions or replicates
