@@ -27,7 +27,6 @@ vcam1_data_vglut_mfi <- vcam1_data %>%
 vcam1_data_vglut_mfi$presynapse_image_mfi_scaled <- scale(vcam1_data_vglut_mfi$presynapse_image_mfi)
 
 # checking distribution
-hist(vcam1_data_vglut_mfi$presynapse_image_mfi)
 hist(vcam1_data_vglut_mfi$presynapse_image_mfi_scaled)
 
 # modifying the gRNA and hippocampal_layer column from character to factor for one hot encoding
@@ -55,7 +54,7 @@ mixed_lm2 <- lmer(presynapse_image_mfi_scaled ~ gRNA * hippocampal_layer +
                   data = vcam1_data_vglut_mfi)
 summary(mixed_lm2)
 
-# improved model WITH SCALED DATA
+# improved model
 improved_model <- lmer(presynapse_image_mfi_scaled ~ gRNA * hippocampal_layer + 
                      (1|Brain) +                             # between-brain variation because of perfusion/viral injection
                      (1|Brain:gRNA) +                        # paired design of hemispheres
@@ -72,6 +71,7 @@ anova(improved_model, mixed_lm2)
 
 
 ## Generalized models
+hist(vcam1_data_vglut_mfi$presynapse_image_mfi)
 
 # taking into accound the non-normality of the data WITH ORIGINAL DATA
 glm_model <- glmer(presynapse_image_mfi ~ gRNA * hippocampal_layer + 
@@ -84,7 +84,7 @@ glm_model <- glmer(presynapse_image_mfi ~ gRNA * hippocampal_layer +
                                             optCtrl = list(maxfun = 200000)))
 summary(glm_model)
 
-
+# QC
 plot(glm_model)
 qqnorm(resid(glm_model))
 qqline(resid(glm_model))
