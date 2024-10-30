@@ -138,6 +138,18 @@ Adjustments & problems to the pipeline:
             - Before applying preprocessing: intensity normalization
             - parameter harmonization, eg for VGLUT1-PSD95 use CA1 SR as reference
 
+## Summary of meeting with statistician Geert Verbeke
+- you need to look at the distribution of the metrics in every group (of fixed effects: gRNA and hippocampal layer).
+- with linear models you can differ a lot of the normal distribution, they are very robust to this.
+- Don't make unnecessary hard with multivariate models (they are a separate field with very advanced statistics).
+
+Conclusion:
+- make a univariate linear mixed effects model of every response variable.
+- because this is an exploratory experiment, he even suggested to do correction of p values for multiple testing. Mention this in the methods of the paper that you thought about this! But I would like to do Hochberg to get more confidence in the data.
+- try the generalized linear mixed effects model, but keep in mind this is not so robust as the linear mixed effects model. This could 
+also be good to mention in the methods that I tried another model -> sensitivity analysis with another model.
+- if the Q-Q plot looks good, its fine. If its the Q-Q plot is not good, make a transformation with logarithmic scale of the data.
+
 
 
 For next, after all prelimary data
