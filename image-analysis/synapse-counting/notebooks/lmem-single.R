@@ -92,8 +92,8 @@ qqline(resid(glm_model))
 anova(glm_model, mixed_lm2) # not comparable because input data is different
 
 # Extract p-values and coefficient names
-coef_table <- summary(glm_model)$coefficients
-p_values <- coef_table[,"Pr(>|z|)"]
+coef_table <- summary(improved_model)$coefficients
+p_values <- coef_table[,"Pr(>|t|)"]
 coef_names <- rownames(coef_table)
 
 # Apply Holm-Bonferroni correction

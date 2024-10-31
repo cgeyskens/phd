@@ -145,7 +145,7 @@ Adjustments & problems to the pipeline:
 
 Conclusion:
 - make a univariate linear mixed effects model of every response variable.
-- because this is an exploratory experiment, he even suggested to do correction of p values for multiple testing. Mention this in the methods of the paper that you thought about this! But I would like to do Hochberg to get more confidence in the data.
+- because this is an exploratory experiment, he even suggested to NOT do correction of p values for multiple testing. Mention this in the methods of the paper that you thought about this! But I would like to do Hochberg to get more confidence in the data.
 - try the generalized linear mixed effects model, but keep in mind this is not so robust as the linear mixed effects model. This could 
 also be good to mention in the methods that I tried another model -> sensitivity analysis with another model.
 - if the Q-Q plot looks good, its fine. If its the Q-Q plot is not good, make a transformation with logarithmic scale of the data.
