@@ -149,7 +149,7 @@ Conclusion:
 - try the generalized linear mixed effects model, but keep in mind this is not so robust as the linear mixed effects model. This could 
 also be good to mention in the methods that I tried another model -> sensitivity analysis with another model.
 - if the Q-Q plot looks good, its fine. If its the Q-Q plot is not good, make a transformation with logarithmic scale of the data.
-
+- must do the analysis with the lme4 package because statsmodel wont converge.
 
 
 For next, after all prelimary data
