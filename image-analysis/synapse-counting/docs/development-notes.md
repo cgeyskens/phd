@@ -151,6 +151,12 @@ also be good to mention in the methods that I tried another model -> sensitivity
 - if the Q-Q plot looks good, its fine. If its the Q-Q plot is not good, make a transformation with logarithmic scale of the data.
 - must do the analysis with the lme4 package because statsmodel won't converge. Make it a function so that it outputs the values for further use in a dataframe.
 - add seed for so that it is reproducible
+ 
+## further research into the question (Ask on training multilevels with FLAMES, Feb 21)
+- Try to do SVD or LDA instead of PCA
+- Really need to apply a multivariate linear mixed effects model, then do a PCA on the residuals ("batch corrected") so that you capture the variance between the samples and not the batch effects
+- If not: do an LDA
+- It is essentialy a batch effect between samples
 
 
 For next, after all prelimary data
