@@ -43,6 +43,9 @@ V - make apptainer container for DIA-NN (see notes in README: https://github.com
   - issue DIA-NN doesnt support .wiff files on linux version. Need to convert from .wiff to .mzML with most popular tool: msconvert.
         --> solution_1: make apptainer container for msconvert from official dockerhub container (https://hub.docker.com/r/proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses)
         --> solution_2: make apptainer container from custom dockerhub container (https://github.com/jspaezp/elfragmentador-data#setting-up-msconvert-on-singularity-)
+        --> solution_3: perform the file conversion locally with a docker container
+        --> solution_4: run DIA-NN with Wine on hpc.
+  - 28.02.2025. could run DIA-NN on hpc, one difference with pedro's run: i don't have a contaminants file. Ask from pedro. Also include antibodies in contaminants?
   
   - Write the outputfiles to another folder, be carefull for OVERWRITING!
   - 
