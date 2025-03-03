@@ -52,3 +52,7 @@ V - make apptainer container for DIA-NN (see notes in README: https://github.com
 
 - make the .config file with the parameters
 - Finetune the running parameters (try different ones)
+
+QC plots:
+ - PCA
+ - Intensity plots (normalized and raw data)
