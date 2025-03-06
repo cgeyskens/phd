@@ -69,15 +69,17 @@ From the previous sections:
   - DEA: try out ROTS, SAM and ProDA, these will handle missing values better
 
 
+Nice python-based packages: Gopher
+
 
 ### Development notes
 
 V - copy raw data to HPC
 V - make apptainer container for DIA-NN (see notes in README: https://github.com/vdemichev/DiaNN/issues 1202#issuecomment-2511182874)
 
-- try to run DIA-NN with same settings as Pedro on the cluster
+V- try to run DIA-NN with same settings as Pedro on the cluster
   - issue DIA-NN doesnt support .wiff files on linux version. Need to convert from .wiff to .mzML with most popular tool: msconvert.
-        --> solution_1: make apptainer container for msconvert from official dockerhub container (https://hub.docker.com/r/proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses)
+        V--> solution_1: make apptainer container for msconvert from official dockerhub container (https://hub.docker.com/r/proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses)
         --> solution_2: make apptainer container from custom dockerhub container (https://github.com/jspaezp/elfragmentador-data#setting-up-msconvert-on-singularity-)
         --> solution_3: perform the file conversion locally with a docker container
         --> solution_4: run DIA-NN with Wine on hpc.
@@ -85,15 +87,31 @@ V - make apptainer container for DIA-NN (see notes in README: https://github.com
 Could run DIA-NN on hpc, one difference with pedro's run: I don't have a contaminants file. Ask from pedro. Also include antibodies in contaminants?
 ###### 04.03.2025
 Could run DIA-NN on hpc, now with the contanimants file from the CRAP website. Check the intensities compared to pedro.
-  
+###### 06.03.2025
+Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/msstats-demo/blob/main/msstats-demo.ipynb
 
 #### TODO:
+- In Alphastats, I cannot find VCAM1 as highly enriched in the VCAM1 IP. Something with the imputation probably. Check the code of the package itself, how it impute if there are not values.
+- Try out MSstats/MS-DAP/Protti in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
+
+
 - Make a script that output the QC from each and test different parameters, to increase the amount of DEPs and have more clustered samples in the PCA.
 - make the .config file with the parameters
 - Finetune the running parameters (try different parameter)
 - Use recent version of DIA-NN
 
 
-QC plots:
- - PCA
- - Intensity plots (normalized and raw data)
+
+
+Eventual plots:
+ - CoV plots (Coefficient of variation)
+ - PCA plot of samples
+ - Intensity plots of raw data per sample (boxplot)
+ - Intensity plots of normalized data (boxplot)
+ - Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
+ - Differential expression analysis, Volcano plot, of SYNGO mentioned proteins
+ - Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
+ - Intensity line plots of raw data per sample of selected candidates
+ - SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition
+ - Gene ontology analysis plots of VCAM1 IP condition
+ - Plot of retention time histogram
