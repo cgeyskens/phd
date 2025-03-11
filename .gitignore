@@ -22,3 +22,7 @@ __pycache__/
 *dist/
 *build/
 *synapse_counting.egg-info
+
+# for clustermap 
+ClusterMap/
+gdf_path_save/
