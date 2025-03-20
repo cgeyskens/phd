@@ -22,6 +22,8 @@ __pycache__/
 *dist/
 *build/
 *synapse_counting.egg-info
+hackathon-2025-owkin/
+
 
 # for clustermap 
 ClusterMap/

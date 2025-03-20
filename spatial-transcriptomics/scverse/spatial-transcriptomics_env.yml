@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   # Core dependencies
-  - python=3.9
+  - python=3.11
   - numpy
   - pandas
   - scipy
@@ -12,13 +12,6 @@ dependencies:
   - seaborn
   - matplotlib
   - numba
-  - statsmodels
-
-  # Graph & clustering tools
-  - igraph
-  - leidenalg
-  - metis
-  - networkx
 
   # Image processing & visualization
   - scikit-image
@@ -26,22 +19,10 @@ dependencies:
   - pillow
   - imageio
   - tifffile
-  - pywavelets
-
-  # I/O and performance optimizations
-  - hdf5
-  - pytables
-  - joblib
-  - lz4-c
-  - blosc
 
   # Miscellaneous utilities
   - pip
   - tqdm
-  - patsy
-  - sinfo
-  - xlrd
-  - threadpoolctl
 
   # Pip-based dependencies
   - pip:
@@ -53,3 +34,9 @@ dependencies:
       - scanpy
       - stdlib-list
       - umap-learn
+      - alphashape
+      - geopandas
+      - spatialdata
+      - anndata
+      - xarray
+      - spatialdata_plot

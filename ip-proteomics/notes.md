@@ -62,7 +62,7 @@ https://www.youtube.com/watch?v=cGKJzx9IIi4
  - For IP; it is recommended to not use imputation for missing values (some are not detected in the IgG control condition)
  - For IP; dissabeling normalization & MBR & no imputation. But if imputation necessary in downstream tools use minimal-value imputation on the protein level. 
 
-From the previous sections:
+From the previous sections and reading:
   - Expression matrix type: directLFQ
   - Normalization: none or else center.mean
   - imputation: if proteins are partially missing in IgG -> use mindet. If proteins are completely absent -> do not impute.
@@ -89,9 +89,12 @@ Could run DIA-NN on hpc, one difference with pedro's run: I don't have a contami
 Could run DIA-NN on hpc, now with the contanimants file from the CRAP website. Check the intensities compared to pedro.
 ###### 06.03.2025
 Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/msstats-demo/blob/main/msstats-demo.ipynb
-
+###### 20.03.2025
+Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on windows and found that they were indeed different. Also the DEGs with simple ttest.
 #### TODO:
-- In Alphastats, I cannot find VCAM1 as highly enriched in the VCAM1 IP. Something with the imputation probably. Check the code of the package itself, how it impute if there are not values.
+- Implement DEP (uses limma), SAM, ROTS, Limma for DEA.
+
+
 - Try out MSstats/MS-DAP/Protti in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
 
 
@@ -103,11 +106,16 @@ Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/mssta
 
 
 
-Eventual plots:
- - CoV plots (Coefficient of variation)
+QC plots:
+ - Nr of proteins per sample (barplot)
+ - Sample Coefficient of Variation plots
  - PCA plot of samples
+ - Pearsons correlation of samples
+ - Abundance rank of proteins IP vs IgG
  - Intensity plots of raw data per sample (boxplot)
  - Intensity plots of normalized data (boxplot)
+
+
  - Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
  - Differential expression analysis, Volcano plot, of SYNGO mentioned proteins
  - Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
