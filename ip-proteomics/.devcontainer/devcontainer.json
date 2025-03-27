@@ -1,0 +1,43 @@
+{
+    "name": "R Dev Environment",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".",
+        "args": {
+            "VENV_NAME": "ip-proteomics",
+            "R_VERSION_MAJOR": "4",
+            "R_VERSION_MINOR": "3",
+            "R_VERSION_PATCH": "1",
+            "CRAN_MIRROR": "https://cran.rstudio.com/",
+            "QUARTO_VER": "1.5.41"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // R Extensions
+                "rdebugger.r-debugger",
+                "reditorsupport.r",
+                // Documentation Extensions
+                "quarto.quarto",
+                "purocean.drawio-preview",
+                "redhat.vscode-yaml",
+                "yzhang.markdown-all-in-one",
+                // Docker Supporting Extensions
+                "ms-azuretools.vscode-docker",
+                "ms-vscode-remote.remote-containers",
+                // Python Extensions
+                "ms-python.python",
+                "ms-toolsai.jupyter"
+            ]
+        }
+    },
+    "runArgs": [
+        "--env-file",
+        ".devcontainer/devcontainer.env"
+    ],
+    "mounts": [
+        "source=/Volumes/KINGSTON/data/phd,target=/mnt/data,type=bind,consistency=cache"
+    ],
+    "postCreateCommand": "radian"
+}

@@ -92,12 +92,15 @@ Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/mssta
 ###### 20.03.2025
 Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on windows and found that they were indeed different. Also the DEGs with simple ttest.
 #### TODO:
-- Implement DEP (uses limma), SAM, ROTS, Limma for DEA.
+- Setup docker environment for R locally with devcontainers.
+   - cgeyskens/ip-proteomics:v1 created but could not get the right extensions in the container.
+- Try the analysis with DEP (uses limma), SAM (samr), ROTS (rots), Limma (limma) for DEA.
 
 
-- Try out MSstats/MS-DAP/Protti in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
+- Try out MSstats/MS-DAP in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
 
 
+- Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
 - Make a script that output the QC from each and test different parameters, to increase the amount of DEPs and have more clustered samples in the PCA.
 - make the .config file with the parameters
 - Finetune the running parameters (try different parameter)
