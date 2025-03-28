@@ -2,77 +2,74 @@ library(DEP)
 library(dplyr)
 library(SummarizedExperiment)
 
+# loading the data
 exp17_data <- read.delim("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.gg_matrix.tsv")
 View(exp17_data)
 
-vcam1_data <- exp17_data[exp17_data$Genes == 'Vcam1',]
+# ////
+# checking the raw value of certain proteins
+vcam1_data <- exp17_data[exp17_data$Genes == 'Csnk2b',]
 View(vcam1_data)
+# \\\\
 
-data <- as_tibble(exp17_data)
+# Rename columns
+new_names <- c(
+    "gpr37l1_ip" = "X.ip.proteomics.ms.convert.output.2ul_CG_1.mzML",
+    "gpr37l1_igg" = "X.ip.proteomics.ms.convert.output.2ul_CG_2.mzML",
+    "vcam1_ip_r1" = "X.ip.proteomics.ms.convert.output.2ul_CG_3.mzML",
+    "vcam1_igg_r1" = "X.ip.proteomics.ms.convert.output.2ul_CG_4.mzML",
+    "vcam1_ip_r2" = "X.ip.proteomics.ms.convert.output.2ul_CG_5.mzML",
+    "vcam1_igg_r2" = "X.ip.proteomics.ms.convert.output.2ul_CG_6.mzML",
+    "vcam1_ip_r3" = "X.ip.proteomics.ms.convert.output.2ul_CG_7.mzML", 
+    "vcam1_igg_r3" = "X.ip.proteomics.ms.convert.output.2ul_CG_8.mzML", 
+    "vcam1_ip_r4" = "X.ip.proteomics.ms.convert.output.2ul_CG_9.mzML",
+    "vcam1_igg_r4" = "X.ip.proteomics.ms.convert.output.2ul_CG_10.mzML"
+)
+colnames(exp17_data)[match(new_names, colnames(exp17_data))] <- names(new_names)
 
-df <- data %>%
-    rename(
-        gpr37l1_ip = X.ip.proteomics.ms.convert.output.2ul_CG_1.mzML,
-        gpr37l1_igg = X.ip.proteomics.ms.convert.output.2ul_CG_2.mzML,
-        vcam1_ip_r1 = X.ip.proteomics.ms.convert.output.2ul_CG_3.mzML,
-        vcam1_igg_r1 = X.ip.proteomics.ms.convert.output.2ul_CG_4.mzML,
-        vcam1_ip_r2 = X.ip.proteomics.ms.convert.output.2ul_CG_5.mzML,
-        vcam1_igg_2 = X.ip.proteomics.ms.convert.output.2ul_CG_6.mzML,
-        vcam1_ip_r3 = X.ip.proteomics.ms.convert.output.2ul_CG_7.mzML, 
-        vcam1_igg_r3 = X.ip.proteomics.ms.convert.output.2ul_CG_8.mzML, 
-        vcam1_ip_r4 = X.ip.proteomics.ms.convert.output.2ul_CG_9.mzML,
-        vcam1_igg_r4 = X.ip.proteomics.ms.convert.output.2ul_CG_10.mzML
-        ) %>%
-        select(-c(gpr37l1_ip, gpr37l1_igg)) %>% # remove the gpr37l1 columns 
-        filter(!if_all(-Genes, is.na)) 
+# remove gpr37l1 data
+df <- exp17_data %>%
+    select(-c("gpr37l1_ip", "gpr37l1_igg"))
 
-dim(df)
-View(df)
+# constructing the summarizedExperiment object
+my_data_unique <- make_unique(
+  proteins = df, 
+  names = "Genes", 
+  ids = "Genes",
+  delim = ";")
 
-colnames(df)
-rownames(df)
-data$Genes %>% duplicated() %>% any()
+columns = as.integer(2:9) # specifying which columns
 
+exp_design = as.data.frame(
+  list(
+  label = c("vcam1_ip_r1", "vcam1_igg_r1", "vcam1_ip_r2", "vcam1_igg_r2", "vcam1_ip_r3", "vcam1_igg_r3", "vcam1_ip_r4", "vcam1_igg_r4"),
+  condition = c("ip", "igg", "ip", "igg", "ip", "igg", "ip", "igg"),
+  replicate = c("1", "1", "2", "2", "3", "3", "4", "4")
+  )
+)
 
-se <- SummarizedExperiment(assays = list(counts = df[, -1]))
-rowData(se) <- DataFrame(Gene = df$Genes)
+se <- make_se(my_data_unique, columns, exp_design)
 se
 
-plot_numbers(se)
-colData(se)$ID <- colnames(se)
-colData(se)
-
-
-# setting the colname
-colData(se)$condition <- c("ip", "igg", "ip", "igg","ip", "igg", "ip", "igg")
-colData(se)
-
-# plotting
-plot_numbers(se)
-plot_coverage(se)
-
-# data formatting for normalization, the values are non-numeric
-counts_data <- assay(se, "counts")
-View(counts_data)
-
-counts_matrix <- as.matrix(counts_data)
-rownames(counts_matrix) <- rownames(counts_data)
-colnames(counts_matrix) <- colnames(counts_data)
-
-assay(se, "counts", withDimnames = FALSE) <- counts_matrix
-class(assay(se, "counts"))
+# imputate missing values
+se_imp <- impute(se, fun = "MinProb")
 
 # normalization
-data_norm <- normalize_vsn(se)
+se_norm <- normalize_vsn(se_imp)
+
+# Visualize normalization
+plot_normalization(se_norm, se_imp)
+
+assay(se_imp)["Vcam1",]
+
+# 12. Differential expression analysis
+data_diff <- test_diff(se_imp, type = "manual", test = c("ip_vs_igg"))
+
+# 13. Add rejections
+dep <- add_rejections(data_diff, alpha = 0.05, lfc = log2(1.5))
+
+# Plot PCA and Volcano
+plot_pca(dep, x = 1, y = 2, n = 100, point_size = 4)
+plot_volcano(dep, contrast = "ip_vs_igg", label_size = 2, add_names = TRUE)
 
 
-non_finite_values <- is.finite(assay(se, "counts"))
-non_finite_rows <- which(!rowSums(non_finite_values))
-non_finite_cols <- which(!colSums(non_finite_values))
-
-# Print the number of non-finite values
-cat("Number of non-finite rows:", length(non_finite_rows), "\n")
-cat("Number of non-finite columns:", length(non_finite_cols), "\n")
-
-plot_missval(se)
-plot_detect(se)
