@@ -1,14 +1,15 @@
 library(DEP)
 library(dplyr)
 library(SummarizedExperiment)
+library(ggplot2)
 
 # loading the data
-exp17_data <- read.delim("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.gg_matrix.tsv")
+exp17_data <- read.delim("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
 View(exp17_data)
 
 # ////
 # checking the raw value of certain proteins
-vcam1_data <- exp17_data[exp17_data$Genes == 'Csnk2b',]
+vcam1_data <- exp17_data[exp17_data$Genes == 'Vcam1',]
 View(vcam1_data)
 # \\\\
 
@@ -35,10 +36,10 @@ df <- exp17_data %>%
 my_data_unique <- make_unique(
   proteins = df, 
   names = "Genes", 
-  ids = "Genes",
+  ids = "Protein.Group",
   delim = ";")
 
-columns = as.integer(2:9) # specifying which columns
+columns = as.integer(5:12) # specifying which columns
 
 exp_design = as.data.frame(
   list(
@@ -51,25 +52,53 @@ exp_design = as.data.frame(
 se <- make_se(my_data_unique, columns, exp_design)
 se
 
+# Plot nr of proteins
+plot_numbers(se)
+
 # imputate missing values
 se_imp <- impute(se, fun = "MinProb")
 
-# normalization
+# variance stabilization
 se_norm <- normalize_vsn(se_imp)
 
 # Visualize normalization
-plot_normalization(se_norm, se_imp)
+plot_normalization(se_norm, se_imp, se)
 
-assay(se_imp)["Vcam1",]
+assay(se)["Vcam1", ]
 
-# 12. Differential expression analysis
-data_diff <- test_diff(se_imp, type = "manual", test = c("ip_vs_igg"))
 
-# 13. Add rejections
+# Differential expression analysis
+data_diff <- test_diff(se_norm, type = "manual", test = c("ip_vs_igg"))
+
+# Add rejections
 dep <- add_rejections(data_diff, alpha = 0.05, lfc = log2(1.5))
 
 # Plot PCA and Volcano
 plot_pca(dep, x = 1, y = 2, n = 100, point_size = 4)
-plot_volcano(dep, contrast = "ip_vs_igg", label_size = 2, add_names = TRUE)
+plot_volcano(dep, contrast = "ip_vs_igg", label_size = 5, add_names = TRUE)
+
+# Plot the pearson's correlation plot
+plot_cor(dep, significant = TRUE, lower = 0, upper = 1, pal = "Reds")
+
+# Plot heatmap
+plot_heatmap(dep, type = "centered", #kmeans = TRUE, k = 2,
+             col_limit = 4, show_row_names = TRUE,
+             indicate = c("condition", "replicate"),
+             row_font_size = 5)
 
 
+
+# line_plot of some log2 raw intensities
+df <- data.frame(assay(se)["Vcam1", ])
+
+names(df)[names(df) == 'assay.se...Vcam1....'] <- 'raw_log2_intensities'
+
+df$condition <- rownames(df)
+
+ggplot(data=x, aes(x=condition, y=raw_log2_intensities, group=1)) +
+  geom_line()+
+  geom_point() + 
+  scale_x_discrete() +
+  scale_y_continuous(expand=c(0, 0), limits=c(0, 25))
+
+colnames(x)
