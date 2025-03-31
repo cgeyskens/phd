@@ -9,7 +9,7 @@ View(exp17_data)
 
 # ////
 # checking the raw value of certain proteins
-vcam1_data <- exp17_data[exp17_data$Genes == 'Vcam1',]
+vcam1_data <- exp17_data[exp17_data$Genes == 'Pmch',]
 View(vcam1_data)
 # \\\\
 
@@ -39,6 +39,8 @@ my_data_unique <- make_unique(
   ids = "Protein.Group",
   delim = ";")
 
+my_data_unique[my_data_unique$Genes == 'Pmch',]
+
 columns = as.integer(5:12) # specifying which columns
 
 exp_design = as.data.frame(
@@ -64,7 +66,7 @@ se_norm <- normalize_vsn(se_imp)
 # Visualize normalization
 plot_normalization(se_norm, se_imp, se)
 
-assay(se)["Vcam1", ]
+assay(se)["Prrt1", ]
 
 
 # Differential expression analysis
@@ -84,21 +86,39 @@ plot_cor(dep, significant = TRUE, lower = 0, upper = 1, pal = "Reds")
 plot_heatmap(dep, type = "centered", #kmeans = TRUE, k = 2,
              col_limit = 4, show_row_names = TRUE,
              indicate = c("condition", "replicate"),
-             row_font_size = 5)
+             row_font_size = 6)
 
 
 
 # line_plot of some log2 raw intensities
-df <- data.frame(assay(se)["Vcam1", ])
+extract_protein_data <- function(se, protein_name) {
+  df <- data.frame(assay(se)[protein_name, ])
+  colnames(df) <- "raw_log2_intensities"
+  df$condition <- rownames(df)
+  df$protein <- protein_name
+  return(df)
+}
 
-names(df)[names(df) == 'assay.se...Vcam1....'] <- 'raw_log2_intensities'
+protein_list <- c(
+  "Vcam1", 
+  "Prrt1", 
+  "Pmch", 
+  "Disp2", 
+  "Sparc", 
+  "Igdcc4", 
+  "Pcdhb14", 
+  "Gls", 
+  "Chgb", 
+  "Rnf216",
+  "Kctd3"
+  )
+df_merge <- bind_rows(lapply(protein_list, extract_protein_data, se = se))
 
-df$condition <- rownames(df)
 
-ggplot(data=x, aes(x=condition, y=raw_log2_intensities, group=1)) +
-  geom_line()+
-  geom_point() + 
+ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
+  geom_line(aes(color=protein))+
+  geom_point(aes(color=protein)) + 
   scale_x_discrete() +
-  scale_y_continuous(expand=c(0, 0), limits=c(0, 25))
+  scale_y_continuous(expand=c(0, 0), limits=c(0, 22))
 
 colnames(x)
