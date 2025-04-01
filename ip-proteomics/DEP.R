@@ -107,10 +107,7 @@ protein_list <- c(
   "Sparc", 
   "Igdcc4", 
   "Pcdhb14", 
-  "Gls", 
-  "Chgb", 
-  "Rnf216",
-  "Kctd3"
+  "Chgb"
   )
 df_merge <- bind_rows(lapply(protein_list, extract_protein_data, se = se))
 
@@ -119,6 +116,7 @@ ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
   geom_line(aes(color=protein))+
   geom_point(aes(color=protein)) + 
   scale_x_discrete() +
-  scale_y_continuous(expand=c(0, 0), limits=c(0, 22))
+  scale_y_continuous(expand=c(0, 0), limits=c(0, 22)) + 
+  theme_grey(base_size = 22)
 
 colnames(x)
