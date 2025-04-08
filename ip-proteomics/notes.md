@@ -115,7 +115,7 @@ QC plots:
  - PCA plot of samples
  - Pearsons correlation of samples
  - Abundance rank of proteins IP vs IgG
- - Intensity plots of raw data per sample (boxplot)
+ - Intensity plots of raw log2 data per sample (boxplot)
  - Intensity plots of normalized data (boxplot)
 
 
