@@ -94,7 +94,7 @@ Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on
 #### TODO:
 - Setup docker environment for R locally with devcontainers.
    - cgeyskens/ip-proteomics:v1 created but could not get the right extensions in the container.
-- Try the analysis with DEP (uses limma), SAM (samr), ROTS (rots), Limma (limma) for DEA.
+- Try the analysis with DEP (uses limma), SAM (samr), ROTS (rots) for DEA.
 
 
 - Try out MSstats/MS-DAP in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
