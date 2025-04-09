@@ -71,5 +71,16 @@ summary(results, fdr = 0.05)
 
 # plotting the results
 plot(results, fdr = 0.05, type = "volcano")
-
 plot(results, fdr = 0.05, type = "heatmap")
+
+# Getting the data in dataframe
+logFC <- results$logfc
+pvalue <- results$pvalue
+adj.pvalue <- results$FDR
+
+rots_results <- cbind(row.names(imputed_df), logFC, pvalue, adj.pvalue)
+
+rots_ip_proteins <- rots_results %>%
+                          subset(adj.pvalue <= 0.05 & logFC > 0)
+
+write.csv(rots_ip_proteins,"rots_ip_proteins.csv", row.names = TRUE)

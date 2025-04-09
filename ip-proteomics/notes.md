@@ -122,6 +122,7 @@ QC plots:
  - Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
  - Differential expression analysis, Volcano plot, of SYNGO mentioned proteins
  - Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
+ - Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
  - Intensity line plots of raw data per sample of selected candidates
  - SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition
  - Gene ontology analysis plots of VCAM1 IP condition

@@ -6,18 +6,17 @@ library(readr)
 library(ROTS)
 
 # loading the data
-exp17_data <- read_tsv("/mnt/data/ip-proteomics/exp19_gpr37l1_syn_replicates.pg_matrix.tsv")
+exp17_data <- read_tsv("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
 View(exp17_data)
 
 # ////
 # checking the raw value of certain proteins
-vcam1_data <- exp17_data[exp17_data$Genes == 'Gpr37l1',]
+vcam1_data <- exp17_data[exp17_data$Genes == 'Vcam1',]
 View(vcam1_data)
 # \\\\
 
 # checking colnames
 colnames(exp17_data)
-
 
 # vcam1 synglio column names
 vcam1_synglio_names <- c(
@@ -57,16 +56,16 @@ colnames(exp17_data)[match(gpr37l1_names, colnames(exp17_data))] <- names(gpr37l
 
 # Rename columns
 new_names <- c(
-    "gpr37l1_ip" = "X.ip.proteomics.ms.convert.output.2ul_CG_1.mzML",
-    "gpr37l1_igg" = "X.ip.proteomics.ms.convert.output.2ul_CG_2.mzML",
-    "vcam1_ip_r1" = "X.ip.proteomics.ms.convert.output.2ul_CG_3.mzML",
-    "vcam1_igg_r1" = "X.ip.proteomics.ms.convert.output.2ul_CG_4.mzML",
-    "vcam1_ip_r2" = "X.ip.proteomics.ms.convert.output.2ul_CG_5.mzML",
-    "vcam1_igg_r2" = "X.ip.proteomics.ms.convert.output.2ul_CG_6.mzML",
-    "vcam1_ip_r3" = "X.ip.proteomics.ms.convert.output.2ul_CG_7.mzML", 
-    "vcam1_igg_r3" = "X.ip.proteomics.ms.convert.output.2ul_CG_8.mzML", 
-    "vcam1_ip_r4" = "X.ip.proteomics.ms.convert.output.2ul_CG_9.mzML",
-    "vcam1_igg_r4" = "X.ip.proteomics.ms.convert.output.2ul_CG_10.mzML"
+    "gpr37l1_ip" = "/ip-proteomics/ms-convert-output/2ul_CG_1.mzML",
+    "gpr37l1_igg" = "/ip-proteomics/ms-convert-output/2ul_CG_2.mzML",
+    "vcam1_ip_r1" = "/ip-proteomics/ms-convert-output/2ul_CG_3.mzML",
+    "vcam1_igg_r1"= "/ip-proteomics/ms-convert-output/2ul_CG_4.mzML",
+    "vcam1_ip_r2" = "/ip-proteomics/ms-convert-output/2ul_CG_5.mzML",
+    "vcam1_igg_r2"= "/ip-proteomics/ms-convert-output/2ul_CG_6.mzML",
+    "vcam1_ip_r3" = "/ip-proteomics/ms-convert-output/2ul_CG_7.mzML",
+    "vcam1_igg_r3"= "/ip-proteomics/ms-convert-output/2ul_CG_8.mzML",
+    "vcam1_ip_r4" = "/ip-proteomics/ms-convert-output/2ul_CG_9.mzML",
+    "vcam1_igg_r4" = "/ip-proteomics/ms-convert-output/2ul_CG_10.mzML"
 )
 colnames(exp17_data)[match(new_names, colnames(exp17_data))] <- names(new_names)
 
@@ -88,25 +87,19 @@ colnames(exp17_data)[match(pedro_names, colnames(exp17_data))] <- names(pedro_na
 # remove gpr37l1 data
 df <- exp17_data %>%
     select(-c(
-      "vcam1_p14_ip_r1",
-      "vcam1_p14_igg_r1",
-      "vcam1_p14_ip_r2",
-      "vcam1_p14_igg_r2",
-      "vcam1_p14_ip_r3",
-      "vcam1_p14_igg_r3",
-      "vcam1_p14_ip_r4",
-      "vcam1_p14_igg_r4"
+        "gpr37l1_ip",
+        "gpr37l1_igg"
       )
     )
 
 # constructing the summarizedExperiment object
 my_data_unique <- make_unique(
-  proteins = exp17_data, 
+  proteins = df, 
   names = "Genes", 
   ids = "Protein.Group",
   delim = ";")
 
-my_data_unique[my_data_unique$Genes == 'Gpr37l1',]
+my_data_unique[my_data_unique$Genes == 'Vcam1',]
 
 columns = as.integer(5:12) # specifying which columns have the wanted intensities
 
@@ -129,14 +122,14 @@ exp_design = as.data.frame(
     # "vcam1_p28_igg_r3",
     # "vcam1_p28_ip_r4",
     # "vcam1_p28_igg_r4",
-    "gpr37l1_ip_r1", 
-    "gpr37l1_igg_r1",
-    "gpr37l1_ip_r2" ,
-    "gpr37l1_igg_r2",
-    "gpr37l1_ip_r3" ,
-    "gpr37l1_igg_r3",
-    "gpr37l1_ip_r4" ,
-    "gpr37l1_igg_r4"
+    "vcam1_ip_r1", 
+    "vcam1_igg_r1",
+    "vcam1_ip_r2" ,
+    "vcam1_igg_r2",
+    "vcam1_ip_r3" ,
+    "vcam1_igg_r3",
+    "vcam1_ip_r4" ,
+    "vcam1_igg_r4"
   ),
   condition = c(
     # "p14_ip", 
@@ -186,7 +179,7 @@ se_norm <- normalize_vsn(se_imp)
 # Visualize normalization
 plot_normalization(se_norm, se_imp, se)
 
-assay(se)["Gpr37l1", ]
+assay(se_norm)["Vcam1", ]
 
 
 # Differential expression analysis
@@ -220,7 +213,7 @@ extract_protein_data <- function(se, protein_name) {
 }
 
 protein_list <- c(
-  "Gpr37l1"
+  "Vcam1"
   # "Vcam1", 
   # "Prrt1", 
   # "Pmch", 
@@ -239,4 +232,9 @@ ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
   scale_y_continuous(expand=c(0, 0), limits=c(0, 22)) + 
   theme_grey(base_size = 22)
 
-colnames(x)
+dep_results <- get_results(dep)
+
+dep_ip_proteins <- dep_results %>%
+                          filter(significant == TRUE & ip_vs_igg_ratio > 0)
+
+write.csv(dep_ip_proteins,"dep_ip_proteins.csv", row.names = TRUE)

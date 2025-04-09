@@ -1,6 +1,9 @@
 library(samr)
 library(dplyr)
 library(ggplot2)
+library(readr)
+library(tibble)
+library(imputeLCMD)
 
 
 # Loading the data
@@ -55,49 +58,102 @@ imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
 ### SAMR
 
 # Group design
-groups = c("ip","igg","ip","igg","ip","igg","ip","igg")
+# groups = c("ip","igg","ip","igg","ip","igg","ip","igg")
 groups = c(1, 2, 1, 2, 1, 2, 1, 2)
 groups
 
+##### Running the original function
 # Running samr
 sam_result <- SAM(x = imputed_matrix,
                 y = groups,
                 resp.type = "Two class unpaired",
                 geneid = rownames(imputed_matrix),
                 genenames = rownames(imputed_matrix),
-                #s0 = 0.1,
-                s0.perc = TRUE,
+                s0 = 0.1,
+                s0.perc = FALSE,
                 nperms = 1000,
                 center.arrays = FALSE,
                 testStatistic = "standard",
                 return.x = TRUE,
                 random.seed = 1234,
                 logged2 = TRUE,
-                fdr.output = 0.1,
-                eigengene.number = 1
+                fdr.output = 0.1
                 )
 
 names(sam_result$samr.obj)
 
+summary(sam_result)
 
 ## qq plot of samr
 samr::samr.plot(sam_result$samr.obj,
             del = 0.45, 
              min.foldchange = 1.5)
 
+check <- sam_result$samr.obj$
 
-## according to script of Pang et al. 
+### latest tryout
+log2_fold_change <- log2(sam_result$samr.obj$foldchange)
+pvalue=data.frame(samr.pvalues.from.perms(sam_result$samr.obj$tt, sam_result$samr.obj$ttstar))
+colnames(pvalue) <- "p.value"
+min.log.p.value = -log10(pvalue)
+colnames(min.log.p.value) <- "min.log.p.value"
+test_results <- cbind(row.names(imputed_matrix), log2_fold_change, pvalue, min.log.p.value)
+colnames(test_results)[1] <- "Gene"
+
+test <- filter(test_results, pvalue <= 0.05 & log2_fold_change < 1.5)
+
+
+
+
+
+
+
+
+##### Running another function
+# making a list for input to samr function
+samr_data <- list(
+  x = as.matrix(imputed_matrix),
+  y = as.numeric(as.factor(groups)), # Convert conditions to numerical factors
+  geneid = rownames(imputed_matrix),     # Optional, but good practice
+  genenames = rownames(imputed_matrix),  # Optional, but good practice
+  logged2 = TRUE                         # Assuming your data is log2 transformed
+)
+
+samr.obj <- samr(samr_data, resp.type= "Two class unpaired", nperms=1000)
+
+names(samr.obj)
+
+logFC<-log2(samr.obj$foldchange)
+pvalue=data.frame(samr.pvalues.from.perms(samr.obj$tt, samr.obj$ttstar))
+pvalue["Vcam1", ]
+pvalue <- data.frame(samr.pvalues.from.perms(samr.obj$tt, samr.obj$ttstar))
+colnames(pvalue) <- "pvalue"
+adj.pvalue <- p.adjust(pvalue$pvalue, method = "fdr")
+
+samr_results<-cbind(row.names(imputed_matrix), logFC, pvalue, adj.pvalue)
+
+test <- filter(samr_results, pvalue <= 0.05 & logFC < 1.5)
+
+
+
+
+
+
+
+
+
+## according to script of Pang et al. getting the adjusted p values 
 logFC<-log2(sam_result$samr.obj$foldchange)
 pvalue=data.frame(samr.pvalues.from.perms(sam_result$samr.obj$tt, sam_result$samr.obj$ttstar))
 
 pvalue["Vcam1", ]
 adj.pvalue=p.adjust(pvalue$samr.pvalues.from.perms.sam_result.samr.obj.tt..sam_result.samr.obj.ttstar., method = "BH")
 
-test_results <- cbind(row.names(imputed_matrix), LogFC, pvalue, adj.pvalue)
+test_results <- cbind(row.names(imputed_matrix), logFC, pvalue, adj.pvalue)
 
 logFC <- log2(sam_result$samr.obj$foldchange)
 pvalue <- data.frame(p.value = samr.pvalues.from.perms(sam_result$samr.obj$tt, sam_result$samr.obj$ttstar))
-pvalue["Vcam1", ]
+pvalues["Vcam1", ]
 adj.pvalue <- data.frame(adj.p.value = p.adjust(pvalue$p.value, method = "BH"))
 test_results <- cbind(row.names(imputed_matrix), logFC, pvalue, adj.pvalue)
 colnames(test_results)[1] <- "Gene"
@@ -108,14 +164,22 @@ test_results <- test_results %>%
   mutate(neg.log10.p.value = -log10(p.value))
 
 
+
+
+
+
+
+
 # make the volcano plot
 
 genes_to_highlight <- c("Vcam1", "Prrt1", "Chgb") # Replace with your gene names
 highlight_colors <- c("blue", "green", "purple") # Corresponding colors
 
-volcano_plot <- ggplot(test_results, aes(x = logFC, y = neg.log10.p.value, label = Gene)) +
+volcano_plot <- ggplot(test_results, aes(x = log2_fold_change, y = min.log.p.value, label = Gene)) +
   geom_point(alpha = 0.6) +
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") + # 
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") + 
+  geom_vline(xintercept = log2(1.5) , linetype = "dashed", color = "red") + 
+  geom_vline(xintercept = -log2(1.5) , linetype = "dashed", color = "red") +
   labs(
     title = "Volcano Plot from SAM Analysis",
     x = "Log2 Fold Change",
@@ -139,4 +203,12 @@ for (i in seq_along(genes_to_highlight)) {
 }
 
 print(volcano_plot)
+
+
+samr_ip_proteins <- test_results %>%
+                    subset(p.value <= 0.05 & logFC > 1)
+
+
+print(unique(test_results$Gene))
+print(genes_to_highlight %in% unique(test_results$Gene))
 
