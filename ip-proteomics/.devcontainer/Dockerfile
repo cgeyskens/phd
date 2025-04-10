@@ -65,6 +65,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.10-venv \
     python3-pip \
     lsof \
+    cmake \
+    libharfbuzz-dev \
+    libfribidi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Step 4 - Install R
@@ -74,8 +77,8 @@ RUN wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MA
 
 WORKDIR /R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
 
-RUN ./configure ${CONFIGURE_OPTIONS} && \
-    make && \
+RUN ./configure ${CONFIGURE_OPTIONS} --with-cxx14 && \
+    make -j$(nproc) && \
     make install
 
 RUN locale-gen en_US.UTF-8

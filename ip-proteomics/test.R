@@ -2,11 +2,7 @@ library(samr)
 library(ROTS)
 library(limma)
 library(DEP)
-
-library(ggplot2)
-data(diamonds)
-
-head(diamonds)
+library(tidyverse)
 
 View(diamonds)
 

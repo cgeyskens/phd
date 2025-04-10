@@ -70,6 +70,7 @@ From the previous sections and reading:
 
 
 Nice python-based packages: Gopher
+Other gene ontology analysis: clusterProfiler, gProfiler2
 
 
 ### Development notes

@@ -9,6 +9,14 @@
             "version": "0.3.12"
         },
         {
+            "package": "devtools",
+            "version": "2.4.5"
+        },
+        {
+            "package": "tinytex",
+            "version": "0.56"
+        },
+        {
             "package": "httpgd",
             "version": "1.3.1"
         },
@@ -51,16 +59,30 @@
         {
             "package": "DEP",
             "version": "1.28.0"
-        }
-    ],
-    "package_dev": [
-        {
-            "package": "BH",
-            "version": "1.81.0-1"
         },
         {
-            "package": "httpgd",
-            "version": "1.3.1"
+            "package": "EnhancedVolcano",
+            "version": "1.24.0"
+        },
+        {
+            "package": "MSstats",
+            "version": "4.14.2"
+        },
+        {
+            "package": "UpSetR",
+            "version": "1.4.0"
+        },
+        {
+            "package": "tidyverse",
+            "version": "2.0.0"
+        },
+        {
+            "package": "clusterProfiler",
+            "version": "4.14.6"
+        },
+        {
+            "package": "gprofiler2",
+            "version": "0.2.3"
         }
     ]
 }
