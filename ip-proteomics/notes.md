@@ -1,5 +1,8 @@
 ## Notes for Co-Ip MS-based proteomics
 
+##### Dev docker container template fro VSCode from:
+https://github.com/RamiKrispin/vscode-r
+
 ### Input from Pedro
 
 ##### Instrument specific parameters:
@@ -92,6 +95,8 @@ Could run DIA-NN on hpc, now with the contanimants file from the CRAP website. C
 Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/msstats-demo/blob/main/msstats-demo.ipynb
 ###### 20.03.2025
 Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on windows and found that they were indeed different. Also the DEGs with simple ttest.
+###### 01.04.2025
+Setup docker environment for R locally with devcontainers.
 #### TODO:
 - Setup docker environment for R locally with devcontainers.
    - cgeyskens/ip-proteomics:v1 created but could not get the right extensions in the container.
@@ -99,6 +104,16 @@ Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on
 
 
 - Try out MSstats/MS-DAP in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
+
+
+### Downstream analyses
+#### Protein level:
+DEP: analysis done
+ROTS: analysis done
+SAMR: issue with analysis, package outdated
+#### Peptide level:
+MSstats: Get stuck when processing data (featureSubset = "all"). If with top_N_features = 300 then I get weird PCA plot, not like the protein-level analysis.
+MS-DAP
 
 
 - Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
