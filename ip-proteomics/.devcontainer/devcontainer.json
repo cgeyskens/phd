@@ -6,8 +6,8 @@
         "args": {
             "VENV_NAME": "ip-proteomics",
             "R_VERSION_MAJOR": "4",
-            "R_VERSION_MINOR": "3",
-            "R_VERSION_PATCH": "1",
+            "R_VERSION_MINOR": "4",
+            "R_VERSION_PATCH": "3",
             "CRAN_MIRROR": "https://cran.rstudio.com/",
             "QUARTO_VER": "1.5.41"
         }
@@ -37,7 +37,7 @@
         ".devcontainer/devcontainer.env"
     ],
     "mounts": [
-        "source=/Volumes/KINGSTON/data/phd,target=/mnt/data,type=bind,consistency=cache"
+        "source=/Volumes/KINGSTON/data/phd/ip-proteomics,target=/mnt/ip-proteomics,type=bind,consistency=cache"
     ],
     "postCreateCommand": "radian"
 }

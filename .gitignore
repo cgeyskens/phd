@@ -24,6 +24,8 @@ __pycache__/
 *synapse_counting.egg-info
 hackathon-2025-owkin/
 
+# for proteomics
+msdap_results
 
 # for clustermap 
 ClusterMap/

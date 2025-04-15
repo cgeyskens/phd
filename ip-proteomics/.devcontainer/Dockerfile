@@ -6,7 +6,7 @@ FROM ubuntu:22.04
 # Define arguments
 ARG VENV_NAME=VENV_NAME
 ARG R_VERSION_MAJOR=4
-ARG R_VERSION_MINOR=3
+ARG R_VERSION_MINOR=4
 ARG R_VERSION_PATCH=1
 ARG DEBIAN_FRONTEND=noninteractive
 ARG CRAN_MIRROR=https://cran.rstudio.com/
@@ -23,7 +23,7 @@ ENV TZ=UTC
 ENV CRAN_MIRROR=$CRAN_MIRROR
 
 # Step 3 - Install R dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get clean && apt-get update && apt-get install -y --no-install-recommends \
     apt-utils\
     gfortran \
     git \
@@ -68,6 +68,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     libharfbuzz-dev \
     libfribidi-dev \
+    libarchive-dev \
+    libpoppler-cpp-dev \
+    pandoc \
+    pandoc-citeproc \
     && rm -rf /var/lib/apt/lists/*
 
 # Step 4 - Install R

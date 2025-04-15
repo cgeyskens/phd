@@ -4,6 +4,7 @@ library(limma)
 library(DEP)
 library(tidyverse)
 
+sessionInfo()
 View(diamonds)
 
 d <- diamonds[sample(nrow(diamonds), 2000), ]
