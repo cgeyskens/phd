@@ -3,10 +3,9 @@ library(dplyr)
 library(SummarizedExperiment)
 library(ggplot2)
 library(readr)
-library(ROTS)
 
 # loading the data
-exp17_data <- read_tsv("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
+exp17_data <- read_tsv("/mnt/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
 View(exp17_data)
 
 # ////
@@ -183,10 +182,10 @@ assay(se_norm)["Vcam1", ]
 
 
 # Differential expression analysis
-data_diff <- test_diff(se_norm, type = "manual", test = c("ip_vs_igg"))
+data_diff <- DEP::test_diff(se_norm, type = "manual", test = c("ip_vs_igg"))
 
 # Add rejections
-dep <- add_rejections(data_diff, alpha = 0.05, lfc = log2(1.5))
+dep <- add_rejections(data_diff, alpha = 0.05, lfc = log2(1))
 
 # Plot PCA and Volcano
 plot_pca(dep, x = 1, y = 2, n = 100, point_size = 4)
@@ -213,15 +212,14 @@ extract_protein_data <- function(se, protein_name) {
 }
 
 protein_list <- c(
-  "Vcam1"
-  # "Vcam1", 
-  # "Prrt1", 
-  # "Pmch", 
-  # "Disp2", 
-  # #"Sparc", 
-  # "Igdcc4", 
-  # #"Pcdhb14", 
-  # "Chgb"
+  "Vcam1", 
+  "Prrt1", 
+  "Pmch", 
+  "Disp2", 
+  "Sparc", 
+  "Igdcc4", 
+  "Pcdhb14", 
+  "Chgb"
   )
 df_merge <- bind_rows(lapply(protein_list, extract_protein_data, se = se))
 
@@ -235,6 +233,6 @@ ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
 dep_results <- get_results(dep)
 
 dep_ip_proteins <- dep_results %>%
-                          filter(significant == TRUE & ip_vs_igg_ratio > 0)
+                          filter(ip_vs_igg_p.val <=0.05 & ip_vs_igg_ratio > 1)
 
-write.csv(dep_ip_proteins,"dep_ip_proteins.csv", row.names = TRUE)
+write.csv(dep_ip_proteins,"vcam1_dep_ip_proteins.csv", row.names = TRUE)

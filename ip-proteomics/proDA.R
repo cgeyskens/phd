@@ -90,7 +90,7 @@ sample_info_df
 ##### Fitting the proDA model
 fit <- proDA(
     normalized_abundance_matrix, 
-    design = ~ condition + replicate - 1, 
+    design = ~ condition + replicate, 
     data_is_log_transformed = TRUE,
     col_data = sample_info_df, 
     reference_level = "igg"
@@ -100,14 +100,13 @@ fit
 result_names((fit))
 test <- proDA::test_diff(
     fit, 
-    contrast = conditionip - conditionigg,
+    contrast = conditionip,
     pval_adjust_method = "fdr"
     )
 
 proda_ip_proteins <- subset(test, pval < 0.05 & diff > 1)
 
-write.csv(proda_ip_proteins,"proda_ip_proteins.csv", row.names = TRUE)
-
+write.csv(proda_ip_proteins,"vcam1_proda_ip_proteins.csv", row.names = TRUE)
 
 
 

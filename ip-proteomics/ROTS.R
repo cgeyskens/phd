@@ -5,7 +5,7 @@ library(tibble)
 library(imputeLCMD)
 
 # Loading the data
-exp17_data <- read_tsv("/mnt/data/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
+exp17_data <- read_tsv("/mnt/ip-proteomics/exp17-my-diann-run/diann_output.pg_matrix.tsv")
 View(exp17_data)
 
 # checking colnames
@@ -56,7 +56,7 @@ imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
 imputed_df <- as.data.frame(imputed_matrix)
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Prrt1", ]
+row_values <- imputed_df["Vcam1", ]
 print(row_values)
 
 ### Doing ROTS
@@ -67,7 +67,7 @@ groups
 
 # Running ROTS
 results = ROTS(data = imputed_df, groups = groups, B = 1000, K = 5000, seed = 1234)
-summary(results, fdr = 0.05)
+summary(results, fdr = 0.1)
 
 # plotting the results
 plot(results, fdr = 0.05, type = "volcano")
@@ -81,6 +81,6 @@ adj.pvalue <- results$FDR
 rots_results <- cbind(row.names(imputed_df), logFC, pvalue, adj.pvalue)
 
 rots_ip_proteins <- rots_results %>%
-                          subset(adj.pvalue <= 0.05 & logFC > 0)
+                          subset(pvalue <= 0.05 & logFC > 1)
 
-write.csv(rots_ip_proteins,"rots_ip_proteins.csv", row.names = TRUE)
+write.csv(rots_ip_proteins,"vcam1_rots_ip_proteins.csv", row.names = TRUE)
