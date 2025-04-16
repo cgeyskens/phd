@@ -29,7 +29,7 @@ BiocManager::repositories()
 
 # Set the jq query
 jq_command <- 'jq -r ".packages[] |  [.package, .version] | @tsv" packages.json'
-# Debug mode 
+# Debug mode
 # jq_command <- 'jq -r ".package_dev[] |  [.package, .version] | @tsv" packages.json'
 
 # Parse the json file with the list of package
