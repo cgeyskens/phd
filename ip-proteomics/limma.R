@@ -102,10 +102,6 @@ write.csv(dep_ip_proteins,"vcam1_limma_ip_proteins.csv", row.names = TRUE)
 ### Enhanced volcano plot
 library(EnhancedVolcano)
 
-select_proteins <- c(
-    "Vcam1",
-    "Prrt1"
-)
 
   # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
   # this can be achieved with nested ifelse statements
@@ -127,12 +123,14 @@ results$logFC > 1 & results$adj.P.Val < 0.05, 19,
   names(keyvals.shape)[keyvals.shape == 21] <- 'mid'
   names(keyvals.shape)[keyvals.shape == 21] <- 'low'
 
-
+select_proteins <- as.character(rownames(results[results$logFC > 1 & results$adj.P.Val < 0.05, ]))
+select_proteins <- c("Vcam1")
 EnhancedVolcano(results,
     lab = rownames(results),
     x = 'logFC',
     y = 'P.Value',
-    selectLab = rownames(results)[which(names(keyvals) %in% c('ip'))],
+    selectLab = select_proteins,
+    #selectLab = rownames(results)[which(names(keyvals) %in% c('ip'))],
     colCustom = keyvals,
     shapeCustom = keyvals.shape,
     drawConnectors = TRUE,

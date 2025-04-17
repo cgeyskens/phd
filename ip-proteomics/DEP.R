@@ -221,6 +221,7 @@ protein_list <- c(
   "Pcdhb14", 
   "Chgb"
   )
+  
 df_merge <- bind_rows(lapply(protein_list, extract_protein_data, se = se))
 
 ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
