@@ -5,6 +5,7 @@ library(ggplot2)
 library(tidyr)
 library(stringr)
 library(UpSetR)
+library(EnhancedVolcano)
 
 library(limma)
 library(imputeLCMD)
@@ -220,6 +221,10 @@ fit3 <- eBayes(fit2)
 results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 3070)
 limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limma$logFC > 1, ]
 
+write.csv(limma_ip_proteins,"gpr37l1_limma_ip_proteins.csv", row.names = TRUE)
+
+
+
 ##### Limma volcano plot 
 
 # to find the p value cutoff for the volcano plot
@@ -309,7 +314,7 @@ rots_results <- rots_results %>%
 
 rots_ip_proteins <- rots_results %>%
                           subset(adj.pvalue <= 0.05 & logFC > 1)
-
+write.csv(rots_ip_proteins,"gpr37l1_rots_ip_proteins.csv", row.names = TRUE)
 
 ##### ROTS volcano plot 
 
@@ -353,8 +358,8 @@ EnhancedVolcano(rots_results,
     colCustom = keyvals,
     shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-10, 10),
-    ylim = c(-0.5, 6),
+    xlim = c(-5, 5),
+    ylim = c(-0.2, 5),
     pCutoff = rots_dynamic_p_cutoff,
     cutoffLineType = 'blank',
     FCcutoff = 1,

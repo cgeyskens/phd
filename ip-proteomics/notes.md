@@ -125,9 +125,9 @@ MS-DAP
 
 QC plots:
  - Nr of proteins per sample (barplot)
- - Sample Coefficient of Variation plots
+ (- Sample Coefficient of Variation plots)
  - PCA plot of samples
- - Abundance rank of proteins IP vs IgG
+ (- Abundance rank of proteins IP vs IgG)
  - Intensity plots of raw log2 data per sample (boxplot)
  - Intensity plots of normalized data (boxplot)
  - Line plots of interesting candidates

@@ -95,7 +95,7 @@ fit3 <- eBayes(fit2)
 results <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 3070)
 limma_ip_proteins <- results[results$P.Val < 0.05 & results$logFC > 1, ]
 
-write.csv(dep_ip_proteins,"vcam1_limma_ip_proteins.csv", row.names = TRUE)
+write.csv(limma_ip_proteins,"vcam1_limma_ip_proteins.csv", row.names = TRUE)
 
 
 
