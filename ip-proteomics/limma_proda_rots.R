@@ -66,10 +66,10 @@ imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
 imputed_df <- as.data.frame(imputed_matrix)
 
 ##### normalization
-df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
+# df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- df_norm["Gpr37l1", ]
+row_values <- imputed_df["Gpr37l1", ]
 print(row_values)
 
 
@@ -110,7 +110,7 @@ ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
 
 ##### QC plots: log2 intensity plots
 
-plot_df_long <- df_norm %>%
+plot_df_long <- imputed_df %>%
   rownames_to_column(var = "Protein") %>%
   pivot_longer(cols = -Protein, names_to = "Sample", values_to = "Intensity") %>%
   # Extract the condition (ip or igg) from the sample name
@@ -138,12 +138,12 @@ ggplot(plot_df_long, aes(x = Sample, y = Intensity, fill = Condition)) +
     axis.line = element_line(linewidth = 0.75, color = "black"), # Make axis lines bolder and black
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "right"
-  )
+  ) + scale_y_continuous(limits = c(0, NA))
 
 ##### QC plots: PCA plot
 
 # 1. Transpose the data frame so that samples are rows and proteins are columns
-df_t <- as.data.frame(t(df_norm))
+df_t <- as.data.frame(t(imputed_df))
 
 # 2. Perform Principal Component Analysis (PCA)
 pca_result <- prcomp(df_t, scale. = TRUE) # scale. = TRUE for scaling the data
@@ -213,7 +213,7 @@ replicate <- factor(c(
 design <- model.matrix(~replicate + condition)
 colnames(design)
 # Fit the linear model
-fit1 <- limma::lmFit(df_norm, design)
+fit1 <- limma::lmFit(imputed_df, design)
 cont <- makeContrasts(conditionip, levels = design)
 fit2 <- contrasts.fit(fit1, contrasts = cont)
 fit3 <- eBayes(fit2)
@@ -227,24 +227,44 @@ write.csv(limma_ip_proteins,"gpr37l1_limma_ip_proteins.csv", row.names = TRUE)
 
 ##### Limma volcano plot 
 
-# to find the p value cutoff for the volcano plot
-adj.P.Val_cutoff <- 0.05
-sorted_results_limma <- results_limma[order(results_limma$P.Val), ]
+# # to find the p value cutoff for the volcano plot
+# adj.P.Val_cutoff <- 0.05
+# sorted_results_limma <- results_limma[order(results_limma$P.Val), ]
 
-limma_rank_cutoff <- which(sorted_results_limma$adj.P.Val <= adj.P.Val_cutoff)
-limma_dynamic_p_cutoff <- sorted_results_limma$P.Val[max(limma_rank_cutoff)]
+# limma_rank_cutoff <- which(sorted_results_limma$adj.P.Val <= adj.P.Val_cutoff)
+# limma_dynamic_p_cutoff <- sorted_results_limma$P.Val[max(limma_rank_cutoff)]
 
+
+# load in annotations
+annotations_data <- read_csv("gpr37l1_limma_ip_proteins_annotations.csv")
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
 # this can be achieved with nested ifelse statements
 keyvals <- ifelse(
-results_limma$logFC > 1 & results_limma$P.Val < 0.05, '#21a0e2',
+results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#21a0e2',
     ifelse(results_limma$logFC < 1, '#c6c6c6',
     '#c6c6c6'))
 keyvals[is.na(keyvals)] <- '#c6c6c6'
 names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'mid'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'low'
+
+
+# # Create a shape vector based on annotations
+# keyvals.shape <- rep(21, nrow(annotations_data)) # Default to open circle
+# names(keyvals.shape) <- rownames(annotations_data)
+
+
+# # Assuming your TRUE/FALSE column in annotations_data is named 'is_target'
+# if ("uniprot_membrane_related" %in% colnames(annotations_data)) {
+#   keyvals.shape[annotations_data$uniprot_membrane_related == TRUE & !is.na(annotations_data$uniprot_membrane_related)] <- 19 # Solid circle if TRUE
+# } else {
+#   warning("Column 'is_target' not found in annotations_data. Using default shapes.")
+# }
+
+
+
+
 
 keyvals.shape <- ifelse(
 results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, 19,
@@ -264,17 +284,17 @@ EnhancedVolcano(results_limma,
     selectLab = select_proteins,
     #selectLab = rownames(results_limma)[which(names(keyvals) %in% c('ip'))],
     colCustom = keyvals,
-    shapeCustom = keyvals.shape,
+    #shapeCustom = keyvals.shape[rownames(annotations_data)],
     drawConnectors = TRUE,
     xlim = c(-10, 10),
     ylim = c(-0.5, 6),
-    pCutoff = limma_dynamic_p_cutoff,
+    pCutoff = 0.0000001,
     cutoffLineType = 'blank',
     FCcutoff = 1,
     colAlpha = 1,
     shape = 21,
     pointSize = 4.0,
-    labSize = 4.0,
+    labSize = 6.0,
     gridlines.major = FALSE,
     gridlines.minor = FALSE,
     arrowheads = FALSE,

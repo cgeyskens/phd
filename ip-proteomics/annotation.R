@@ -197,6 +197,9 @@ merged_df_updated <- merged_df_updated_syngo %>%
   left_join(subcellular_locations %>% select(Protein.Group, uniprot_membrane_related), by = "Protein.Group")
 
 
+write.csv(merged_df_updated,"gpr37l1_limma_ip_proteins_annotations.csv", row.names = TRUE)
+
+
 
 ##### Clusterprofiler analysis 
 BiocManager::install("org.Mm.eg.db")
@@ -220,48 +223,77 @@ head(summary(go))
 dotplot(go, showCategory=30)
 
 
-# ##### make the graph
-# categories <- c(
-#     "Van Oostrum 2023",
-#     "SynGO",
-#     "Sorokina 2021, postsynaptic",
-#     "Sorokina 2021, presynaptic", 
-#     "Sorokina 2021, synaptosome",
-#     "Sorokina 2021, in database"
-#     )
+##### make the percentage match graph
 
-# percentages <- c(
-#     oostrum_percentage_matches,
-#     SynGO_percentage_matches,
-#     sorokina_percentage_postsynaptic_matches,
-#     sorokina_percentage_presynaptic_matches,
-#     sorokina_percentage_synaptosome_matches, 
-#     sorokina_percentage_matches
-#     )
+# calculate the percentages for each of the annotations
+total_rows <- nrow(merged_df_updated)
 
-# # bar colors
-# bar_colors <- ifelse(categories == "SynGO", "#ffba19",
-#                    ifelse(categories == "Van Oostrum 2023", "#c2b51c",
-#                           "#21a0e2"))
-# barplot(percentages,
-#         names.arg = NA,
-#         horiz = TRUE,
-#         xlim = c(0, 100),
-#         xlab = "% of co-immunoprecipitated proteins",
-#         col = bar_colors,  # You can choose a different color
-#         border = "black",
-#         las = 1, # Make axis labels horizontal
-#         axes = FALSE
-# )
-# axis(side = 1,
-#      lwd = 3
-# )
-# y_label_y_positions <- c(0.5, 1.7, 2.9, 4.1, 5.3, 6.5) 
-# text(x = 7, # Adjust the x-coordinate to position labels inside
-#      y = y_label_y_positions,
-#      labels = categories,
-#      cex = 2.5,      # Make the text bigger (adjust as needed)
-#      col = "black",
-#      adj = c(0, 0.1),        # Left-align the text
-#      family = "Arial" # Set the font family to Arial
-# )
+# sorokina in db 
+num_true_sorokina <- sum(merged_df_updated$in_sorokina_2021, na.rm = TRUE)
+sorokina_percentage_matches <- (num_true_sorokina / total_rows) * 100
+
+# sorokina synaptosome
+num_true_sorokina_syn <- sum(merged_df_updated$sorokina_2021_synaptosome, na.rm = TRUE)
+sorokina_percentage_synaptosome_matches <- (num_true_sorokina_syn / total_rows) * 100
+
+# sorokina presynaptic
+num_true_sorokina_pre <- sum(merged_df_updated$sorokina_2021_presynaptic, na.rm = TRUE)
+sorokina_percentage_presynaptic_matches <- (num_true_sorokina_pre / total_rows) * 100
+
+# sorokina postsynaptic
+num_true_sorokina_post <- sum(merged_df_updated$sorokina_2021_postsynaptic, na.rm = TRUE)
+sorokina_percentage_postsynaptic_matches <- (num_true_sorokina_post / total_rows) * 100
+
+# Van Oostrum 2023
+num_true_van_oostrunm <- sum(merged_df_updated$in_van_oostrum_2023, na.rm = TRUE)
+oostrum_percentage_matches <- (num_true_van_oostrunm/total_rows) * 100
+
+# SynGo
+num_true_syngo <- sum(merged_df_updated$in_syngo, na.rm = TRUE)
+SynGO_percentage_matches <- (num_true_syngo/total_rows) * 100
+
+
+categories <- c(
+    "Van Oostrum 2023",
+    "SynGO",
+    "Sorokina 2021, postsynaptic",
+    "Sorokina 2021, presynaptic", 
+    "Sorokina 2021, synaptosome",
+    "Sorokina 2021, in database"
+    )
+
+percentages <- c(
+    oostrum_percentage_matches,
+    SynGO_percentage_matches,
+    sorokina_percentage_postsynaptic_matches,
+    sorokina_percentage_presynaptic_matches,
+    sorokina_percentage_synaptosome_matches, 
+    sorokina_percentage_matches
+    )
+
+# bar colors
+bar_colors <- ifelse(categories == "SynGO", "#ffce82",
+                   ifelse(categories == "Van Oostrum 2023", "#e5db99",
+                          "#ffadbc"))
+barplot(percentages,
+        names.arg = NA,
+        horiz = TRUE,
+        xlim = c(0, 100),
+        xlab = "% of co-immunoprecipitated proteins",
+        col = bar_colors,  # You can choose a different color
+        border = "black",
+        las = 1, # Make axis labels horizontal
+        axes = FALSE
+)
+axis(side = 1,
+     lwd = 3
+)
+y_label_y_positions <- c(0.5, 1.7, 2.9, 4.1, 5.3, 6.5) 
+text(x = 7, # Adjust the x-coordinate to position labels inside
+     y = y_label_y_positions,
+     labels = categories,
+     cex = 2.5,      # Make the text bigger (adjust as needed)
+     col = "black",
+     adj = c(0, 0.1),        # Left-align the text
+     family = "Arial" # Set the font family to Arial
+)
