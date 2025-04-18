@@ -26,6 +26,7 @@ hackathon-2025-owkin/
 
 # for proteomics
 msdap_results
+batch_results
 
 # for clustermap 
 ClusterMap/

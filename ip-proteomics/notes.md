@@ -111,9 +111,11 @@ Setup docker environment for R locally with devcontainers.
 DEP: analysis done
 ROTS: analysis done
 SAMR: issue with analysis, package outdated
+Limma: analysis done
+proDA: analysis done
 #### Peptide level:
 MSstats: Get stuck when processing data (featureSubset = "all"). If with top_N_features = 300 then I get weird PCA plot, not like the protein-level analysis.
-MS-DAP
+MS-DAP: nice output of pdf report but just deletes rows with too many NAs
 
 
 - Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
@@ -124,19 +126,19 @@ MS-DAP
 
 
 QC plots:
- - Nr of proteins per sample (barplot)
+ V- Nr of proteins per sample (barplot)
  (- Sample Coefficient of Variation plots)
- - PCA plot of samples
+ V- PCA plot of samples
  (- Abundance rank of proteins IP vs IgG)
- - Intensity plots of raw log2 data per sample (boxplot)
- - Intensity plots of normalized data (boxplot)
- - Line plots of interesting candidates
+ V- Intensity plots of raw log2 data per sample (boxplot)
+ V- Intensity plots of normalized data (boxplot)
+ V- Line plots of interesting candidates
 
  - Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
- - Differential expression analysis, Volcano plot, of SYNGO mentioned proteins
- - Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
- - Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
- - Intensity line plots of raw data per sample of selected candidates
- - SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition
+ (- Differential expression analysis, Volcano plot, of SYNGO mentioned proteins)
+ V- Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
+ V- Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
+ V- Intensity line plots of raw data per sample of selected candidates
+ (- SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
  - Gene ontology analysis plots of VCAM1 IP condition
  - Plot of retention time histogram

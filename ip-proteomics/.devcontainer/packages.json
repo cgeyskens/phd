@@ -87,6 +87,10 @@
         {
             "package": "proDA",
             "version": "1.20.0"
+        },
+        {
+            "package": "UniprotR",
+            "version": "2.4.0"
         }
     ]
 }
