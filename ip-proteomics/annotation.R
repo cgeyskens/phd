@@ -9,7 +9,7 @@ library(UniprotR)
 library(readxl)
 
 # loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-my-diann-run/exp19-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp10_vcam1_synglio_replicates.pg_matrix.tsv")
 View(raw_data)
 
 # Loading in the results

@@ -13,7 +13,7 @@ library(ROTS)
 library(proDA)
 
 ##### Loading the data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-my-diann-run/exp19-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp10_vcam1_synglio_replicates.pg_matrix.tsv")
 View(raw_data)
 
 ##### Filter out the antibodies fragments: starting with "Ig"
@@ -45,7 +45,27 @@ gpr37l1_col_names <- c(
     "gpr37l1_ip_r4" = "/ip-proteomics/exp19-ms-convert-output/CG_07.mzML",
     "gpr37l1_igg_r4"= "/ip-proteomics/exp19-ms-convert-output/CG_08.mzML"
 )
-colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
+
+vcam1_exp10_synglio_col_names <- c(
+  "p14_vcam1_ip_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_1.wiff",
+  "p14_vcam1_igg_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_2.wiff",
+  "p14_vcam1_ip_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_3.wiff",
+  "p14_vcam1_igg_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_4.wiff",
+  "p14_vcam1_ip_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_5.wiff",
+  "p14_vcam1_igg_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_6.wiff",
+  "p14_vcam1_ip_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_7.wiff",
+  "p14_vcam1_igg_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_8.wiff",
+  "p28_vcam1_ip_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_9.wiff",
+  "p28_vcam1_igg_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_10.wiff",
+  "p28_vcam1_ip_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_11.wiff",
+  "p28_vcam1_igg_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_12.wiff",
+  "p28_vcam1_ip_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_13.wiff",
+  "p28_vcam1_igg_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_14.wiff",
+  "p28_vcam1_ip_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_15.wiff",
+  "p28_vcam1_igg_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_16.wiff"
+)
+
+colnames(data_na_filtered)[match(vcam1_exp10_synglio_col_names, colnames(data_na_filtered))] <- names(vcam1_exp10_synglio_col_names)
 
 ##### further data wrangling
 df <- data_na_filtered %>%
@@ -69,7 +89,7 @@ imputed_df <- as.data.frame(imputed_matrix)
 # df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Gpr37l1", ]
+row_values <- imputed_df["Vcam1", ]
 print(row_values)
 
 
@@ -178,7 +198,7 @@ condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6")
 # 6. Create the PCA scatter plot
 ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
   geom_point(size = 6) +
-  #geom_text(hjust = -0.1, vjust = 0.1, size = 3) + # Add sample labels
+  #geom_text(hjust = -0.1, vjust = 0.1, size = 5) + # Add sample labels
   scale_color_manual(values = condition_colors) +
   labs(
     title = "PCA Plot of Samples",
@@ -195,7 +215,8 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
     axis.title.y = element_text(size = 18, family = "Arial"), 
     axis.title.x = element_text(size = 18, family = "Arial"), 
     plot.title = element_text(size = 20, family = "Arial"), 
-  )
+  ) + 
+  xlim(-30, 30)
 
 
 ##### DEA Limma #####
@@ -556,18 +577,18 @@ extract_protein_data <- function(df, protein_name) {
 
 # Assuming your dataframe is called 'df_proteins'
 protein_list <- c(
-  "Gpr37l1",
-  "Tenm3", 
-  "Tenm4", 
-  "Ntng1", 
-  "Vangl2",
-  "Rgs7",
-  "Gabrb1",
-  "Sst",
-  "Nf1",
-  "Trappc4",
-  "Stxbp5",
-  "Cdh9"
+  "Vcam1"
+  # "Tenm3", 
+  # "Tenm4", 
+  # "Ntng1", 
+  # "Vangl2",
+  # "Rgs7",
+  # "Gabrb1",
+  # "Sst",
+  # "Nf1",
+  # "Trappc4",
+  # "Stxbp5",
+  # "Cdh9"
 )
 
 # Create an empty list to store results
