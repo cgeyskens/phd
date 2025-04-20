@@ -157,15 +157,13 @@ subcellular_locations <- do.call(rbind, results_list)
 
 # Define the terms you are looking for (lowercase for case-insensitive matching)
 membrane_terms <- tolower(c(
-  "membrane",
   "cell membrane",
   "cell junction",
   "plasma membrane",
   "secreted",
   "extracellular space",
   "extracellular matrix",
-  "cell surface",
-  "postsynaptic density"
+  "cell surface"
 ))
 
 # Create the new column 'is_membrane_related' initialized to FALSE
@@ -205,7 +203,7 @@ write.csv(merged_df_updated,"gpr37l1_limma_ip_proteins_annotations.csv", row.nam
 BiocManager::install("org.Mm.eg.db")
 library(org.Mm.eg.db)
 
-values_uniprot <- merged_df[["Protein.Group"]]
+values_uniprot <- merged_df_updated[["Protein.Group"]]
 length(values_uniprot)
 values_background_uniprot <- raw_data[["Protein.Group"]]
 length(values_background_uniprot)
@@ -222,6 +220,13 @@ head(summary(go))
 
 dotplot(go, showCategory=30)
 
+
+##### for gProfiler check through webportal
+check <- annotations_data$Genes
+print(check)
+for (item in check) {
+  cat(item, "\n")
+}
 
 ##### make the percentage match graph
 
@@ -270,30 +275,32 @@ percentages <- c(
     sorokina_percentage_synaptosome_matches, 
     sorokina_percentage_matches
     )
-
+#ffce82
 # bar colors
-bar_colors <- ifelse(categories == "SynGO", "#ffce82",
-                   ifelse(categories == "Van Oostrum 2023", "#e5db99",
-                          "#ffadbc"))
-barplot(percentages,
-        names.arg = NA,
-        horiz = TRUE,
-        xlim = c(0, 100),
-        xlab = "% of co-immunoprecipitated proteins",
-        col = bar_colors,  # You can choose a different color
-        border = "black",
-        las = 1, # Make axis labels horizontal
-        axes = FALSE
-)
-axis(side = 1,
-     lwd = 3
-)
-y_label_y_positions <- c(0.5, 1.7, 2.9, 4.1, 5.3, 6.5) 
-text(x = 7, # Adjust the x-coordinate to position labels inside
-     y = y_label_y_positions,
-     labels = categories,
-     cex = 2.5,      # Make the text bigger (adjust as needed)
-     col = "black",
-     adj = c(0, 0.1),        # Left-align the text
-     family = "Arial" # Set the font family to Arial
-)
+bar_colors <- ifelse(categories == "SynGO", "#ffadbc",
+                   ifelse(categories == "Van Oostrum 2023", "#ffce82",
+                          "#e5db99"))
+
+ggplot(data.frame(percentages = percentages, categories = categories),
+       aes(x = percentages, y = categories)) +
+  geom_bar(stat = "identity", fill = bar_colors, color = "black") +
+  scale_x_continuous(limits = c(0, 100),
+                    breaks = c(0,20,40,60,80,100)) +
+  xlab("% of co-immunoprecipitated proteins") +
+  ylab(NULL) + # Remove default y-axis label
+  theme_minimal() +
+  theme(
+    axis.line.x = element_line(linewidth = 0.75, color = "black"),
+    axis.ticks.x = element_line(color = "black", linewidth = 0.75, size = 1),
+    axis.text.x = element_text(size = 16),
+    axis.title.x = element_text(size = 25, family = "Arial"),
+    axis.text.y = element_blank(),
+    panel.grid.major.y = element_blank(), # Remove horizontal grid lines
+    panel.grid.minor = element_blank()    # Remove minor grid lines
+  ) +
+  geom_text(aes(label = categories),
+            x = 7, # Adjust for label positioning
+            hjust = 0,
+            size = 10,
+            color = "black",
+            family = "Arial")

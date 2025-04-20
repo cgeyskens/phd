@@ -52,7 +52,7 @@ df <- data_na_filtered %>%
         as_tibble() %>%
         column_to_rownames(var = "Genes") %>% # The Genes column as rownames
         select(-Protein.Group, -Protein.Names, -First.Protein.Description)
-
+check <- df["Ntng1", ]
 
 ##### log2 transformation
 df_log2 <- df %>%
@@ -61,7 +61,7 @@ df_log2 <- df %>%
 ##### imputation
 data_matrix <- as.matrix(df_log2)
 imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
-                                      q = 0.01,      
+                                      q = 0.001,      
                                       tune.sigma = 1) 
 imputed_df <- as.data.frame(imputed_matrix)
 
@@ -104,8 +104,13 @@ ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
   theme(
     panel.grid = element_blank(), # Remove all grid lines
     axis.line = element_line(linewidth = 0.75, color = "black"), # Make axis lines bolder and black
-    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate x-axis labels
-    legend.position = "right" # Adjust legend position as needed
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 16),# Rotate x-axis labels
+    axis.text.y = element_text(size = 16),
+    axis.title.y = element_text(size = 18, family = "Arial"), 
+    axis.title.x = element_blank(), 
+    plot.title = element_text(size = 20, family = "Arial"),
+    legend.position = "right",
+    text = element_text(family = "Arial")  # Adjust legend position as needed
   )
 
 ##### QC plots: log2 intensity plots
@@ -136,7 +141,11 @@ ggplot(plot_df_long, aes(x = Sample, y = Intensity, fill = Condition)) +
   theme(
     panel.grid = element_blank(), # Remove all grid lines
     axis.line = element_line(linewidth = 0.75, color = "black"), # Make axis lines bolder and black
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.y = element_text(size = 18, family = "Arial"), 
+    axis.title.x = element_blank(), 
+    plot.title = element_text(size = 20, family = "Arial"),
     legend.position = "right"
   ) + scale_y_continuous(limits = c(0, NA))
 
@@ -181,7 +190,11 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
     panel.grid = element_blank(),
     axis.line = element_line(linewidth = 0.75, color = "black"),
     legend.position = "right",
-    axis.ticks = element_line(color = "black", linewidth = 0.75, size = 1) 
+    axis.ticks = element_line(color = "black", linewidth = 0.75, size = 1),
+    axis.text.y = element_text(size = 16),
+    axis.title.y = element_text(size = 18, family = "Arial"), 
+    axis.title.x = element_text(size = 18, family = "Arial"), 
+    plot.title = element_text(size = 20, family = "Arial"), 
   )
 
 
@@ -224,77 +237,40 @@ limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limm
 write.csv(limma_ip_proteins,"gpr37l1_limma_ip_proteins.csv", row.names = TRUE)
 
 
+#### Limma volcano plot without annotations
 
-##### Limma volcano plot 
+results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 
-# # to find the p value cutoff for the volcano plot
-# adj.P.Val_cutoff <- 0.05
-# sorted_results_limma <- results_limma[order(results_limma$P.Val), ]
+# making the labels for volcano plot
+labels <- results_limma$Genes
+labels_upper <- paste0(toupper(labels))
 
-# limma_rank_cutoff <- which(sorted_results_limma$adj.P.Val <= adj.P.Val_cutoff)
-# limma_dynamic_p_cutoff <- sorted_results_limma$P.Val[max(limma_rank_cutoff)]
+select_gpr37l1 <- c("Gpr37l1")
+select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
-
-# load in annotations
-annotations_data <- read_csv("gpr37l1_limma_ip_proteins_annotations.csv")
-
-# create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
-# this can be achieved with nested ifelse statements
+# making the statement color the points
 keyvals <- ifelse(
-results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#21a0e2',
-    ifelse(results_limma$logFC < 1, '#c6c6c6',
-    '#c6c6c6'))
+    results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#21a0e2', '#c6c6c6')
 keyvals[is.na(keyvals)] <- '#c6c6c6'
 names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
-names(keyvals)[keyvals == '#c6c6c6'] <- 'mid'
-names(keyvals)[keyvals == '#c6c6c6'] <- 'low'
+names(keyvals)[keyvals == '#c6c6c6'] <- 'unspecific'
 
-
-# # Create a shape vector based on annotations
-# keyvals.shape <- rep(21, nrow(annotations_data)) # Default to open circle
-# names(keyvals.shape) <- rownames(annotations_data)
-
-
-# # Assuming your TRUE/FALSE column in annotations_data is named 'is_target'
-# if ("uniprot_membrane_related" %in% colnames(annotations_data)) {
-#   keyvals.shape[annotations_data$uniprot_membrane_related == TRUE & !is.na(annotations_data$uniprot_membrane_related)] <- 19 # Solid circle if TRUE
-# } else {
-#   warning("Column 'is_target' not found in annotations_data. Using default shapes.")
-# }
-
-
-
-
-
-keyvals.shape <- ifelse(
-results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, 19,
-      ifelse(results_limma$logFC < 1, 21,
-        21))
-  keyvals.shape[is.na(keyvals.shape)] <- 21
-  names(keyvals.shape)[keyvals.shape == 19] <- 'pp'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'mid'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'low'
-
-select_proteins <- as.character(rownames(results_limma[results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, ]))
-select_proteins <- c("Gpr37l1")
+# making the volcano plot
 EnhancedVolcano(results_limma,
-    lab = rownames(results_limma),
+    lab = labels_upper,
     x = 'logFC',
     y = 'P.Value',
-    selectLab = select_proteins,
-    #selectLab = rownames(results_limma)[which(names(keyvals) %in% c('ip'))],
+    selectLab = select_proteins_upper,
     colCustom = keyvals,
-    #shapeCustom = keyvals.shape[rownames(annotations_data)],
+    #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-10, 10),
+    xlim = c(-8, 8),
     ylim = c(-0.5, 6),
-    pCutoff = 0.0000001,
     cutoffLineType = 'blank',
-    FCcutoff = 1,
     colAlpha = 1,
     shape = 21,
     pointSize = 4.0,
-    labSize = 6.0,
+    labSize = 6,
     gridlines.major = FALSE,
     gridlines.minor = FALSE,
     arrowheads = FALSE,
@@ -304,6 +280,79 @@ EnhancedVolcano(results_limma,
 
 
 
+### !!! Now go to the annotations.R script to get the annotations
+
+##### Limma volcano plot with annotations
+
+# load in annotations
+annotations_data <- read_csv("gpr37l1_limma_ip_proteins_annotations.csv")
+
+# merge annotations with the results_limma
+# results_limma <- tibble::rownames_to_column(results_limma, "Genes")
+results_limma <- tibble::as_tibble(results_limma)
+merged_df_for_volcano <- left_join(results_limma, 
+                          select(annotations_data, "Genes", 
+                          "in_van_oostrum_2023",
+                          "in_sorokina_2021",
+                          "sorokina_2021_synaptosome",
+                          "sorokina_2021_presynaptic",
+                          "sorokina_2021_postsynaptic",
+                          "in_syngo",
+                          "uniprot_membrane_related"))
+
+
+# making the statement color the points
+keyvals <- ifelse(
+    merged_df_for_volcano$logFC > 1 & merged_df_for_volcano$adj.P.Val < 0.05, '#21a0e2', '#c6c6c6')
+keyvals[is.na(keyvals)] <- '#c6c6c6'
+names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
+names(keyvals)[keyvals == '#c6c6c6'] <- 'unspecific'
+
+# making the statement to shape the points 
+keyvals.shape <- ifelse(
+      merged_df_for_volcano$uniprot_membrane_related == TRUE & merged_df_for_volcano$in_syngo ==TRUE, 
+      19, 
+      21)
+keyvals.shape[is.na(keyvals.shape)] <- 21
+names(keyvals.shape)[keyvals.shape == 19] <- 'yes'
+names(keyvals.shape)[keyvals.shape == 21] <- 'low'
+
+# checking how many labels fit the statements
+table(merged_df_for_volcano$uniprot_membrane_related, merged_df_for_volcano$in_syngo)
+
+# making the labels for volcano plot
+labels <- merged_df_for_volcano$Genes
+labels_upper <- paste0(toupper(labels))
+
+select_proteins_with_na <- as.character(merged_df_for_volcano$Genes[merged_df_for_volcano$uniprot_membrane_related == TRUE & merged_df_for_volcano$in_syngo ==TRUE])
+select_proteins <- select_proteins_with_na[!is.na(select_proteins_with_na)]
+select_proteins_upper <- paste0(toupper(select_proteins))
+
+
+# making the volcano plot
+EnhancedVolcano(merged_df_for_volcano,
+    lab = labels_upper,
+    x = 'logFC',
+    y = 'P.Value',
+    selectLab = select_proteins_upper,
+    colCustom = keyvals,
+    shapeCustom = keyvals.shape,
+    drawConnectors = TRUE,
+    xlim = c(-8, 8),
+    ylim = c(-0.5, 6),
+    cutoffLineType = 'blank',
+    colAlpha = 1,
+    shape = 21,
+    pointSize = 4.0,
+    #parseLabels = TRUE,
+    labSize = 6,
+    gridlines.major = FALSE,
+    gridlines.minor = FALSE,
+    arrowheads = FALSE,
+    parseLabels = TRUE,
+    lengthConnectors = unit(0.1, 'npc'),
+    ) + theme(text=element_text(size=4,  family="Arial"))
+
 
 ##### DEA ROTS 
 
@@ -312,7 +361,7 @@ groups = c(0,1,0,1,0,1,0,1)
 groups
 
 # Running ROTS
-results = ROTS(data = df_norm, groups = groups, B = 1000, K = 5000, seed = 1234)
+results = ROTS(data = imputed_df, groups = groups, B = 1000, K = 5000, seed = 1234)
 summary(results, fdr = 0.1)
 
 # plotting the results
@@ -323,7 +372,7 @@ logFC <- results$logfc
 pvalue <- results$pvalue
 adj.pvalue <- results$FDR
 
-rots_results <- as.data.frame(cbind(row.names(df_norm), logFC, pvalue, adj.pvalue))
+rots_results <- as.data.frame(cbind(row.names(imputed_df), logFC, pvalue, adj.pvalue))
 rots_results <- rots_results %>%
   mutate(
     logFC = as.numeric(logFC),
@@ -338,19 +387,19 @@ write.csv(rots_ip_proteins,"gpr37l1_rots_ip_proteins.csv", row.names = TRUE)
 
 ##### ROTS volcano plot 
 
-# to find the p value cutoff for the volcano plot
-adj.pvalue_cutoff <- 0.05
+rots_results <- tibble::rownames_to_column(rots_results, "Genes")
 
-sorted_rots_results <- rots_results[order(rots_results$pval), ]
-n_sorted_rots <- nrow(sorted_rots_results)
+# making the labels for volcano plot
+labels <- rots_results$Genes
+labels_upper <- paste0(toupper(labels))
 
-rots_rank_cutoff <- which(sorted_rots_results$adj.pvalue <= adj.pvalue_cutoff)
-rots_dynamic_p_cutoff <- sorted_rots_results$pvalue[max(rots_rank_cutoff)]
+select_gpr37l1 <- c("Gpr37l1")
+select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
 # this can be achieved with nested ifelse statements
 keyvals <- ifelse(
-rots_results$logFC > 1 & rots_results$pvalue < 0.05, '#21a0e2',
+rots_results$logFC > 1 & rots_results$adj.pvalue < 0.05, '#21a0e2',
     ifelse(rots_results$logFC < 1, '#c6c6c6',
     '#c6c6c6'))
 keyvals[is.na(keyvals)] <- '#c6c6c6'
@@ -358,35 +407,22 @@ names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'mid'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'low'
 
-keyvals.shape <- ifelse(
-rots_results$logFC > 1 & rots_results$adj.pvalue < 0.05, 19,
-      ifelse(rots_results$logFC < 1, 21,
-        21))
-  keyvals.shape[is.na(keyvals.shape)] <- 21
-  names(keyvals.shape)[keyvals.shape == 19] <- 'pp'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'mid'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'low'
 
-select_proteins <- as.character(rownames(rots_results[results$logFC > 1 & rots_results$adj.P.Val < 0.05, ]))
-select_proteins <- c("Gpr37l1")
 EnhancedVolcano(rots_results,
-    lab = rownames(rots_results),
+    lab = labels_upper,
     x = 'logFC',
     y = 'pvalue',
-    selectLab = select_proteins,
-    #selectLab = rownames(rots_results)[which(names(keyvals) %in% c('ip'))],
+    selectLab = select_proteins_upper,
     colCustom = keyvals,
-    shapeCustom = keyvals.shape,
+    #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-5, 5),
+    xlim = c(-7, 7),
     ylim = c(-0.2, 5),
-    pCutoff = rots_dynamic_p_cutoff,
     cutoffLineType = 'blank',
-    FCcutoff = 1,
     colAlpha = 1,
     shape = 21,
     pointSize = 4.0,
-    labSize = 4.0,
+    labSize = 6,
     gridlines.major = FALSE,
     gridlines.minor = FALSE,
     arrowheads = FALSE,
@@ -394,6 +430,7 @@ EnhancedVolcano(rots_results,
     lengthConnectors = unit(0.1, 'npc'),
     ) + theme(text=element_text(size=4,  family="Arial"))
 
+check <- rots_results[rots_results$Genes == "Gpr37l1", ]
 
 ##### DEA proDA
 
@@ -404,7 +441,7 @@ log2_matrix <- as.matrix(df_log2)
 barplot(colSums(is.na(log2_matrix)),
         ylab = "# missing values")
 
-boxplot(normalized_matrix,
+boxplot(log2_matrix,
         ylab = "Intensity Distribution")
 
 #normalization 
@@ -419,7 +456,7 @@ sample_info_df
 
 ##### Fitting the proDA model
 fit <- proDA(
-    normalized_matrix, 
+    log2_matrix, 
     design = ~ condition + replicate, 
     data_is_log_transformed = TRUE,
     col_data = sample_info_df, 
@@ -438,55 +475,41 @@ proda_ip_proteins <- subset(results_proda, adj_pval < 0.05 & diff > 1)
 
 ##### proDA volcano plot 
 
-# to find the p value cutoff for the volcano plot
-adj_pval_cutoff <- 0.05
+names(results_proda)[names(results_proda) == "name"] <- "Genes"
+31431
+# making the labels for volcano plot
+labels <- results_proda$Genes
+labels_upper <- paste0(toupper(labels))
 
-sorted_proda_data <- results_proda[order(results_proda$pval), ]
-n_sorted_proda <- nrow(sorted_proda_data)
-
-rank_cutoff <- which(sorted_proda_data$adj_pval <= adj_pval_cutoff)
-dynamic_p_cutoff <- sorted_proda_data$pval[max(rank_cutoff)]
+select_gpr37l1 <- c("Gpr37l1")
+select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
 # this can be achieved with nested ifelse statements
 keyvals <- ifelse(
-results_proda$diff > 1 & results_proda$pval < 0.05, '#21a0e2',
-    ifelse(results_proda$diff < 1, '#c6c6c6',
+results_proda$diff > 1 & results_proda$adj_pval < 0.05, '#21a0e2',
+    ifelse(results_proda$logFC < 1, '#c6c6c6',
     '#c6c6c6'))
 keyvals[is.na(keyvals)] <- '#c6c6c6'
 names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'mid'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'low'
 
-keyvals.shape <- ifelse(
-results_proda$diff > 1 & results_proda$adj_pval < 0.05, 19,
-      ifelse(results_proda$diff < 1, 21,
-        21))
-  keyvals.shape[is.na(keyvals.shape)] <- 21
-  names(keyvals.shape)[keyvals.shape == 19] <- 'pp'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'mid'
-  names(keyvals.shape)[keyvals.shape == 21] <- 'low'
 
-select_proteins <- as.character(rownames(results_proda[results$diff > 1 & results_proda$adj_pval < 0.05, ]))
-select_proteins <- c("Gpr37l1")
 EnhancedVolcano(results_proda,
-    lab = rownames(results_proda),
+    lab = labels_upper,
     x = 'diff',
     y = 'pval',
-    selectLab = select_proteins,
-    #selectLab = rownames(results_proda)[which(names(keyvals) %in% c('ip'))],
+    selectLab = select_proteins_upper,
     colCustom = keyvals,
-    shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-10, 10),
-    ylim = c(-0.5, 10),
-    pCutoff = dynamic_p_cutoff,
+    xlim = c(-7, 7),
+    ylim = c(-0.5, 7.5),
     cutoffLineType = 'blank',
-    FCcutoff = 1,
     colAlpha = 1,
     shape = 21,
     pointSize = 4.0,
-    labSize = 4.0,
+    labSize = 6,
     gridlines.major = FALSE,
     gridlines.minor = FALSE,
     arrowheads = FALSE,
@@ -534,10 +557,17 @@ extract_protein_data <- function(df, protein_name) {
 # Assuming your dataframe is called 'df_proteins'
 protein_list <- c(
   "Gpr37l1",
-  "Pfla4", 
-  "Rasgef1a", 
-  "Frmpd3", 
-  "Brd3os"
+  "Tenm3", 
+  "Tenm4", 
+  "Ntng1", 
+  "Vangl2",
+  "Rgs7",
+  "Gabrb1",
+  "Sst",
+  "Nf1",
+  "Trappc4",
+  "Stxbp5",
+  "Cdh9"
 )
 
 # Create an empty list to store results
@@ -555,54 +585,11 @@ for(protein in protein_list) {
 df_merge <- bind_rows(results_list)
 
 # Plot with NA handling
-extract_protein_data <- function(df, protein_name) {
-  # Check if protein exists in rownames
-  if(!(protein_name %in% rownames(df))) {
-    return(NULL)
-  }
-  
-  # Extract the row for the specified protein
-  protein_row <- df[protein_name, , drop = FALSE]
-  
-  # Convert to long format
-  protein_data <- data.frame(
-    condition = colnames(protein_row),
-    raw_log2_intensities = as.numeric(as.matrix(protein_row)),
-    protein = protein_name
-  )
-  
-  return(protein_data)
-}
-
-# Assuming your dataframe is called 'df_proteins'
-protein_list <- c(
-  "Gpr37l1",
-  "Pfla4", 
-  "Rasgef1a", 
-  "Frmpd3", 
-  "Brd3os"
-)
-
-# Create an empty list to store results
-results_list <- list()
-
-# Process each protein
-for(protein in protein_list) {
-  result <- extract_protein_data(df_proteins, protein)
-  if(!is.null(result)) {
-    results_list[[protein]] <- result
-  }
-}
-
-# Combine all results
-df_merge <- bind_rows(results_list)
-
-# Plot with NA handling
 ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
   geom_line(aes(color=protein), na.rm = TRUE, size = 1) +  # Skip NA values when drawing lines
   geom_point(aes(color=protein), na.rm = TRUE, size = 5) +  # Skip NA values when plotting points
   scale_x_discrete() +
-  scale_y_continuous(expand=c(0, 0), limits=c(0, 25)) + 
+  scale_y_continuous(expand=c(0, 0), limits=c(0, 20)) + 
   theme_minimal(base_size = 22) +
   theme(
     panel.background = element_blank(),
@@ -611,6 +598,6 @@ ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=protein)) +
     axis.ticks = element_line(size = 1.2),
     axis.text.x = element_text(angle = 45, hjust = 1)
   ) +
-  labs(title="Protein Expression Levels",
+  labs(title="Raw Intensity Levels",
        x="Condition",
-       y="Log2 Intensity")
+       y="Log2 Intensity") + theme(text=element_text(size=20,  family="Arial"))
