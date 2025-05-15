@@ -9,11 +9,11 @@ library(UniprotR)
 library(readxl)
 
 # loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp10_vcam1_synglio_replicates.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp17-only-vcam1-diann-output/exp17-only-vcam1-diann_output.pg_matrix.tsv")
 View(raw_data)
 
 # Loading in the results
-ip_data <- read.csv("gpr37l1_limma_ip_proteins.csv", row.names = 1)
+ip_data <- read.csv("vcam1_limma_ip_proteins.csv", row.names = 1)
 ip_data$Genes <- rownames(ip_data)
 View(ip_data)
 
@@ -103,7 +103,6 @@ merged_df_updated_syngo <- merged_df_updated_sorokina_3 %>%
     new_column_name = "in_syngo"
   )
 
-
 ###### Crossreference with Uniprot subcellular location
 values_uniprot <- merged_df[["Protein.Group"]]
 
@@ -119,7 +118,7 @@ num_proteins <- length(final_protein_list)
 results_list <- list()
 
 # Folder to save intermediate batch results
-dir.create("batch_results", showWarnings = FALSE)
+dir.create("batch_results_vcam1", showWarnings = FALSE)
 
 # Process the protein list in batches
 for (i in 1:ceiling(num_proteins / batch_size)) {
@@ -127,7 +126,7 @@ for (i in 1:ceiling(num_proteins / batch_size)) {
   end_index <- min(i * batch_size, num_proteins)
   current_batch <- final_protein_list[start_index:end_index]
 
-  batch_file <- paste0("batch_results/batch_", i, ".rds")
+  batch_file <- paste0("batch_results_vcam1/batch_", i, ".rds")
 
   # Skip if this batch has already been processed
   if (file.exists(batch_file)) {
@@ -195,7 +194,7 @@ merged_df_updated <- merged_df_updated_syngo %>%
   left_join(subcellular_locations %>% select(Protein.Group, uniprot_membrane_related), by = "Protein.Group")
 
 
-write.csv(merged_df_updated,"gpr37l1_limma_ip_proteins_annotations.csv", row.names = TRUE)
+write.csv(merged_df_updated,"vcam1_limma_ip_proteins_annotations.csv", row.names = TRUE)
 
 
 

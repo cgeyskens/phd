@@ -63,7 +63,7 @@ https://www.youtube.com/watch?v=cGKJzx9IIi4
  From DIA-NN issues:
  https://github.com/vdemichev/DiaNN/issues/1136
  - For IP; it is recommended to not use imputation for missing values (some are not detected in the IgG control condition)
- - For IP; dissabeling normalization & MBR & no imputation. But if imputation necessary in downstream tools use minimal-value imputation on the protein level. 
+ - For IP; dissabeling normalization & use MBR & no imputation. But if imputation necessary in downstream tools use minimal-value imputation on the protein level. 
 
 From the previous sections and reading:
   - Expression matrix type: directLFQ
