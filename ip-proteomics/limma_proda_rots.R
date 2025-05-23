@@ -13,7 +13,7 @@ library(ROTS)
 library(proDA)
 
 ##### Loading the data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp17-only-vcam1-diann-output/exp17-only-vcam1-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
 View(raw_data)
 
 ##### Filter out the antibodies fragments: starting with "Ig"
@@ -58,32 +58,33 @@ vcam1_col_names <- c(
 )
 
 vcam1_exp10_synglio_col_names <- c(
-  "p14_vcam1_ip_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_1.wiff",
-  "p14_vcam1_igg_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_2.wiff",
-  "p14_vcam1_ip_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_3.wiff",
-  "p14_vcam1_igg_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_4.wiff",
-  "p14_vcam1_ip_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_5.wiff",
-  "p14_vcam1_igg_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_6.wiff",
-  "p14_vcam1_ip_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_7.wiff",
-  "p14_vcam1_igg_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_8.wiff",
-  "p28_vcam1_ip_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_9.wiff",
-  "p28_vcam1_igg_r1" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_10.wiff",
-  "p28_vcam1_ip_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_11.wiff",
-  "p28_vcam1_igg_r2" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_12.wiff",
-  "p28_vcam1_ip_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_13.wiff",
-  "p28_vcam1_igg_r3" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_14.wiff",
-  "p28_vcam1_ip_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_15.wiff",
-  "p28_vcam1_igg_r4" = "D:\\Proteomics2024\\CBD\\JorisdeWitLab\\PCF000184\\CG_16.wiff"
+  "p14_vcam1_ip_r1" = "/ip-proteomics/exp10-ms-convert-output/CG_1.mzML",
+  "p14_vcam1_igg_r1"= "/ip-proteomics/exp10-ms-convert-output/CG_2.mzML",
+  "p14_vcam1_ip_r2" = "/ip-proteomics/exp10-ms-convert-output/CG_3.mzML",
+  "p14_vcam1_igg_r2"= "/ip-proteomics/exp10-ms-convert-output/CG_4.mzML",
+  "p14_vcam1_ip_r3" = "/ip-proteomics/exp10-ms-convert-output/CG_5.mzML",
+  "p14_vcam1_igg_r3"= "/ip-proteomics/exp10-ms-convert-output/CG_6.mzML",
+  "p14_vcam1_ip_r4" = "/ip-proteomics/exp10-ms-convert-output/CG_7.mzML",
+  "p14_vcam1_igg_r4"= "/ip-proteomics/exp10-ms-convert-output/CG_8.mzML",
+  "p28_vcam1_ip_r1" = "/ip-proteomics/exp10-ms-convert-output/CG_9.mzML",
+  "p28_vcam1_igg_r1"= "/ip-proteomics/exp10-ms-convert-output/CG_10.mzML",
+  "p28_vcam1_ip_r2" = "/ip-proteomics/exp10-ms-convert-output/CG_11.mzML",
+  "p28_vcam1_igg_r2"= "/ip-proteomics/exp10-ms-convert-output/CG_12.mzML",
+  "p28_vcam1_ip_r3" = "/ip-proteomics/exp10-ms-convert-output/CG_13.mzML",
+  "p28_vcam1_igg_r3"= "/ip-proteomics/exp10-ms-convert-output/CG_14.mzML",
+  "p28_vcam1_ip_r4" = "/ip-proteomics/exp10-ms-convert-output/CG_15.mzML",
+  "p28_vcam1_igg_r4"= "/ip-proteomics/exp10-ms-convert-output/CG_16.mzML"
 )
 
-colnames(data_na_filtered)[match(vcam1_col_names, colnames(data_na_filtered))] <- names(vcam1_col_names)
+colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
 
 ##### further data wrangling
 df <- data_na_filtered %>%
         as_tibble() %>%
         column_to_rownames(var = "Genes") %>% # The Genes column as rownames
         select(-Protein.Group, -Protein.Names, -First.Protein.Description)
-check <- df["Vcam1", ]
+check <- df["Gpr37l1", ]
+print(check)
 
 ##### log2 transformation
 df_log2 <- df %>%
@@ -100,7 +101,7 @@ imputed_df <- as.data.frame(imputed_matrix)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Vcam1", ]
+row_values <- imputed_df["Gpr37l1", ]
 print(row_values)
 
 
@@ -265,7 +266,7 @@ fit3 <- eBayes(fit2)
 results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 3070)
 limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limma$logFC > 1, ]
 
-write.csv(limma_ip_proteins,"vcam1_limma_ip_proteins.csv", row.names = TRUE)
+write.csv(limma_ip_proteins,"gpr37l1_limma_ip_proteins.csv", row.names = TRUE)
 
 
 #### Limma volcano plot without annotations
@@ -276,7 +277,7 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Vcam1")
+select_gpr37l1 <- c("Gpr37l1")
 select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # making the statement color the points
@@ -316,7 +317,7 @@ EnhancedVolcano(results_limma,
 ##### Limma volcano plot with annotations
 
 # load in annotations
-annotations_data <- read_csv("vcam1_limma_ip_proteins_annotations.csv")
+annotations_data <- read_csv("gpr37l1_limma_ip_proteins_annotations.csv")
 
 # merge annotations with the results_limma
 # results_limma <- tibble::rownames_to_column(results_limma, "Genes")
@@ -341,7 +342,7 @@ names(keyvals)[keyvals == '#c6c6c6'] <- 'unspecific'
 
 # making the statement to shape the points 
 keyvals.shape <- ifelse(
-      merged_df_for_volcano$uniprot_membrane_related == TRUE & merged_df_for_volcano$in_syngo ==TRUE, 
+      merged_df_for_volcano$uniprot_membrane_related == TRUE, 
       19, 
       21)
 keyvals.shape[is.na(keyvals.shape)] <- 21
@@ -349,13 +350,13 @@ names(keyvals.shape)[keyvals.shape == 19] <- 'yes'
 names(keyvals.shape)[keyvals.shape == 21] <- 'low'
 
 # checking how many labels fit the statements
-table(merged_df_for_volcano$uniprot_membrane_related, merged_df_for_volcano$in_syngo)
+table(merged_df_for_volcano$uniprot_membrane_related) #merged_df_for_volcano$in_syngo)
 
 # making the labels for volcano plot
 labels <- merged_df_for_volcano$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_proteins_with_na <- as.character(merged_df_for_volcano$Genes[merged_df_for_volcano$uniprot_membrane_related == TRUE & merged_df_for_volcano$in_syngo ==TRUE])
+select_proteins_with_na <- as.character(merged_df_for_volcano$Genes[merged_df_for_volcano$uniprot_membrane_related == TRUE])
 select_proteins <- select_proteins_with_na[!is.na(select_proteins_with_na)]
 select_proteins_upper <- paste0(toupper(select_proteins))
 
@@ -369,19 +370,20 @@ EnhancedVolcano(merged_df_for_volcano,
     colCustom = keyvals,
     shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-10, 10),
+    xlim = c(-6, 6),
     ylim = c(-0.5, 6),
     cutoffLineType = 'blank',
     colAlpha = 1,
     shape = 21,
     pointSize = 4.0,
     #parseLabels = TRUE,
-    labSize = 6,
+    labSize = 4,
     gridlines.major = FALSE,
     gridlines.minor = FALSE,
     arrowheads = FALSE,
     parseLabels = TRUE,
-    lengthConnectors = unit(0.1, 'npc'),
+    lengthConnectors = unit(0.5, 'npc'),
+    max.overlaps = 40,
     ) + theme(text=element_text(size=4,  family="Arial"))
 
 
@@ -424,7 +426,7 @@ rots_results <- tibble::rownames_to_column(rots_results, "Genes")
 labels <- rots_results$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Vcam1")
+select_gpr37l1 <- c("Gpr37l1")
 select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
@@ -481,7 +483,7 @@ normalized_matrix <- scale(log2_matrix)
 # getting the sample metadata in a dataframes 
 sample_info_df <- data.frame(name = colnames(log2_matrix),
                              stringsAsFactors = FALSE)
-sample_info_df$condition <- substr(sample_info_df$name, 7, nchar(sample_info_df$name)  - 3)
+sample_info_df$condition <- substr(sample_info_df$name, 9, nchar(sample_info_df$name)  - 3)
 sample_info_df$replicate <- as.numeric(substr(sample_info_df$name, nchar(sample_info_df$name) - 0, nchar(sample_info_df$name)))
 sample_info_df # Check this carefully !
 
@@ -512,7 +514,7 @@ names(results_proda)[names(results_proda) == "name"] <- "Genes"
 labels <- results_proda$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Vcam1")
+select_gpr37l1 <- c("Gpr37l1")
 select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
@@ -550,8 +552,8 @@ EnhancedVolcano(results_proda,
 
 
 ##### Upsetplot of Limma, ROTS & proDA
-limma_ip_proteins_for_upset_plot <- limma_ip_proteins %>% remove_rownames %>% column_to_rownames(var="Genes")
-limma_set <- rownames(limma_ip_proteins_for_upset_plot)
+# limma_ip_proteins_for_upset_plot <- limma_ip_proteins %>% remove_rownames %>% column_to_rownames(var="Genes")
+limma_set <- rownames(limma_ip_proteins)
 rots_set <- rownames(rots_ip_proteins)
 proda_ip_proteins_for_upset_plot <- proda_ip_proteins %>% remove_rownames %>% column_to_rownames(var="name")
 proda_set <- rownames(proda_ip_proteins_for_upset_plot)
@@ -592,7 +594,12 @@ protein_list <- c(
   "Vcam1",
   "Cd2ap",
   "Prrt1",
-  "Aak1"
+  "Aak1",
+  "Chgb",
+  "Aqp4",
+  "Igdcc4",
+  "Slc39a5",
+  "Pmch"
   # "Tenm3", 
   # "Tenm4", 
   # "Ntng1", 
