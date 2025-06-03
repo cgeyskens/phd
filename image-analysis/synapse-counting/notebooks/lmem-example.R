@@ -35,7 +35,7 @@ library(stringr)
 library(emmeans)
 
 # loading the data
-vcam1_data <- read.csv("/Volumes/KINGSTON/data/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
 
 # preprocessing the data
 vcam1_data_metric_assessed <- vcam1_data %>%
@@ -43,7 +43,7 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     section = str_extract(img_filename, "section-\\d+")
     ) %>%
     select(
-    local_peak_colocalized_spots,
+    post_puncta_density_per_100_um2,
     gRNA,
     hippocampal_layer,
     section,
@@ -51,19 +51,15 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     )
 
 # check the distribution
-hist(vcam1_data_metric_assessed$local_peak_colocalized_spots)
+hist(vcam1_data_metric_assessed$post_puncta_density_per_100_um2)
 
-# check the distribution
-vcam1_data_metric_assessed$local_peak_colocalized_spots_log <- log2(vcam1_data_metric_assessed$local_peak_colocalized_spots)
+# log2 transform & check the distribution
+vcam1_data_metric_assessed$post_puncta_density_per_100_um2_log <- log2(vcam1_data_metric_assessed$post_puncta_density_per_100_um2)
+hist(vcam1_data_metric_assessed$post_puncta_density_per_100_um2_log)
 
-hist(vcam1_data_metric_assessed$local_peak_colocalized_spots_log)
-
-# scaling the data
-vcam1_data_metric_assessed$local_peak_colocalized_spots_log_scaled <- scale(vcam1_data_metric_assessed$local_peak_colocalized_spots_log)
-hist(vcam1_data_metric_assessed$local_peak_colocalized_spots_log_scaled)
-
-vcam1_data_metric_assessed$local_peak_colocalized_spots_scaled <- scale(vcam1_data_metric_assessed$local_peak_colocalized_spots)
-
+# scaling the data & check distribution
+vcam1_data_metric_assessed$post_puncta_density_per_100_um2_log_scaled <- scale(vcam1_data_metric_assessed$post_puncta_density_per_100_um2_log)
+hist(vcam1_data_metric_assessed$post_puncta_density_per_100_um2_log_scaled)
 
 
 # modifying the gRNA and hippocampal_layer column from character to factor for one hot encoding
@@ -73,34 +69,42 @@ class(vcam1_data_metric_assessed$gRNA)
 class(vcam1_data_metric_assessed$hippocampal_layer)
 
 # model 1
-model_1 <- lmer(local_peak_colocalized_spots_log_scaled ~ gRNA * hippocampal_layer + 
+model_1 <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA * hippocampal_layer + 
                 (1 + gRNA | Brain), 
                 data = vcam1_data_metric_assessed)
 
 # model 2
-model_2 <- lmer(local_peak_colocalized_spots_log_scaled ~ gRNA * hippocampal_layer + 
+model_2 <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA * hippocampal_layer + 
                      (1|Brain) +                     # between-brain variation because of perfusion/viral injection                      # paired design of hemispheres
                      (1|Brain:hippocampal_layer),    # captures layer specific variation within each brain
                      data = vcam1_data_metric_assessed,
                      REML=TRUE)
 
 # model 3
-model_3 <- lmer(local_peak_colocalized_spots_log_scaled ~ gRNA * hippocampal_layer + 
+model_3 <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA * hippocampal_layer + 
                      (1|Brain) +                                   # between-brain variation because of perfusion/viral injection                      # paired design of hemispheres
                      (1|Brain:hippocampal_layer) +              # captures layer specific variation within each brain
                      (1|Brain:section:hippocampal_layer),                                   # captures layer specific variation within each brain
                      data = vcam1_data_metric_assessed,
                      REML=TRUE)
 
+# model 4
+model_4 <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA * hippocampal_layer + # fixed effects with interaction between gRNA & hippocampal layer
+                     (1|Brain) +                             # between-brain variation because of perfusion/viral injection
+                     (1|Brain:gRNA) +                        # paired design of hemispheres
+                     (1|Brain:section:hippocampal_layer),    # nested measurements
+                     data = vcam1_data_metric_assessed,
+                     REML=TRUE)
+
 # improved_model
-improved_model <- lmer(local_peak_colocalized_spots_log_scaled ~ gRNA + hippocampal_layer + 
+improved_model <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA + hippocampal_layer + 
                      (1|Brain) +                             # between-brain variation because of perfusion/viral injection
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
                      data = vcam1_data_metric_assessed,
                      REML=TRUE)
 
-improved_model_wolog <- lmer(local_peak_colocalized_spots_scaled ~ gRNA + hippocampal_layer + 
+improved_model_wolog <- lmer(post_puncta_density_per_100_um2_log_scaled ~ gRNA + hippocampal_layer + 
                      (1|Brain) +                             # between-brain variation because of perfusion/viral injection
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
@@ -108,14 +112,14 @@ improved_model_wolog <- lmer(local_peak_colocalized_spots_scaled ~ gRNA + hippoc
                      REML=TRUE)
 
 
-summary(improved_model)
+summary(model_4)
 
-plot(model_3)
-qqnorm(resid(model_3))
-qqline(resid(model_3))
+plot(model_4)
+qqnorm(resid(model_4))
+qqline(resid(model_4))
 
 # comparing models
-anova(model_1, model_2, model_3, improved_model, improved_model_wolog)
+anova(model_1, model_2, model_3, model_4, improved_model)
 
 # pairwise comparison
 emm_results <- emmeans(glm_model, pairwise ~ gRNA | hippocampal_layer)
@@ -129,16 +133,16 @@ results_df <- data.frame(
   VCAM1_mean = means_data$emmean[seq(2, nrow(means_data), 2)], # Get VCAM1 means
   Estimate = contrasts_data$estimate,
   SE = contrasts_data$SE,
-  t_ratio = contrasts_data$t.ratio,
+  t_ratio = contrasts_data$z.ratio,
   p_value = contrasts_data$p.value,
   p_adj_FDR = p.adjust(contrasts_data$p.value, method = "fdr")
 )
 
-glm_model <- glmer(local_peak_colocalized_spots ~ gRNA * hippocampal_layer + 
+glm_model <- glmer(post_puncta_density_per_100_um2 ~ gRNA * hippocampal_layer + 
                      (1|Brain) +                             # between-brain variation
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
-                     data = vcam1_data_metric_assessed,
+                     data = vcam1_data_metric_assessed,      # On raw data values
                      family = poisson)
 
 

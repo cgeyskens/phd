@@ -194,3 +194,27 @@ test-4-figure.py (test-4-figure.ipynb)
 - make a class or module out of the analysis? so that the scripts can the class in the module.
 - parrallel workflow via nextflow?
 
+
+### Statiscian meeting with Steffen Fieuws
+- take the mean per brain, do not work on individual sections
+- take the log and then the ratio of LacZ-gRNA vs candidate-gRNA & simplify the model 
+    (take out the nested measurements (1|Brain:section:hippocampal_layer))
+- PCA plot on hemispheres (gRNA) on residuals to correct for the brain batch effect
+
+
+### Figures eventually
+Main:
+- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values
+- PCA plot of samples (hemisphere level on residuals)
+Supplemental:
+- Heatmap of features
+- Epoch data of local peaks optimization
+- Correlation analysis across metrics & between metrics and PCs
+
+
+### Notes, implementing a linear mixed model on the log2 ratio values 
+- most metrics can work with the model. 
+    I do see some times conflicting results between the paired t-test and the simplified linear model.
+        example: local_peaks_colocalized_spots for VCAM1 & VGAT_GEPH doesnt show any significance, 
+                but it is very clear from the data points that there IS a diference.
+- The nice thing about this setup is that its a paired design and now we just take the log2 ratio and don't account for the piared design in the model

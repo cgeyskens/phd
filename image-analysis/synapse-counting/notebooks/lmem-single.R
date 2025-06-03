@@ -1,5 +1,16 @@
 # test script for linear mixed effect models
 # now just trying out a lme for a single synaptic metric
+# getting the libraries
+library(dplyr)
+library(ggplot2)
+library(lme4)
+library(stringr)
+library(emmeans)
+library(tibble)
+library(tidyr)
+
+remotes::install_github("nx10/httpgd")
+library(httpgd)
 
 metrics_to_assess = c("local_peak_colocalized_spots",
                       "overlap_coeff",
@@ -14,17 +25,11 @@ metrics_to_assess = c("local_peak_colocalized_spots",
                       "pre_mean_puncta_size_um2",
                       "post_mean_puncta_size_um2")
 
-# getting the libraries
-library(dplyr)
-library(ggplot2)
-library(lme4)
-library(stringr)
-library(emmeans)
-
 metric_assessed = "presynapse_image_mfi"
 
 # loading the data
-vcam1_data <- read.csv("/Volumes/KINGSTON/data/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+dim(vcam1_data)
 
 # data preprocessing for only one dependent variable (one synaptic metric, here it is presynaptic MFI)
 vcam1_data_metric_assessed <- vcam1_data %>%
@@ -39,14 +44,14 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     Brain
     )
 
-# Log-transform the original data
-vcam1_data_metric_assessed[[paste0(metric_assessed, "_log")]] <- log(data[[metric_assessed]])
+# Log-transform the raw data
+vcam1_data_metric_assessed[[paste0(metric_assessed, "_log")]] <- log(vcam1_data_metric_assessed[[metric_assessed]])
 
 # standardizing the values
 vcam1_data_metric_assessed[[paste0(metric_assessed, "_scaled")]] <- scale(vcam1_data_metric_assessed[paste0(metric_assessed, "_log")])
 
 # checking distribution
-boxplot(vcam1_data_metric_assessed$presynapse_image_mfi)
+# boxplot(vcam1_data_metric_assessed$presynapse_image_mfi)
 
 # modifying the gRNA and hippocampal_layer column from character to factor for one hot encoding
 vcam1_data_metric_assessed$gRNA <- as.factor(vcam1_data_metric_assessed$gRNA) 
@@ -67,19 +72,18 @@ improved_model <- lmer(
 summary(improved_model)
 
 # The best model to fit my data
-improved_model <- lmer(presynapse_image_mfi_scaled ~ gRNA * hippocampal_layer + 
+improved_model <- lmer(presynapse_image_mfi ~ gRNA * hippocampal_layer +   # fixed effects with interaction between gRNA & hippocampal layer
                      (1|Brain) +                             # between-brain variation because of perfusion/viral injection
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
                      data = vcam1_data_metric_assessed,
                      REML=TRUE)
+                     
 summary(improved_model)
 
 plot(improved_model)
 qqnorm(resid(improved_model))
 qqline(resid(improved_model))
-
-anova(improved_model, mixed_lm2)
 
 # checking pairwise comparisons
 emm_results <- emmeans(improved_model, pairwise ~ gRNA | hippocampal_layer)
@@ -93,39 +97,39 @@ results_df <- data.frame(
   VCAM1_mean = means_data$emmean[seq(2, nrow(means_data), 2)], # Get VCAM1 means
   Estimate = contrasts_data$estimate,
   SE = contrasts_data$SE,
-  t_ratio = contrasts_data$t.ratio,
+  t_ratio = contrasts_data$z.ratio,
   p_value = contrasts_data$p.value,
   p_adj_FDR = p.adjust(contrasts_data$p.value, method = "fdr")
-)
+  )
 
 
 # Other models tested:
 
 # trying to model with a simple linear regression
-basic_lm <- lm(presynapse_image_mfi_scaled ~ gRNA, data = vcam1_data_vglut_mfi)
+basic_lm <- lm(presynapse_image_mfi_scaled ~ gRNA, data = vcam1_data_metric_assessed)
 summary(basic_lm)
 
 # nested mixed effects model
 mixed_lm <- lmer(presynapse_image_mfi_scaled ~ gRNA + 
                 (1|Brain/section/hippocampal_layer), 
-                data = vcam1_data_vglut_mfi)
+                data = vcam1_data_metric_assessed)
 summary(mixed_lm)
 
 # model: interaction between gRNA and layer
 mixed_lm2 <- lmer(presynapse_image_mfi_scaled ~ gRNA * hippocampal_layer +
                   (1|Brain/section/hippocampal_layer),
-                  data = vcam1_data_vglut_mfi)
+                  data = vcam1_data_metric_assessed)
 summary(mixed_lm2)
 
 ## Generalized models
-hist(vcam1_data_vglut_mfi$presynapse_image_mfi)
+hist(vcam1_data_metric_assessed$presynapse_image_mfi)
 
 # taking into accound the non-normality of the data WITH ORIGINAL DATA
 glm_model <- glmer(presynapse_image_mfi ~ gRNA * hippocampal_layer + 
                      (1|Brain) +                             # between-brain variation
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
-                     data = vcam1_data_vglut_mfi,
+                     data = vcam1_data_metric_assessed,
                      family = Gamma(link = "log"),
                      control = glmerControl(optimizer = "bobyqa",
                                             optCtrl = list(maxfun = 200000)))

@@ -158,7 +158,6 @@ subcellular_locations <- do.call(rbind, results_list)
 membrane_terms <- tolower(c(
   "cell membrane",
   "cell junction",
-  "plasma membrane",
   "secreted",
   "extracellular space",
   "extracellular matrix",

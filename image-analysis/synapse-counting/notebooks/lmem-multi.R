@@ -1,7 +1,7 @@
 # test script for multivariate linear mixed-effect model
 # need to have a generalized mixed effects model, because the data is not normally distributed
 # loading data
-vcam1_data <- read.csv("/Volumes/KINGSTON/data/phd/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
 dim(vcam1_data)
 
 # getting the libraries

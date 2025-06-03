@@ -31,3 +31,7 @@ batch_results*
 # for clustermap 
 ClusterMap/
 gdf_path_save/
+
+*.vscode
+*.devcontainer
+*Rplots.pdf
