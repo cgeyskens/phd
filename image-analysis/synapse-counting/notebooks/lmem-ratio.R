@@ -5,6 +5,7 @@ library(stringr)
 library(emmeans)
 library(tibble)
 library(tidyr)
+library(nlme)
 
 remotes::install_github("nx10/httpgd")
 library(httpgd)
@@ -57,6 +58,32 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     Brain
     )
 
+
+# OPTION 1:
+
+# calculating first the log2 ratio on section level & then taking the mean per brain
+log2_ratio_section <- vcam1_data_metric_assessed %>%
+  pivot_wider(
+    names_from = gRNA,
+    values_from = local_peak_colocalized_spots
+  ) %>% 
+  group_by(Brain, section, hippocampal_layer) %>%
+  mutate(log2_ratio = log2(`VCAM1-gRNA`/`LacZ-gRNA`)) %>%
+  group_by(Brain, hippocampal_layer) %>%
+  mutate(!!metric_assessed := mean(log2_ratio)) %>%
+  select(hippocampal_layer, Brain, !!metric_assessed) %>%
+  distinct()
+
+# dynamically new column name
+new_metric_col_name = paste0(metric_assessed, "_log2_ratio")
+
+log2_ratio_section <- log2_ratio_section %>%
+  rename(!!new_metric_col_name := metric_assessed)
+
+
+
+# OPTION 2:
+
 # calculating the mean per brain
 mean_per_brain_layer <- vcam1_data_metric_assessed %>%
   group_by(hippocampal_layer, Brain, gRNA) %>%
@@ -79,6 +106,8 @@ new_metric_col_name = paste0(metric_assessed, "_log2_ratio")
 log2_ratio <- log2_ratio %>%
   rename(!!new_metric_col_name := log2_ratio)
 
+
+
 # # making the model
 # model <- lmer(local_peak_colocalized_spots_log2_ratio ~ hippocampal_layer +    # fixed effects with hippocampal layer
 #               (1|Brain),                          # between-brain variation because of perfusion/viral injection
@@ -94,14 +123,23 @@ model_1 <- lmer(formula = as.formula(paste0(metric_assessed, "_log2_ratio ~ hipp
 model_2 <- lm(formula = as.formula(paste0(metric_assessed, "_log2_ratio ~ hippocampal_layer")),
                data = log2_ratio)
 
+
+# first nlme model
+model_3 <- lme(
+  fixed = local_peak_colocalized_spots_log2_ratio ~ hippocampal_layer,
+  data = log2_ratio_section,
+  random = ~1 | Brain,
+  weights = varIdent(form = ~1 | hippocampal_layer)
+)
+
 # checking the model
-summary(model_2)
-plot(model_2)
-qqnorm(resid(model_2))
-qqline(resid(model_2))
+summary(model_3)
+plot(model_3)
+qqnorm(resid(model_3))
+qqline(resid(model_3))
 
 # extracting the estimated mean per layer (without reference)
-em_means <- emmeans(model_2, ~hippocampal_layer)
+em_means <- emmeans(model_3, ~hippocampal_layer)
 summary(em_means)
 
 # producing the output table with reference layer

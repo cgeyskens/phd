@@ -195,19 +195,40 @@ test-4-figure.py (test-4-figure.ipynb)
 - parrallel workflow via nextflow?
 
 
-### Statiscian meeting with Steffen Fieuws
+### Statiscian meeting with Steffen Fieuws 28.05.2025
 - take the mean per brain, do not work on individual sections
 - take the log and then the ratio of LacZ-gRNA vs candidate-gRNA & simplify the model 
     (take out the nested measurements (1|Brain:section:hippocampal_layer))
 - PCA plot on hemispheres (gRNA) on residuals to correct for the brain batch effect
 
 
+### Statistician meeting with Steffen Fieuws 09.06.2025
+- take log ratio op sectie niveau: 1. ratio log op sectie niveau. 2. mean per brein.
+- in lme model, residuele variantie kan verschillen tussen locaties !!!! random intercept.
+- SAS code: 
+proc mixed data=horizon;
+class brain   location;
+model logratio= location/solution;
+lsmeans location/diff;
+repeated/group=location type=simple;
+random intercept/subject=brain;
+run;
+- Code in nlme package:
+model_3 <- lme(
+  fixed = local_peak_colocalized_spots_log2_ratio ~ hippocampal_layer,
+  data = log2_ratio_section,
+  random = ~1 | Brain,
+  weights = varIdent(form = ~1 | hippocampal_layer)
+)
+
+
 ### Figures eventually
 Main:
 - Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values
-- PCA plot of samples (hemisphere level on residuals)
+- PCA plot of samples (hemisphere level on residuals). Look into PLS-DA which is supervised.
 Supplemental:
-- Heatmap of features
+- Heatmap of features over samples
+- Cluster analysis on highly variable features on sample level
 - Epoch data of local peaks optimization
 - Correlation analysis across metrics & between metrics and PCs
 
@@ -218,3 +239,13 @@ Supplemental:
         example: local_peaks_colocalized_spots for VCAM1 & VGAT_GEPH doesnt show any significance, 
                 but it is very clear from the data points that there IS a diference.
 - The nice thing about this setup is that its a paired design and now we just take the log2 ratio and don't account for the piared design in the model
+
+
+### Next
+Try the models with nlme with log_ratio (VCAM1 vs LacZ) and without. In the last model, put also the treamtment as interaction term like this: 
+model_3 <- lme(
+  fixed = local_peak_colocalized_spots_log2 ~ gRNA * hippocampal_layer,
+  data = log2,
+  random = ~1 | Brain,
+  weights = varIdent(form = ~1 | hippocampal_layer)
+)
