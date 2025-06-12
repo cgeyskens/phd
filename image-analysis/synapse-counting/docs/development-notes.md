@@ -224,7 +224,7 @@ model_3 <- lme(
 
 ### Figures eventually
 Main:
-- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values
+- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values (0.1 FDR)
 - PCA plot of samples (hemisphere level on residuals). Look into PLS-DA which is supervised.
 Supplemental:
 - Heatmap of features over samples
@@ -249,3 +249,4 @@ model_3 <- lme(
   random = ~1 | Brain,
   weights = varIdent(form = ~1 | hippocampal_layer)
 )
+- Make the preprocessing parameters for GPR37L1 better.
