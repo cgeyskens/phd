@@ -228,9 +228,10 @@ Main:
 - PCA plot of samples (hemisphere level on residuals). Look into PLS-DA which is supervised.
 Supplemental:
 - Heatmap of features over samples
-- Cluster analysis on highly variable features on sample level
+- Cluster analysis on highly variable features on sample level (tree)
 - Epoch data of local peaks optimization
 - Correlation analysis across metrics & between metrics and PCs
+- Check papers
 
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
