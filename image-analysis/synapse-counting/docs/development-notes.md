@@ -224,14 +224,14 @@ model_3 <- lme(
 
 ### Figures eventually
 Main:
-- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values (0.1 FDR)
-- PCA plot of samples (hemisphere level on residuals). Look into PLS-DA which is supervised.
+V- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values (0.1 FDR)
+V- PCA plot of samples of VGLUT1 & VGAT data. Then try on most variable metrics. Then try on residuals. Look into PLS-DA which is supervised. If this not works, select first the features and then do PCA.
 Supplemental:
-- Heatmap of features over samples
+- Differential analysis: LMEM for the 192 features each? And then FDR ajusted p values ranking for most differential feature? Take the the top n for visualization in heatmap
+- Heatmap of mean features over samples
 - Cluster analysis on highly variable features on sample level (tree)
 - Epoch data of local peaks optimization
 - Correlation analysis across metrics & between metrics and PCs
-- Check papers
 
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
