@@ -179,7 +179,6 @@ model_5 <- lme(
   control = lmeControl(maxIter = 100, msMaxIter = 100, opt = "optim", singular.ok = TRUE)
 )
 
-
 # checking the model
 summary(model_5)
 plot(model_5)
@@ -289,7 +288,7 @@ model_extract_params <- function(model_to_extract){
     return(results_df)
 }
 
-# wrapper function for full analysis
+# main function for full analysis
 run_full_analysis <- function(data, metrics_to_assess, protein){
     all_results_list <- list() # empty list
     for (metric_assessed in metrics_to_assess){

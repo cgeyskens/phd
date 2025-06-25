@@ -127,18 +127,21 @@ MS-DAP: nice output of pdf report but just deletes rows with too many NAs
 
 QC plots:
  V- Nr of proteins per sample (barplot)
- (- Sample Coefficient of Variation plots)
+ - Sample Coefficient of Variation plots
  V- PCA plot of samples
  (- Abundance rank of proteins IP vs IgG)
  V- Intensity plots of raw log2 data per sample (boxplot)
  V- Intensity plots of normalized data (boxplot)
  V- Line plots of interesting candidates
 
- - Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
+ V- Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
  (- Differential expression analysis, Volcano plot, of SYNGO mentioned proteins)
- V- Differential expression analysis, Volcano plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
+ V- Differential expression analysis, bar plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
  V- Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
  V- Intensity line plots of raw data per sample of selected candidates
  (- SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
- - Gene ontology analysis plots of VCAM1 IP condition
  - Plot of retention time histogram
+
+ - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins
+ - Gene ontology analysis plots of GPR37L1 IP membrane proteins
+ - Heatmap of GPR37L1 IP proteins that are interesting (extension of the Line plots)
