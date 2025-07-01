@@ -142,6 +142,7 @@ QC plots:
  (- SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
  - Plot of retention time histogram
 
- - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins
- - Gene ontology analysis plots of GPR37L1 IP membrane proteins
- - Heatmap of GPR37L1 IP proteins that are interesting (extension of the Line plots)
+ - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see recent paper)
+ - Gene ontology analysis plots of GPR37L1 IP proteins
+ - Heatmap of GPR37L1 IP membrane proteins that are interesting (extension of the Line plots)
+ - Crossreference both VCAM1 and GPR37L1 datasets with the in silico PPI datasets.

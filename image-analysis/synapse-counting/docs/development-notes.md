@@ -230,10 +230,9 @@ Supplemental:
 V- Differential analysis: LMEM for the 192 features each? And then FDR ajusted p values ranking for most differential feature? No, nothing significant
 V- Heatmap of mean features over samples
 V- Cluster analysis on top 25 differentially abundant metrics on sample level (tree)
-- Epoch data of local peaks optimization
-- Correlation analysis across metrics & between metrics and PCs (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3)).
+V- Epoch data of local peaks optimization
+V- Correlation analysis across metrics & between metrics and PCs (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3)).
 V- PCA loadings of metrics
-- PCA/UMAP on residuals of metrics and then kmeans clustering?
 
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
@@ -252,4 +251,4 @@ model_3 <- lme(
   random = ~1 | Brain,
   weights = varIdent(form = ~1 | hippocampal_layer)
 )
-- Make the preprocessing parameters for GPR37L1 better.
+- Make the preprocessing parameters for GPR37L1 better. Do the same downstream analysis for GPR37L1 as you did for VCAM1.
