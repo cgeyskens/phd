@@ -14,7 +14,7 @@
 
         a.	Open image manually
         b.	Run “macro_z-stack_split_grey.ijm” to max project, split the channels, set LUT to grey and delete the original image
-        c.	Manually draw an ROI around each some in the image with the polygon tool, save these ROIs.
+        c.	Manually draw an ROI around each soma in the image with the polygon tool, save these ROIs in soma_roi folder.
         d.	Run “macro_clear_rois.ijm” to clear all the information inside the ROIs from all channels
 
 3.	Set the mean threshold & create mask
@@ -27,12 +27,16 @@
         a.	Run “macro_count_synapses” to count the pre & post synapses with analyze particles function 
         b.	Copy paste the count numbers and the average particle size in the excel sheet
 
-5.	Skeletonize to calculate branch length 
+5.	Skeletonize to calculate total branch length 
 
         a.	Run “macro_skeletonize” to get the total branch length, this will also close all the images but not the produced tables with numbers
         b.	Copy paste the numbers in th excel sheets
-        c. Close all the tables and start again at Step 2.
+
+6.      Close all the images and tables
+
+        a.      Run "macro_closing" to close all tables, images and clear our the ROI manager
+        b.      Restart with Step 2 for the next image
 
 
 ##### Credits
-Fiji Macro's were based on Efstathia Kotoula's macro's and adjusted.
+Workflow and Fiji Macro's were based on Efstathia Kotoula's macro's and adjusted to better flow.
