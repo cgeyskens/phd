@@ -222,17 +222,23 @@ model_3 <- lme(
 )
 
 
+### Statistician meeting with Steffen Fieuws 02.07.2025
+- oppassen met adj-p-values, q values and FDR. Check Storey vs BH.
+- Do PCA loadings instead of correlation of metrics with PCs. Loadings are real correlations. For each PC, the metrics loadings it will sum to one. Use squared loadings of the PCs.
+
+
+
 ### Figures eventually
 Main:
 V- Dotplot of layers (x-axis) synaptic metrics (y-axis), showing effect size, directions & p values (0.1 FDR)
 V- PCA plot of samples of VGLUT1 & VGAT data, worked on residuals (LMEM for each of the 192 metrics)
 Supplemental:
 V- Differential analysis: LMEM for the 192 features each? And then FDR ajusted p values ranking for most differential feature? No, nothing significant
-V- Heatmap of mean features over samples
-V- Cluster analysis on top 25 differentially abundant metrics on sample level (tree)
+V- Heatmap and cluster analysis of mean features over samples
+V- Heatmap and cluster analysis on top 25 differentially abundant metrics on sample level (tree)
 V- Epoch data of local peaks optimization
 V- Correlation analysis across metrics & between metrics and PCs (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3)).
-V- PCA loadings of metrics
+V- PCA loadings of metrics (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3))
 
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
@@ -244,11 +250,22 @@ V- PCA loadings of metrics
 
 
 ### Next
-Try the models with nlme with log_ratio (VCAM1 vs LacZ) and without. In the last model, put also the treamtment as interaction term like this: 
+V- Try the models with nlme with log_ratio (VCAM1 vs LacZ) and without. In the last model, put also the treamtment as interaction term like this: 
 model_3 <- lme(
   fixed = local_peak_colocalized_spots_log2 ~ gRNA * hippocampal_layer,
   data = log2,
   random = ~1 | Brain,
   weights = varIdent(form = ~1 | hippocampal_layer)
 )
-- Make the preprocessing parameters for GPR37L1 better. Do the same downstream analysis for GPR37L1 as you did for VCAM1.
+
+- Make the preprocessing parameters for GPR37L1 better. When set, do the same downstream analysis for GPR37L1 as you did for VCAM1.
+    - Check the preprocessing parameters for VCAM1 again on the values that show significance. Input the optimizated values for local-peak-maxima and check visually.
+        - VGLUT1-PSD95_CA3-SO, preprocess params ok (only 3 images confounded by bleedthrough from Lck-GFP). local-peaks-optimal-params-ok.
+        - VGLUT1-PSD95_CA3-SL, preprocess params ok. local-peaks-optimal-params-ok.
+        - VGLUT1-PSD95_CA3-SR, preprocess params ok. local-peaks-optimal-params-ok.
+        - VGLUT1-PSD95_DG-Hilus
+        - VGAT-GEPH_CA3-SO
+        - VGAT-GEPH_CA1-SR
+        - VGAT-GEPH_CA1-SLM
+        - VGAT-GEPH_CA3-SR
+    - Check the preprocessing parameters for GPR37L1 (separate JSON files for VCAM1 & GPR37L1?).
