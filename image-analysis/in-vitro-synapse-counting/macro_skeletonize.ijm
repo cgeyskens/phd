@@ -18,9 +18,3 @@ imageList = getList("image.titles");
 		run("Summarize Skeleton");
     }
 }
-
-// closing all images
-while (nImages > 0) {
-    selectImage(nImages);
-    close();
-}
