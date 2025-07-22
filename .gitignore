@@ -10,6 +10,7 @@ work/
 *.pptx
 *.csv:Zone.Identifier
 *.svg
+*.png
 *.sif
 data/
 # all folders related to the hpc
