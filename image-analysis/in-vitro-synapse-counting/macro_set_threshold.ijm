@@ -2,9 +2,9 @@
 
 
 // !!! Adjust this threshold to the mean threshold that you calculated
-vgat_threshold = 19373; // assuming VGAT is in C3
-map2_threshold = 21399; // assuming MAP2 is in C2
-geph_threshold = 23221; // assuming GEPH is in C1
+pre_threshold = 7619; // assuming presynapse is in C3
+map2_threshold = 15360; // assuming MAP2 is in C2
+post_threshold = 12940; // assuming postsynapse is in C1
 
 list = getList("image.titles");
 
@@ -20,11 +20,11 @@ for (i = 0; i < copyList.length; i++) {
 
     // determine threshold based on filename
     if (indexOf(title, "C1") != -1) {
-        setThreshold(geph_threshold, 65535); 
+        setThreshold(post_threshold, 65535); 
     } else if (indexOf(title, "C2") != -1) {
         setThreshold(map2_threshold, 65535);
     } else if (indexOf(title, "C3") != -1) {
-        setThreshold(vgat_threshold, 65535);
+        setThreshold(pre_threshold, 65535);
     } 
     setOption("BlackBackground", true);
     selectWindow(copyList[i]);
