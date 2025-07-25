@@ -2,9 +2,9 @@
 
 
 // !!! Adjust this threshold to the mean threshold that you calculated
-pre_threshold = 7619; // assuming presynapse is in C3
-map2_threshold = 15360; // assuming MAP2 is in C2
-post_threshold = 12940; // assuming postsynapse is in C1
+pre_threshold = 12966; // assuming presynapse is in C3
+map2_threshold = 14174; // assuming MAP2 is in C2
+post_threshold = 13120; // assuming postsynapse is in C1
 
 list = getList("image.titles");
 
