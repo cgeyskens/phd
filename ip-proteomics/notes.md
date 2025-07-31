@@ -132,17 +132,17 @@ QC plots:
  (- Abundance rank of proteins IP vs IgG)
  V- Intensity plots of raw log2 data per sample (boxplot)
  V- Intensity plots of normalized data (boxplot)
- V- Line plots of interesting candidates
+ V- Line plots of interesting candidates or heatmap
 
  V- Differential expression analysis, Volcano plot, of VCAM1 and membrane proteins (uniprot)
  (- Differential expression analysis, Volcano plot, of SYNGO mentioned proteins)
  V- Differential expression analysis, bar plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
  V- Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
  V- Intensity line plots of raw data per sample of selected candidates
- (- SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
+ - (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
  - Plot of retention time histogram
 
  - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see recent paper)
- - Gene ontology analysis plots of GPR37L1 IP proteins
+ - Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  - Heatmap of GPR37L1 IP membrane proteins that are interesting (extension of the Line plots)
- - Crossreference both VCAM1 and GPR37L1 datasets with the in silico PPI datasets.
+ - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
