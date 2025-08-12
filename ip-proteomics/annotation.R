@@ -9,7 +9,7 @@ library(UniprotR)
 library(readxl)
 
 # loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp17_astral-run_PCF000417.pg_matrix.tsv")
 View(raw_data)
 
 # Loading in the results
@@ -118,7 +118,7 @@ num_proteins <- length(final_protein_list)
 results_list <- list()
 
 # Folder to save intermediate batch results
-dir.create("batch_results_gpr37l1_20250523", showWarnings = FALSE)
+dir.create("batch_results_gpr37l1_20250801", showWarnings = FALSE)
 
 # Process the protein list in batches
 for (i in 1:ceiling(num_proteins / batch_size)) {
@@ -126,7 +126,7 @@ for (i in 1:ceiling(num_proteins / batch_size)) {
   end_index <- min(i * batch_size, num_proteins)
   current_batch <- final_protein_list[start_index:end_index]
 
-  batch_file <- paste0("batch_results_gpr37l1_20250523/batch_", i, ".rds")
+  batch_file <- paste0("batch_results_gpr37l1_20250801/batch_", i, ".rds")
 
   # Skip if this batch has already been processed
   if (file.exists(batch_file)) {

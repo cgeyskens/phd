@@ -12,8 +12,13 @@ library(imputeLCMD)
 library(ROTS)
 library(proDA)
 
+remotes::install_github("nx10/httpgd")
+library(httpgd)
+hgd()
+
+
 ##### Loading the data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp17_astral-run_PCF000417.pg_matrix.tsv")
 View(raw_data)
 
 ##### Filter out the antibodies fragments: starting with "Ig"
@@ -76,19 +81,42 @@ vcam1_exp10_synglio_col_names <- c(
   "p28_vcam1_igg_r4"= "/ip-proteomics/exp10-ms-convert-output/CG_16.mzML"
 )
 
-colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
+vcam1_exp17_astral_run_col_names <- c(
+  "gpr37l1_ip_r1" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_1.raw",
+  "gpr37l1_igg_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_2.raw",
+  "vcam1_ip_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_3.raw",
+  "vcam1_igg_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_4.raw",
+  "vcam1_ip_r2"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_5.raw",
+  "vcam1_igg_r2"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_6.raw",
+  "vcam1_ip_r3" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_7.raw",
+  "vcam1_igg_r3"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_8.raw",
+  "vcam1_ip_r4" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_9.raw",
+  "vcam1_igg_r4"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_10.raw"
+)
 
-##### further data wrangling
+colnames(data_na_filtered)[match(vcam1_exp17_astral_run_col_names, colnames(data_na_filtered))] <- names(vcam1_exp17_astral_run_col_names)
+#### further data wranglin8
 df <- data_na_filtered %>%
         as_tibble() %>%
         column_to_rownames(var = "Genes") %>% # The Genes column as rownames
-        select(-Protein.Group, -Protein.Names, -First.Protein.Description)
-check <- df["Gpr37l1", ]
+        select(
+          -Protein.Group, 
+          -Protein.Names, 
+          -First.Protein.Description,
+          -N.Sequences,
+          -N.Proteotypic.Sequences,
+          -gpr37l1_ip_r1,
+          -gpr37l1_igg_r1
+        )
+check <- df["Vcam1", ]
 print(check)
 
 ##### log2 transformation
 df_log2 <- df %>%
   mutate(across(where(is.numeric), log2))
+
+check <- df_log2["Vcam1", ]
+print(check)
 
 ##### imputation
 data_matrix <- as.matrix(df_log2)
@@ -101,7 +129,7 @@ imputed_df <- as.data.frame(imputed_matrix)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Gpr37l1", ]
+row_values <- imputed_df["Vcam1", ]
 print(row_values)
 
 
@@ -228,7 +256,7 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
     axis.title.x = element_text(size = 18, family = "Arial"), 
     plot.title = element_text(size = 20, family = "Arial"), 
   ) + 
-  xlim(-45, 45)
+  xlim(-60, 60)
 
 ##### DEA Limma #####
 
@@ -277,7 +305,7 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Gpr37l1")
+select_gpr37l1 <- c("Vcam1")
 select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # making the statement color the points
@@ -426,7 +454,7 @@ rots_results <- tibble::rownames_to_column(rots_results, "Genes")
 labels <- rots_results$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Gpr37l1")
+select_gpr37l1 <- c("Vcam1")
 select_proteins_upper <- paste0(toupper(select_gpr37l1))
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change

@@ -37,7 +37,7 @@
         ".devcontainer/devcontainer.env"
     ],
     "mounts": [
-        "source=/Volumes/KINGSTON/data/phd/ip-proteomics,target=/mnt/ip-proteomics,type=bind,consistency=cache"
+        "source=/Volumes/Intenso/ip-proteomics,target=/mnt/ip-proteomics,type=bind,consistency=cache"
     ],
     "postCreateCommand": "radian"
 }
