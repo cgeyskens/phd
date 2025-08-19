@@ -161,7 +161,7 @@ V- Respond to the VUB HPC admind Qs.
 V- Make a contact map of GPR37L1-CDH9 with biotite.
 V- Check GPR37L1-CDH9 interaction with downstream analysis
 - Make a Topolgy score from 0-1.
-- Make a graph of the running metrics.
+V- Make a graph of the running metrics.
 - new version of Uniref30 database is available. Try out the monomer VCAM1 prediction.
 V- Read the documentation of AlphaFold3 and try to run GPR37L1 and VCAM1. Model parameters are requested. Download the model params.
 - Try out AlphaFold3.
@@ -189,6 +189,7 @@ https://www.youtube.com/@Brown_Lab
 - ChimeraX: 
     - How do I select the chains that are only in contact with each other from outputs of AlphaFold Multimer?
     - How do I color the proteins by protein such that its more clear.
+            "color #1/A red" & "color #1/B blue"
     - How many agstroms is considered a contact? 8 Ang?
     - How do I represent the "bonds" between the two proteins
 
@@ -205,5 +206,6 @@ https://www.youtube.com/@Brown_Lab
 
 
 
-
+## ChimeraX commands
+- Coloring the two proteins: "color #1/A red" & "color #1/B blue"
 
