@@ -44,7 +44,8 @@ Scale: 0 to 1, above 0.5 is good
 
 Measures the accuracy of the predicted relative positions of the subunits forming the protein-protein complex.
 
-Scale: 0 to 1, above 0.8 is good, between 0.5 and 0.8 is grey zone, below 0.5 is bad
+Scale: 0 to 1, above 0.8 is good, between 0.5 and 0.8 is grey zone, below 0.5 is bad.
+Scale from Samsoe et al for receptors: penalized ipTM above 0.47 is good. lower then 0.2 is random interaction.
 
 These values assume modelling with multiple recycling steps, so the process of prediction reaches a degree of convergence. In large-scale screenings for protein-protein interactions, often settings optimised for the speed of prediction are used, e.g. very few or no recycling steps. In such cases ipTM thresholds as low as 0.3 have been used for initial screening; importantly though, all pairs of proteins with ipTM scores higher than 0.3 were then subjected to additional examination (e.g. Weeratunga et al., 2023). Disordered regions and regions with low pLDDT score may negatively impact the ipTM score even if the structure of the complex is predicted correctly.
 
@@ -71,6 +72,7 @@ Scale: 0 to 1, above 0.5 likely correct docking arrangment, 0.23 to 0.5 possible
 - VCAM1 is natively in dimer (R&D protein) -> check this in literature if its true and how to deal with this 
 - Interactors of VCAM1 have low pLDDT and/or PEA scores, however, they can be used as the folding is likely dependent on the interaction
 - There are multiple DBs that predict the TM region of proteins: Membranone, AlphaFoldTm and TmAlphaFold. 
+- Check also DeepTMHMM for prediction of transmembrane topologies.
 - Isoforms of VCAM1 
 - Only use the ECD of VCAM1 for screening, see (paper)[https://www.biorxiv.org/content/10.1101/2023.03.16.531341v2]
 - Use also the IgG proteins that don't bind to VCAM1 IP as a negative control for the AlpaFold Pulldown, as such you can set threshold on the false positives. (ROC curves, score histograms and percentile-based threshold). You can set these thresholds with the ELISA dataset from Nuno. Then apply this to your possible interactions.
@@ -99,35 +101,42 @@ KUL: AlphaFold/2.3.4 (with module spider alphafold)
 For KUL, follow: https://github.com/hpcleuven/AlphaFold
 
 
+
+
+
 #### 31.07.2025
 
 Tried building the image locally from the gitrepo but had issue with my M3 chip.
 On HPC, the Apptainer container installation worked. Used this docker image (catgumag/alphafold).
 Issue: do not have read permission for reading in the databases. Asked to join lp_alphafold group, next day I joined the lp_alphafold group.
 
-#### 04.08.2025 - 07.08.2025
+#### 04.08.2025 - 15.08.2025
 
-I managed to build the apptainer container but now when I try a simple monomer run, it exits and warns about that a maximun number of residues are exceeded. Apparently, there is something wrong with the Uniref30 database that I'm using on the VSC KU Leuven, see [issue](https://arc.net/l/quote/hgezehdt), I cannot change this. Thus, I will try four things: 
+I managed to build the apptainer container but now when I try a simple monomer run, it exits and warns about that a maximun number of residues are exceeded. Apparently, there is something wrong with the Uniref30 database that I'm using on the VSC KU Leuven, see [issue](https://arc.net/l/quote/hgezehdt), I cannot change this. Thus, I will try things: 
 
-(1) run AlphaFold without container using the module system. When running AlphaFold with the module system on KUL HPC, I get the same error of titin sequence.
+V-(1) run AlphaFold without container using the module system. When running AlphaFold with the module system on KUL HPC, I get the same error of titin sequence.
 
-(2) run it with reduced and full databases on KUL & VUB & UGent
+V-(2) run it with reduced and full databases on KUL & VUB & UGent
 
-    - KUL_reduced. I get an error, same as this [one](https://github.com/google-deepmind/alphafold/issues/743) Solution: Edit the Fasta file header with no spaces. KUL job nr: 64910853 (reduced). The output doesnt state why it failed, it probably got cancelled by the group account that I took, not due to the script. I requested more credits. I got access to lp_big_mem_gpu, to run GPU jobs here. I now have the error: "sbatch: error: Batch job submission failed: Invalid qos specification", I asked the HPC admin.
+    - KUL. I get an error, same as this [one](https://github.com/google-deepmind/alphafold/issues/743) Solution: Edit the Fasta file header with no spaces. KUL job nr: 64910853 (reduced). The output doesnt state why it failed, it probably got cancelled by the group account that I took, not due to the script. I requested more credits. I got access to lp_big_mem_gpu, to run GPU jobs here. I now have the error: "sbatch: error: Batch job submission failed: Invalid qos specification", I asked the HPC admin. The issue lied in the fact that my credits were out and that I had the wrong partition-account combo. I ran a job for GPR37L1 monomer, job nr 64970319. Also for VCAM1, job nr 64970411. The GPR37L1 job failed due to this (error)[https://github.com/google-deepmind/alphafold/issues/743]. I ran with a previous version: v2.2.2 with 2021 db, job nr 64970454. This failed because db is too old. Changed to db from 2022, job nr 64970459. This failed, couldn't find hhm_db nor a3m_db. Next, used the 2024 db, job nr 64970538. This also failed. VCAM1 job is still running: 64970411. This job got again the titin error. Try with only extracellular region of VCAM1, job nr 11000585. This run also had the titin error.
 
-    - VUB. Error that it cant find the reduced db: "Could not find Jackhmmer database /databases/bio/alphafold-2.3.1/small_bfd/bfd-first_non_consensus_sequences.fasta". Solution: ran with a more newer version of AlphaFold (AlphaFold/2.3.4-foss-2022a-CUDA-11.7.0-ColabFold). Error: it could not find the database because there isnt any for 2.3.4 so I set the data-dir to the last version. VUB job nr: 10981208 (full) & 10981207 (reduced). Again the same error because in the previous version there isnt also anh "small_bfd". Seem that the reduced run isnt available in the VUB & it indeed is, no small_bfd in VUB. With the full run, I have again the issue with the titin sequence & again the uniref30 database used is 2021_03 (alphafold-2.3.1 db). Nextup: run it with the AlphaFold 2.2.0 verion and db as these do not seem to have the Uniref30 database (job nr 10983334). Issue: cannot load earlier AlphaFold modules (only v2.3.1 and newer) and these have all the Uniref30 db that is given errors. Next: run it for GPR37L1 with v2.3.4 & full db (job 10983466). This job ran for 4 hours but I got this (error)[https://github.com/google-deepmind/alphafold/issues/743]. This is related to version of AlphaFold, I need to run it with a more recent version (the header of the fasta file is short and wo spaces). Thus, I will now try to run alphafold inside an apptainer image from (this)[https://hub.docker.com/r/uvarc/alphafold/tags]. Next: run with version 2.3.1-foss-2022a-CUDA-11.7.0 on GPR37L1 (job nr 10983911). This run worked.
+    - VUB. Error that it cant find the reduced db: "Could not find Jackhmmer database /databases/bio/alphafold-2.3.1/small_bfd/bfd-first_non_consensus_sequences.fasta". Solution: ran with a more newer version of AlphaFold (AlphaFold/2.3.4-foss-2022a-CUDA-11.7.0-ColabFold). Error: it could not find the database because there isnt any for 2.3.4 so I set the data-dir to the last version. VUB job nr: 10981208 (full) & 10981207 (reduced). Again the same error because in the previous version there isnt also a "small_bfd". Seem that the reduced run isnt available in the VUB & it indeed is, no small_bfd in VUB. With the full run, I have again the issue with the titin sequence & again the uniref30 database used is 2021_03 (alphafold-2.3.1 db). Nextup: run it with the AlphaFold 2.2.0 verion and db as these do not seem to have the Uniref30 database (job nr 10983334). Issue: cannot load earlier AlphaFold modules (only v2.3.1 and newer) and these have all the Uniref30 db that is given errors. Next: run it for GPR37L1 with v2.3.4 & full db (job 10983466). This job ran for 4 hours but I got this (error)[https://github.com/google-deepmind/alphafold/issues/743]. This is related to version of AlphaFold, I need to run it with a more recent version (the header of the fasta file is short and wo spaces). Thus, I will now try to run alphafold inside an apptainer image from (this)[https://hub.docker.com/r/uvarc/alphafold/tags]. Next: run with version 2.3.1-foss-2022a-CUDA-11.7.0 on GPR37L1 (job nr 10983911). This run worked.
 
     GPR37L1 dimer. Tried running the dimer of GPR37L1 (job nr 10989886), this worked and took 9h.
-    
-    If this does not work: make apptainer container on KUL system and then transfer to this system.
+
+    GPR37L1-PSAP interaction. Job 10993704. This did work.
+
+    GPR37L1-CDH9 interaction. Job 10993803. Job got terminated by timeout (14h). Submitted new job with 20h, job nr 10997883. This job ran for 17h. It interacted in Cis. Perform the same but now with only ECD CDH9, job nr 11008658. This did work, it interacted in trans. Now run it without a signal peptide, job nr 11021906. This job took 12h.
     
     - from Ugent. Reduced_db failed. Two Ugent jobs: 40709080 (reduced) & 40709191 (full). With the full database job, I get the same titin error. With the reduced db run, I get just a truncated output log. Although I found the "small_bfd" db inside AlphaFold/20230310 and AlphaFold/2.3.2-foss-2023a-CUDA-12.1.1. Try to run it with GPR37L1 protein in reduced (40710071) and full db (40710070) mode for 16h. This failed because the system wasnt finding the GPU cores, so there this is a too long run. It's also the only version that is available on the Ugent system.
 
-(3) run it with GPR37L1, is this titin problem VCAM1-specfic? Yes
+V-(3) run it with GPR37L1, is this titin problem VCAM1-specfic? Yes.
 
-(4) run with ColabFold/MMseqs2 databases
+V-(6) ask HPC admins to use updated databases and for the titin error.
+    19.08.2025. The VUB HPC admin installed the newer version of the Uniref30 database. I tried out the VCAM1 monomer prediction, job nr 11027722.
 
-(5) ask HPC admins to use updated databases
+(5) Try to install and install AlphaPulldown according to the github documentation. 
+    - AlphaPullDown is installed within an Apptainer container, but it needs the correct databases. I asked the VUB HPC admin to install AlphaPullDown.
 
 - Run a simple AlphaFold of VCAM1
 - Run a simple AlphaMultimer of VCAM1-VCAM1
@@ -136,15 +145,32 @@ I managed to build the apptainer container but now when I try a simple monomer r
 
 Conclusions untill now:
 VUB: Can't run the reduced_db option. Modules are outdated. Run (GPR37L1 - full_db - AlphaFold/2.3.1-foss-2022a-CUDA-11.7.0) worked, took around 4h. Dimer of GPR37L1 also worked, took 9h.
-KUL: 
-UGent: only v2.3.2 available and it doesn't find the GPU.
+KUL: v2.3.4 gives an error due too internal python error. Earlier version don't have compatibility with databases.
+UGent: only v2.3.2 available and it can't find the GPU.
 General:
-    - The titin error seems to be VCAM1-specific and not module specific
+    - The titin error seems to be VCAM1-specific and not module specific.
 
 Can connect to login node of KUL & VUB with VSCode.
 
-# Downstream analysis using ChimeraX, PyMOL and Python code for unpickling
-There seems to be an issue with the compatibility with the Jaxlib version, see (issue)[https://github.com/jax-ml/jax/issues/18368]. I implement the suggested solution but then I got some more errors. Now I have a working downstream jupyter notebook for AlphaFold Multimer.
+TODO:
+V- Check out GPR37L1-PSAP & GPR37L1-CDH9 structures
+V- Contact the VUB HPC about the titin error and to install the newer database.
+V- Contact the KUL HPC about the titin error and to install the newer database.
+V- Read the AlphaFold Multimer screen paper very thoroughly.
+V- Respond to the VUB HPC admind Qs.
+V- Make a contact map of GPR37L1-CDH9 with biotite.
+V- Check GPR37L1-CDH9 interaction with downstream analysis
+- Make a Topolgy score from 0-1.
+- Make a graph of the running metrics.
+- new version of Uniref30 database is available. Try out the monomer VCAM1 prediction.
+V- Read the documentation of AlphaFold3 and try to run GPR37L1 and VCAM1. Model parameters are requested. Download the model params.
+- Try out AlphaFold3.
+
+
+
+
+# Downstream analysis and visualization using ChimeraX, PyMOL, biotite, Python code for unpickling
+There seems to be an issue with the compatibility with the Jaxlib version, see (issue)[https://github.com/jax-ml/jax/issues/18368]. I implement the suggested solution but then I got some more errors. Now I have a working downstream jupyter notebook with conda env for AlphaFold Multimer.
 
 
 
@@ -155,7 +181,29 @@ https://www.youtube.com/@Brown_Lab
 
 ## Questions for couse:
 
-- ChimeraX: How do I select the chains that are only in contact with each other from outputs of AlphaFold Multimer
+- AlphaFold HPC run:
+    - Isn't there like a safe Docker image that VSC users can use as an apptainer to run the latest version of AlphaFold2-Multimer?
+    - Do you also need to include the Signal Peptide? Samsoe et al. 2024 uses without the SP.
+    - Which AlphaFold, i.e. AlphaFold2-Multimer or AlphaFold3, is best for predicting protein-protein interactions?
+
+- ChimeraX: 
+    - How do I select the chains that are only in contact with each other from outputs of AlphaFold Multimer?
+    - How do I color the proteins by protein such that its more clear.
+    - How many agstroms is considered a contact? 8 Ang?
+    - How do I represent the "bonds" between the two proteins
+
+
+## Scores:
+- pTM (from AlphaFold-Multimer)
+- ipTM (from AlphaFold-Multimer)
+- iPAE (from AlphaFold-Multimer)
+- penalized ipTM (from Teufel et al. 2022)
+- PI-score (from AlphaPullDown)
+- pDockQ for dimers (from AlphaPullDown)
+- mpDockQ score for multimers (from AlphaPullDown)
+- Topology score (self-made)
+
+
 
 
 
