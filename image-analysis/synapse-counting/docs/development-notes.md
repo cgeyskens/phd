@@ -239,7 +239,7 @@ V- Heatmap and cluster analysis on top 25 differentially abundant metrics on sam
 V- Epoch data of local peaks optimization
 V- Correlation analysis across metrics & between metrics and PCs (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3)).
 V- PCA loadings of metrics (dougnut graph of percentage significant correlated metrics (VGLUT1 vs VGAT or CA1 vs CA3))
-
+- PLS-DA (see Kaulich et al. 2025)
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
 - most metrics can work with the model. 

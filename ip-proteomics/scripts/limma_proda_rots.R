@@ -18,7 +18,7 @@ hgd()
 
 
 ##### Loading the data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp17_astral-run_PCF000417.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
 View(raw_data)
 
 ##### Filter out the antibodies fragments: starting with "Ig"
@@ -62,6 +62,19 @@ vcam1_col_names <- c(
     "vcam1_igg_r4"= "/ip-proteomics/exp17-only-vcam1-ms-convert-output/2ul_CG_10.mzML"
 )
 
+vcam1_col_names_2 <- c(
+    "gpr37l1_ip_r1" = "/ip-proteomics/ms-convert-output/2ul_CG_1.mzML",
+    "gpr37l1_igg_r1"= "/ip-proteomics/ms-convert-output/2ul_CG_2.mzML",
+    "vcam1_ip_r1" = "/ip-proteomics/ms-convert-output/2ul_CG_3.mzML",
+    "vcam1_igg_r1"= "/ip-proteomics/ms-convert-output/2ul_CG_4.mzML",
+    "vcam1_ip_r2" = "/ip-proteomics/ms-convert-output/2ul_CG_5.mzML",
+    "vcam1_igg_r2"= "/ip-proteomics/ms-convert-output/2ul_CG_6.mzML",
+    "vcam1_ip_r3" = "/ip-proteomics/ms-convert-output/2ul_CG_7.mzML",
+    "vcam1_igg_r3"= "/ip-proteomics/ms-convert-output/2ul_CG_8.mzML",
+    "vcam1_ip_r4" = "/ip-proteomics/ms-convert-output/2ul_CG_9.mzML",
+    "vcam1_igg_r4"= "/ip-proteomics/ms-convert-output/2ul_CG_10.mzML"
+)
+
 vcam1_exp10_synglio_col_names <- c(
   "p14_vcam1_ip_r1" = "/ip-proteomics/exp10-ms-convert-output/CG_1.mzML",
   "p14_vcam1_igg_r1"= "/ip-proteomics/exp10-ms-convert-output/CG_2.mzML",
@@ -94,7 +107,8 @@ vcam1_exp17_astral_run_col_names <- c(
   "vcam1_igg_r4"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_10.raw"
 )
 
-colnames(data_na_filtered)[match(vcam1_exp17_astral_run_col_names, colnames(data_na_filtered))] <- names(vcam1_exp17_astral_run_col_names)
+colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
+colnames(data_na_filtered)
 #### further data wranglin8
 df <- data_na_filtered %>%
         as_tibble() %>%
@@ -102,20 +116,16 @@ df <- data_na_filtered %>%
         select(
           -Protein.Group, 
           -Protein.Names, 
-          -First.Protein.Description,
-          -N.Sequences,
-          -N.Proteotypic.Sequences,
-          -gpr37l1_ip_r1,
-          -gpr37l1_igg_r1
+          -First.Protein.Description
         )
-check <- df["Vcam1", ]
+check <- df["Gpr37l1", ]
 print(check)
 
 ##### log2 transformation
 df_log2 <- df %>%
   mutate(across(where(is.numeric), log2))
 
-check <- df_log2["Vcam1", ]
+check <- df_log2["Gpr37l1", ]
 print(check)
 
 ##### imputation
@@ -129,7 +139,7 @@ imputed_df <- as.data.frame(imputed_matrix)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Vcam1", ]
+row_values <- imputed_df["Gpr37l1", ]
 print(row_values)
 
 
@@ -233,11 +243,11 @@ pca_plot_df <- pca_scores %>%
 print(head(pca_plot_df))
 
 # 5. Define colors for the conditions
-condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6")
+condition_colors <- c("ip" = "#e69f00", "igg" = "#c6c6c6")
 
 # 6. Create the PCA scatter plot
 ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
-  geom_point(size = 6) +
+  geom_point(size = 4) +
   #geom_text(hjust = -0.1, vjust = 0.1, size = 5) + # Add sample labels
   scale_color_manual(values = condition_colors) +
   labs(
@@ -250,13 +260,18 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
     panel.grid = element_blank(),
     axis.line = element_line(linewidth = 0.75, color = "black"),
     legend.position = "right",
-    axis.ticks = element_line(color = "black", linewidth = 0.75, size = 1),
+    axis.ticks = element_line(color = "black", linewidth = 2, size = 1),
+    axis.ticks.length=unit(0.3,"cm"),
     axis.text.y = element_text(size = 16),
     axis.title.y = element_text(size = 18, family = "Arial"), 
     axis.title.x = element_text(size = 18, family = "Arial"), 
     plot.title = element_text(size = 20, family = "Arial"), 
   ) + 
-  xlim(-60, 60)
+  xlim(-50, 40) +
+  ylim(-40, 40)
+
+# save PCA plot as PDF
+ggsave("pca_vcam1.pdf", height = 5, width = 6, dpi = 600, device=cairo_pdf)
 
 ##### DEA Limma #####
 
@@ -305,14 +320,15 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_gpr37l1 <- c("Vcam1")
-select_proteins_upper <- paste0(toupper(select_gpr37l1))
+select_proteins <- c("Gpr37l1", "Adgrb3", "Pmch", "Cdh4", "Cdh6", "Cdh8", "Cdh9")
+select_proteins <- c()
+select_proteins_upper <- paste0(toupper(select_proteins))
 
 # making the statement color the points
 keyvals <- ifelse(
-    results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#21a0e2', '#c6c6c6')
+    results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#e69f00', '#c6c6c6')
 keyvals[is.na(keyvals)] <- '#c6c6c6'
-names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
+names(keyvals)[keyvals == '#e69f00'] <- 'ip'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'unspecific'
 
 # making the volcano plot
@@ -325,10 +341,10 @@ EnhancedVolcano(results_limma,
     #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
     xlim = c(-10, 10),
-    ylim = c(-0.5, 6),
+    ylim = c(-0, 6),
     cutoffLineType = 'blank',
     colAlpha = 1,
-    shape = 21,
+    shape = 19,
     pointSize = 4.0,
     labSize = 6,
     gridlines.major = FALSE,
@@ -336,9 +352,13 @@ EnhancedVolcano(results_limma,
     arrowheads = FALSE,
     parseLabels = TRUE,
     lengthConnectors = unit(0.1, 'npc'),
-    ) + theme(text=element_text(size=4,  family="Arial"))
+    ) + theme(
+      text=element_text(size=4,  family="Arial"),
+      axis.ticks.length=unit(0.3,"cm")
+      )
 
-
+# save limma plot as PDF
+ggsave("limma_gpr37l1.svg", height = 10, width = 6, dpi = 1000, device=cairo_pdf)
 
 ### !!! Now go to the annotations.R script to get the annotations
 

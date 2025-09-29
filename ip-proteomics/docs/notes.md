@@ -118,7 +118,7 @@ MSstats: Get stuck when processing data (featureSubset = "all"). If with top_N_f
 MS-DAP: nice output of pdf report but just deletes rows with too many NAs
 
 
-- Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
+V - Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
 - Make a script that output the QC from each and test different parameters, to increase the amount of DEPs and have more clustered samples in the PCA.
 - make the .config file with the parameters
 - Finetune the running parameters (try different parameter)
@@ -142,7 +142,8 @@ QC plots:
  - (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
  - Plot of retention time histogram
 
- - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see recent paper)
+ - Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
+ - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
  - Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  - Heatmap of GPR37L1 IP membrane proteins that are interesting (extension of the Line plots)
  - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.

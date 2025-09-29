@@ -9,7 +9,7 @@ library(UniprotR)
 library(readxl)
 
 # loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp17_astral-run_PCF000417.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
 View(raw_data)
 
 # Loading in the results
@@ -82,6 +82,7 @@ merged_df_updated_sorokina <- merged_df_updated_oostrum %>%
 merged_df_updated_sorokina_1 <- merged_df_updated_sorokina %>%
   mutate(sorokina_2021_synaptosome = sapply(Genes, is_localised, sorokina_data, "Synaptosome"))
 
+
 # crossreference for sorokina_presynaptic
 merged_df_updated_sorokina_2 <- merged_df_updated_sorokina_1 %>%
   mutate(sorokina_2021_presynaptic = sapply(Genes, is_localised, sorokina_data, "Presynaptic"))
@@ -118,7 +119,7 @@ num_proteins <- length(final_protein_list)
 results_list <- list()
 
 # Folder to save intermediate batch results
-dir.create("batch_results_gpr37l1_20250801", showWarnings = FALSE)
+dir.create("batch_results_gpr37l1_20250828", showWarnings = FALSE)
 
 # Process the protein list in batches
 for (i in 1:ceiling(num_proteins / batch_size)) {

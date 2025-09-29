@@ -6,6 +6,10 @@ Sources:
 
 [VIB Tutorial](https://elearning.vib.be/courses/alphafold/)
 
+[VIB Course](https://github.com/vib-tcp/protein-structure-analysis)
+
+[VIBFold](https://github.com/jasperzuallaert/VIBFold)
+
 ## Confidence scores - AlphaFold
 
 ### pLDDT: Predicted Local Distance Difference Test
@@ -80,7 +84,7 @@ Scale: 0 to 1, above 0.5 likely correct docking arrangment, 0.23 to 0.5 possible
 # Considerations for running the software
 
 - It uses random seeds to initialize the structure, re-run the prediction with several different seeds
-- Increase the number of recycles (3 to 20) is an effective method for improving prediction quality
+- Increase the number of recycles (3 to 20) is an effective method for improving prediction quality.
 - Optimize the MSA: deeper MSA with many 1000s of sequences will generally lead to a better prediction
 - AlphaBridge (post-processing toolkit designed to analyze and visualize protein–protein complex predictions made by AlphaFold 3 / AlphaFold-Multimer.)
 - AlphaFold-Multimer is from AlphaFold package
@@ -101,7 +105,16 @@ KUL: AlphaFold/2.3.4 (with module spider alphafold)
 For KUL, follow: https://github.com/hpcleuven/AlphaFold
 
 
+# Notes from course 2025
+- 6000 predictions is always better for better predictions instead of the standard 25 or 5. So keep itering. If the interaction is not there in the beginning, it doesn't mean it the interaction is not possible.
+- ESMFold/ESM3, OmegaFold: without MSA and good for AAseq's that are de novo or not have any other species alike sequence.
+- AlphaMissense: for each AA, you can get an pathogenicity score if this were to take place.
+- Clones of AF3: Chai1, HelixFold3.
+- Boltz2: only for chemical structures, no proteins/peptides.
 
+- For predictions, the B-factor is replaced by the pLLDT score.
+- You cannot compare the scores from AF2 to AF3.
+- They have seen that 0.4 or 0.5 ranking score for AF2 was in some cases really representative of the structure. Depends from case to case.
 
 
 #### 31.07.2025
@@ -132,19 +145,25 @@ V-(2) run it with reduced and full databases on KUL & VUB & UGent
 
 V-(3) run it with GPR37L1, is this titin problem VCAM1-specfic? Yes.
 
-V-(6) ask HPC admins to use updated databases and for the titin error.
-    19.08.2025. The VUB HPC admin installed the newer version of the Uniref30 database. I tried out the VCAM1 monomer prediction, job nr 11027722.
+-(4) ask HPC admins to use updated databases and for the titin error.
+    19.08.2025. The VUB HPC admin installed the newer version of the Uniref30 database. I tried out the VCAM1 monomer prediction, job nr 11027722. Again, I had the titin error, so the issue is not the database. 
 
-(5) Try to install and install AlphaPulldown according to the github documentation. 
-    - AlphaPullDown is installed within an Apptainer container, but it needs the correct databases. I asked the VUB HPC admin to install AlphaPullDown.
+X-(5) Try to run AlphaFold3. Skip for now as the AF2-Multimer is as good as AF3.
+    V- Test job for GPR37L1, job nr 11030881.
+    V- Test job for VCAM1, job nr 11032194. Increase nr of seeds & recycles, job 11036065. Tried with 100 seeds, job 11037206.
+    V- Test job for GPR37L1-CDH9-ECD, job nr 11032960. Much faster then AF2. Not good enough like AF2. Increased seeds & recycles, job 11036059. AF3 seems to be worse at predicting protein-protein interactions. This is because it uses a more shallower MSA stack. Tried with 100 seeds, job 11037205. Again, this gave me not the same good predictions as AF2-Multimer.
+
+(6) Try to install and install AlphaPulldown according to the github documentation. 
+    V- AlphaPullDown is installed within an Apptainer container, but it needs the correct databases. I asked the VUB HPC admin & KUL admin to install AlphaPullDown.
+    - On KUL system, AlphaPullDown is installed but however I couldn't get the AF2 to work.
 
 - Run a simple AlphaFold of VCAM1
 - Run a simple AlphaMultimer of VCAM1-VCAM1
 - Run a simple AlphaMultimer of VCAM1-VLA4
 - Run the AlphaPulldown of VCAM1 with interactors
 
-Conclusions untill now:
-VUB: Can't run the reduced_db option. Modules are outdated. Run (GPR37L1 - full_db - AlphaFold/2.3.1-foss-2022a-CUDA-11.7.0) worked, took around 4h. Dimer of GPR37L1 also worked, took 9h.
+Main conclusions untill now:
+VUB: Can't run the reduced_db option. Modules are outdated. Run (GPR37L1 - full_db - AlphaFold/2.3.1-foss-2022a-CUDA-11.7.0) worked, took around 4h. Dimer of GPR37L1 also worked, took 9h. Can also run AlphaFold3, but it's more shallower.
 KUL: v2.3.4 gives an error due too internal python error. Earlier version don't have compatibility with databases.
 UGent: only v2.3.2 available and it can't find the GPU.
 General:
@@ -160,17 +179,28 @@ V- Read the AlphaFold Multimer screen paper very thoroughly.
 V- Respond to the VUB HPC admind Qs.
 V- Make a contact map of GPR37L1-CDH9 with biotite.
 V- Check GPR37L1-CDH9 interaction with downstream analysis
-- Make a Topolgy score from 0-1.
 V- Make a graph of the running metrics.
-- new version of Uniref30 database is available. Try out the monomer VCAM1 prediction.
 V- Read the documentation of AlphaFold3 and try to run GPR37L1 and VCAM1. Model parameters are requested. Download the model params.
-- Try out AlphaFold3.
+V- Make ppt of AF2 GPR37L1-CDH9 for AF2.
+- new version of Uniref30 database is available. Try out the monomer VCAM1 prediction. This didn't work but the pipeline used still the older database. Tried to specify the database paths specifically. job nr 11077875. See new comment in the titin error.
+- Make downstream analysis for AF3.
+- Try out AlphaFold3 with 5 seeds. For:
+    V- GPR37L1, 
+    - GPR37L1-CDH9, 
+    V- VCAM1, 
+    - VCAM1-VCAM1, 
+    - VCAM1-VLA4,
+    - VCAM1-PMCH.
+     => it seems that AF3 uses a shallower databases then AF2. Can you use AF3 for more deeper databases? Yes you can use the MSA from AF2 in the .json in the unpaired or paired field. You can just copy paste the .a3m files inside the msa
+- Make a Topolgy score from 0-1 from AF3 output.
+
 
 
 
 
 # Downstream analysis and visualization using ChimeraX, PyMOL, biotite, Python code for unpickling
-There seems to be an issue with the compatibility with the Jaxlib version, see (issue)[https://github.com/jax-ml/jax/issues/18368]. I implement the suggested solution but then I got some more errors. Now I have a working downstream jupyter notebook with conda env for AlphaFold Multimer.
+There seems to be an issue with the compatibility with the Jaxlib version, see (issue)[https://github.com/jax-ml/jax/issues/18368]. I implement the suggested solution but then I got some more errors. 
+=> Now I have a working downstream jupyter notebook with conda env for AlphaFold Multimer.
 
 
 
@@ -179,19 +209,24 @@ https://www.youtube.com/@Brown_Lab
 
 
 
-## Questions for couse:
+## Questions for course:
 
 - AlphaFold HPC run:
-    - Isn't there like a safe Docker image that VSC users can use as an apptainer to run the latest version of AlphaFold2-Multimer?
-    - Do you also need to include the Signal Peptide? Samsoe et al. 2024 uses without the SP.
-    - Which AlphaFold, i.e. AlphaFold2-Multimer or AlphaFold3, is best for predicting protein-protein interactions?
+    V- Is there a safe Docker image that VSC users can use as an apptainer to run the latest version of AlphaFold2-Multimer? 
+        KUL HPC admin: Try to make the apptainer definition file yourself.
+    V- Do you also need to include the Signal Peptide? Samsoe et al. 2024 uses without the SP. From training, they also run it without the SP.
+    V- Which AlphaFold, i.e. AlphaFold2-Multimer or AlphaFold3, is best for predicting protein-protein interactions? My feeling is AF2-Multimer but check the MSA paring for AF3 more deeply. From the course, in the AlphaFold community, for protein-protein interactions, they still use AF2-Multimer.
+    V- For AF3, how to add the posttranslational modifications? By experimental knowledge or UniProt annotations? We are not there yet for having the posttranslational effects on the structure.
+    V- Can you let AF3 use a more deeper MSA, comparable to AF2? See AF3/issue289 for further research. How do you do custom MSA? 
+    From course: you can use the AF2 MSA as input to AF3. There are tools out there for custom MSA.
+    V- Please explain MSA pairing and unpairing, which is best for protein-protein interactions? MSA pairing is the ordering of other species sequences that are in the same order for both proteins in protein-protein interactions. They usually do the pairing for protein-protein interactions.
 
 - ChimeraX: 
     - How do I select the chains that are only in contact with each other from outputs of AlphaFold Multimer?
     - How do I color the proteins by protein such that its more clear.
             "color #1/A red" & "color #1/B blue"
-    - How many agstroms is considered a contact? 8 Ang?
-    - How do I represent the "bonds" between the two proteins
+    V- How many agstroms is considered a contact? From Samsoe et al.: 8 Ang. From the course: they are considered below 3 to 4 angstroms.
+    - How do I represent the "bonds" between the two proteins?
 
 
 ## Scores:
