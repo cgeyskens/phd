@@ -79,10 +79,10 @@ Other gene ontology analysis: clusterProfiler, gProfiler2
 ### Development notes
 
 V - copy raw data to HPC
-V - make apptainer container for DIA-NN (see notes in README: https://github.com/vdemichev/DiaNN/issues 1202#issuecomment-2511182874)
+V - make apptainer container for DIA-NN (see notes in README: https://github.com/vdemichev/DiaNN/issues1202#issuecomment-2511182874)
 
 V- try to run DIA-NN with same settings as Pedro on the cluster
-  - issue DIA-NN doesnt support .wiff files on linux version. Need to convert from .wiff to .mzML with most popular tool: msconvert.
+  - issue: DIA-NN doesnt support .wiff files on linux version. Need to convert from .wiff to .mzML with most popular tool: msconvert.
         V--> solution_1: make apptainer container for msconvert from official dockerhub container (https://hub.docker.com/r/proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses)
         --> solution_2: make apptainer container from custom dockerhub container (https://github.com/jspaezp/elfragmentador-data#setting-up-msconvert-on-singularity-)
         --> solution_3: perform the file conversion locally with a docker container
@@ -97,13 +97,13 @@ Check other packages, like MS-DAP and MSstats. https://github.com/wfondrie/mssta
 Compared raw and log2 intensities from my DIANN run on cluster vs Pedro's run on windows and found that they were indeed different. Also the DEGs with simple ttest.
 ###### 01.04.2025
 Setup docker environment for R locally with devcontainers.
-#### TODO:
-- Setup docker environment for R locally with devcontainers.
-   - cgeyskens/ip-proteomics:v1 created but could not get the right extensions in the container.
-- Try the analysis with DEP (uses limma), SAM (samr), ROTS (rots) for DEA.
+###### 08.2025
+V- Setup docker environment for R locally with devcontainers.
+   V- cgeyskens/ip-proteomics:v1 created but could not get the right extensions in the container.
+V- Try the analysis with DEP (uses limma), SAM (samr), ROTS (rots) for DEA.
 
 
-- Try out MSstats/MS-DAP in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
+V- Try out MSstats/MS-DAP in jupyter notebooks. With MSstats there is more support: https://github.com/Vitek-Lab/MSstats/issues/34
 
 
 ### Downstream analyses
@@ -116,6 +116,30 @@ proDA: analysis done
 #### Peptide level:
 MSstats: Get stuck when processing data (featureSubset = "all"). If with top_N_features = 300 then I get weird PCA plot, not like the protein-level analysis.
 MS-DAP: nice output of pdf report but just deletes rows with too many NAs
+
+
+
+
+## Formal analysis notes: 10.2025
+- For ms-convert apptainer container specific image: 'apptainer pull ms-convert.sif docker://proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses:skyline_daily_25.1.1.270-67f3e15'.
+- Mouse ref proteome was downloaded here: https://www.uniprot.org/proteomes/UP000000589
+
+
+### TODO
+V- Install container with new DIA-NN version (v2.2.0)
+V- Create new container for converting .wiff to .mzML files (necessary for ZenoTOF, not for Astral)
+- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version
+- Analyze Exp17 VCAM1 replicates ZenoTOF data with new DIA-NN version & compare with astral data
+
+
+
+
+
+
+
+
+
+
 
 
 V - Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
