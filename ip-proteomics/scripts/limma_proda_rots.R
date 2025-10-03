@@ -1,3 +1,11 @@
+###############################################################################
+# Script: limma_proda_rots.R
+# Purpose: script to compare different differential protein expression analyses
+# Author: Cydric Geyskens
+# Date: 2025-05-02
+###############################################################################
+
+#### =============================== Setup =============================== ####
 library(readr)
 library(dplyr)
 library(tibble)
@@ -12,16 +20,23 @@ library(imputeLCMD)
 library(ROTS)
 library(proDA)
 
+# for data viewing
 remotes::install_github("nx10/httpgd")
 library(httpgd)
 hgd()
 
+#### =============================== arguments =============================== ####
+input_data_filepath <- "/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv"
+ip_protein = "gpr37l1"
 
-##### Loading the data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
+
+#### =============================== Loading the data =============================== ####
+raw_data <- read_tsv(input_data_filepath)
 View(raw_data)
 
-##### Filter out the antibodies fragments: starting with "Ig"
+#### =============================== Filter out proteins =============================== ####
+
+# Filter out the antibodies fragments: starting with "Ig"
 antibodies_condition1 <- startsWith(raw_data$Protein.Group, "A0A")
 antibodies_condition2 <- startsWith(raw_data$Genes, "Ig")
 antibodies_to_filter_out <- antibodies_condition1 & antibodies_condition2
@@ -29,17 +44,18 @@ antibodies_to_filter_out <- antibodies_condition1 & antibodies_condition2
 data_ab_filtered <- raw_data[!antibodies_to_filter_out, ]
 data_ab_filtered_out <- raw_data[antibodies_to_filter_out, ] # to check the filtered out proteins
 
-##### Filter out proteins with no genes charactar (eg they are human or otherwise)
+#Filter out proteins with no genes charactar (eg they are human or otherwise)
 gene_na_rows <- is.na(data_ab_filtered$Genes)
 
 data_na_filtered <- data_ab_filtered[!gene_na_rows, ]
 data_na_filtered_out <- data_ab_filtered[gene_na_rows, ]
 
-##### Renaming the columns
+#### =============================== Renaming the column names =============================== ####
 
 # checking colnames
 colnames(data_na_filtered)
-# new colnames
+
+# new colnames according to the experiments
 gpr37l1_col_names <- c(
     "gpr37l1_ip_r1" = "/ip-proteomics/exp19-ms-convert-output/CG_01.mzML",
     "gpr37l1_igg_r1"= "/ip-proteomics/exp19-ms-convert-output/CG_02.mzML",
@@ -109,7 +125,9 @@ vcam1_exp17_astral_run_col_names <- c(
 
 colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
 colnames(data_na_filtered)
-#### further data wranglin8
+
+
+#### =============================== data wrangling =============================== ####
 df <- data_na_filtered %>%
         as_tibble() %>%
         column_to_rownames(var = "Genes") %>% # The Genes column as rownames
@@ -118,53 +136,57 @@ df <- data_na_filtered %>%
           -Protein.Names, 
           -First.Protein.Description
         )
-check <- df["Gpr37l1", ]
+check <- df[ip_protein, ]
 print(check)
 
-##### log2 transformation
+#### =============================== data transformation =============================== ####
+
+# log2 transformation
 df_log2 <- df %>%
   mutate(across(where(is.numeric), log2))
 
-check <- df_log2["Gpr37l1", ]
+check <- df_log2[ip_protein, ]
 print(check)
 
-##### imputation
+# imputation
 data_matrix <- as.matrix(df_log2)
 imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
                                       q = 0.01,      
                                       tune.sigma = 1) 
 imputed_df <- as.data.frame(imputed_matrix)
 
-##### normalization
+# normalization if necessary (DIA-NN does a normalization step)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Gpr37l1", ]
+row_values <- imputed_df[ip_protein, ]
 print(row_values)
 
+#### =============================== Plotting =============================== ####
 
-##### QC plots: nr of protein identified per sample
+# QC plot 1: nr of protein identified per sample
 
+# prepare the data for the barplot
 plot_df <- df %>%
-  # Count the number of non-NA entries (identified proteins) for each sample
+  # count the number of non-NA entries (identified proteins) for each sample
   summarise(across(everything(), ~sum(!is.na(.)))) %>%
-  # Transpose the data frame to have samples as a column
+  # transpose the data frame to have samples as a column
   pivot_longer(cols = everything(), names_to = "Sample", values_to = "UniqueProteins") %>%
-  # Extract the condition (ip or igg) from the sample name
+  # extract the condition (ip or igg) from the sample name
   mutate(Condition = str_extract(Sample, "(ip|igg)"))
 
 
-condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6") # You can choose your desired colors
+condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6") 
 
-# Create the bar plot using ggplot2
+# create barplot
 ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = UniqueProteins),
-            hjust = 0.5, # Center the text horizontally
-            vjust = 2, # Center the text vertically
+            hjust = 0.5, 
+            vjust = 2, 
             color = "white",
-            size = 5) + # Adjust text size if needed
-  scale_fill_manual(values = condition_colors) + # Apply the defined colors
+            size = 5) + 
+  scale_fill_manual(values = condition_colors) + 
   labs(
     title = "Number of Unique Proteins Identified in Each Sample",
     x = "Sample",
@@ -172,18 +194,18 @@ ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
   ) +
   theme_minimal() +
   theme(
-    panel.grid = element_blank(), # Remove all grid lines
-    axis.line = element_line(linewidth = 0.75, color = "black"), # Make axis lines bolder and black
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 16),# Rotate x-axis labels
+    panel.grid = element_blank(), 
+    axis.line = element_line(linewidth = 0.75, color = "black"), 
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
     axis.text.y = element_text(size = 16),
     axis.title.y = element_text(size = 18, family = "Arial"), 
     axis.title.x = element_blank(), 
     plot.title = element_text(size = 20, family = "Arial"),
     legend.position = "right",
-    text = element_text(family = "Arial")  # Adjust legend position as needed
+    text = element_text(family = "Arial")  
   )
 
-##### QC plots: log2 intensity plots
+# QC plot 2: log2 intensity plots per sample
 
 plot_df_long <- imputed_df %>%
   rownames_to_column(var = "Protein") %>%
@@ -219,33 +241,33 @@ ggplot(plot_df_long, aes(x = Sample, y = Intensity, fill = Condition)) +
     legend.position = "right"
   ) + scale_y_continuous(limits = c(0, NA))
 
-##### QC plots: PCA plot
+# QC plot 3: PCA plot
 
-# 1. Transpose the data frame so that samples are rows and proteins are columns
+# transpose the data frame so that samples are rows and proteins are columns
 df_t <- as.data.frame(t(imputed_df))
 
-# 2. Perform Principal Component Analysis (PCA)
-pca_result <- prcomp(df_t, scale. = TRUE) # scale. = TRUE for scaling the data
+# perform PCA
+pca_result <- prcomp(df_t, scale. = TRUE) 
 
-# 3. Extract the principal components and their variances
+# extract the components and their variances
 pca_scores <- as.data.frame(pca_result$x)
 pca_variance <- pca_result$sdev^2
 pca_percentage_variance <- round(100 * pca_variance / sum(pca_variance), 1)
 
-# 4. Create a data frame for plotting
+# create df or plotting
 pca_plot_df <- pca_scores %>%
   # Add the sample names as a column
   mutate(Sample = rownames(df_t)) %>%
   # Extract the condition (ip or igg) from the sample name
   mutate(Condition = stringr::str_extract(Sample, "(ip|igg)"))
 
-# Print the first few rows of the PCA plotting data frame
+# check the data
 print(head(pca_plot_df))
 
-# 5. Define colors for the conditions
+# define colors 
 condition_colors <- c("ip" = "#e69f00", "igg" = "#c6c6c6")
 
-# 6. Create the PCA scatter plot
+# create the PCA plot
 ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
   geom_point(size = 4) +
   #geom_text(hjust = -0.1, vjust = 0.1, size = 5) + # Add sample labels
@@ -271,9 +293,11 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
   ylim(-40, 40)
 
 # save PCA plot as PDF
-ggsave("pca_vcam1.pdf", height = 5, width = 6, dpi = 600, device=cairo_pdf)
+ggsave(paste0("pca_", ip_protein".pdf"), height = 5, width = 6, dpi = 600, device=cairo_pdf)
 
-##### DEA Limma #####
+
+
+#### =============================== DEP Limma =============================== #####
 
 # Create factors for your experimental design
 condition <- factor(c(
@@ -309,10 +333,10 @@ fit3 <- eBayes(fit2)
 results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 3070)
 limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limma$logFC > 1, ]
 
-write.csv(limma_ip_proteins,"gpr37l1_limma_ip_proteins.csv", row.names = TRUE)
+write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins.csv"), row.names = TRUE)
 
 
-#### Limma volcano plot without annotations
+#### =============================== Limma volcano plot without annotations =============================== ####
 
 results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 
@@ -358,11 +382,13 @@ EnhancedVolcano(results_limma,
       )
 
 # save limma plot as PDF
-ggsave("limma_gpr37l1.svg", height = 10, width = 6, dpi = 1000, device=cairo_pdf)
+ggsave(paste0("limma_", ip_protein, ".svg"), height = 10, width = 6, dpi = 1000, device=cairo_pdf)
+
+
 
 ### !!! Now go to the annotations.R script to get the annotations
 
-##### Limma volcano plot with annotations
+#### =============================== Limma volcano plot with annotations =============================== ####
 
 # load in annotations
 annotations_data <- read_csv("gpr37l1_limma_ip_proteins_annotations.csv")
@@ -466,7 +492,7 @@ rots_ip_proteins <- rots_results %>%
                           subset(adj.pvalue <= 0.05 & logFC > 1)
 write.csv(rots_ip_proteins,"vcam1_rots_ip_proteins.csv", row.names = TRUE)
 
-##### ROTS volcano plot 
+#### =============================== ROTS volcano plot =============================== ####
 
 rots_results <- tibble::rownames_to_column(rots_results, "Genes")
 
@@ -513,7 +539,7 @@ EnhancedVolcano(rots_results,
 
 check <- rots_results[rots_results$Genes == "Vcam1", ]
 
-##### DEA proDA
+#### =============================== DEP proDA =============================== ####
 
 # needs to be in matrix format
 log2_matrix <- as.matrix(df_log2)
@@ -554,7 +580,7 @@ proda_ip_proteins <- subset(results_proda, adj_pval < 0.05 & diff > 1)
 
 
 
-##### proDA volcano plot 
+#### =============================== proDA volcano plot =============================== ####
 
 names(results_proda)[names(results_proda) == "name"] <- "Genes"
 
@@ -599,7 +625,7 @@ EnhancedVolcano(results_proda,
     ) + theme(text=element_text(size=4,  family="Arial"))
 
 
-##### Upsetplot of Limma, ROTS & proDA
+#### =============================== Upsetplot of Limma, ROTS & proDA =============================== ####
 # limma_ip_proteins_for_upset_plot <- limma_ip_proteins %>% remove_rownames %>% column_to_rownames(var="Genes")
 limma_set <- rownames(limma_ip_proteins)
 rots_set <- rownames(rots_ip_proteins)
@@ -616,7 +642,7 @@ upset(fromList(list_of_sets),
     text.scale = 2)
 
 
-##### Line plots of selected proteins
+##### =============================== Line plots of selected proteins =============================== ####
 
 extract_protein_data <- function(df, protein_name) {
   # Check if protein exists in rownames

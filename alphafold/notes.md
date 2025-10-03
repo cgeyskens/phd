@@ -156,6 +156,7 @@ X-(5) Try to run AlphaFold3. Skip for now as the AF2-Multimer is as good as AF3.
 (6) Try to install and install AlphaPulldown according to the github documentation. 
     V- AlphaPullDown is installed within an Apptainer container, but it needs the correct databases. I asked the VUB HPC admin & KUL admin to install AlphaPullDown.
     - On KUL system, AlphaPullDown is installed but however I couldn't get the AF2 to work.
+    - On the VUB, it will be installed (02/10/2025). Tried a job to get the patched version of the database to work (job nr 11098950)
 
 - Run a simple AlphaFold of VCAM1
 - Run a simple AlphaMultimer of VCAM1-VCAM1

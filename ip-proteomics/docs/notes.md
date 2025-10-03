@@ -121,32 +121,28 @@ MS-DAP: nice output of pdf report but just deletes rows with too many NAs
 
 
 ## Formal analysis notes: 10.2025
-- For ms-convert apptainer container specific image: 'apptainer pull ms-convert.sif docker://proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses:skyline_daily_25.1.1.270-67f3e15'.
-- Mouse ref proteome was downloaded here: https://www.uniprot.org/proteomes/UP000000589
+- For ms-convert apptainer container specific image: 'apptainer pull ms-convert.sif docker://proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses:skyline_daily_25.1.1.270-67f3e15'. (Also cite their paper)
+- Mouse ref proteome was downloaded here: https://www.uniprot.org/proteomes/UP000000589 at 2025.09.30
+- The crap-fasta file was downloaded at 2025.03.04
+- DIA-NN version 2.2.0 was used in apptainer on HPC
 
 
-### TODO
+### TODO 10.2025
 V- Install container with new DIA-NN version (v2.2.0)
 V- Create new container for converting .wiff to .mzML files (necessary for ZenoTOF, not for Astral)
-- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version
+V- Create the spectral library
+   Had this issue: https://github.com/vdemichev/DiaNN/issues/1623. Re-installed diann apptainer container and tried again creating the spectral library 
+V- Read the update DIA-NN documentation
+
+V- Generate libraries for DIA-NN v2.2.0 astral with 1 and 2 missed cleavages
+
+- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version, of 1 (job 65240114) vs 2 (job ) missed cleavages
 - Analyze Exp17 VCAM1 replicates ZenoTOF data with new DIA-NN version & compare with astral data
 
+- Perform the formal analysis for VCAM1 & GPR37L1 & make the final script
 
 
 
-
-
-
-
-
-
-
-
-V - Also analyze previous synaptogliosomes (Exp10) experiment! Very different log2 intensity values
-- Make a script that output the QC from each and test different parameters, to increase the amount of DEPs and have more clustered samples in the PCA.
-- make the .config file with the parameters
-- Finetune the running parameters (try different parameter)
-- Use recent version of DIA-NN
 
 
 QC plots:
@@ -164,10 +160,9 @@ QC plots:
  V- Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
  V- Intensity line plots of raw data per sample of selected candidates
  - (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
- - Plot of retention time histogram
 
  - Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
  - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
  - Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
- - Heatmap of GPR37L1 IP membrane proteins that are interesting (extension of the Line plots)
+ - Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
  - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.

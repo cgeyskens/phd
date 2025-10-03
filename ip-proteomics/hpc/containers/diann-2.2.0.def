@@ -1,0 +1,44 @@
+# definition file for creating DIA-NN Apptainer container to use on HPC
+
+Bootstrap: docker
+From: debian:12.11
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # update and install locales
+    apt-get update -y
+    apt-get install -y locales
+    rm -rf /var/lib/apt/lists/*
+    
+    # configure locales
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+    sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+    dpkg-reconfigure --frontend=noninteractive locales
+    
+    # install dependencies
+    apt-get update
+    apt-get install -y libgomp1 build-essential wget unzip
+    
+    # install Microsoft repository
+    wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    dpkg -i packages-microsoft-prod.deb
+    rm packages-microsoft-prod.deb
+    
+    # install .NET SDK
+    apt-get update
+    apt-get install -y dotnet-sdk-8.0
+    rm -r /var/lib/apt/lists/*
+    
+    # download and install DIA-NN
+    wget https://github.com/vdemichev/DiaNN/releases/download/2.0/DIA-NN-2.2.0-Academia-Linux.zip -O diann-2.2.0.zip
+    unzip -o diann-2.2.0.zip
+    rm diann-2.2.0.zip
+    
+    # set permissions on DIA-NN
+    chmod -R 775 /diann-2.2.0
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
