@@ -26,8 +26,9 @@ library(httpgd)
 hgd()
 
 #### =============================== arguments =============================== ####
-input_data_filepath <- "/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv"
-ip_protein = "gpr37l1"
+input_data_filepath <- "/mnt/ip-proteomics/exp17-astral-diann-output-1miscleavage-20251002/exp17-astral-diann-output-1miscleavage.pg_matrix.tsv"
+ip_protein = "vcam1"
+ip_protein_id = "P29533"
 
 
 #### =============================== Loading the data =============================== ####

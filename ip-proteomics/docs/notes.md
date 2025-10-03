@@ -42,6 +42,7 @@ https://www.youtube.com/watch?v=cGKJzx9IIi4
  Peng et al. 2024 Nature Comms.
  - Expression matrix type: 
     - DIA-NN provides directLFQ intensities, you can extract MaxLFQ, top0 and top3 with the 'iq' package from the parquet file.
+    - DIA-NN provdes MaxLFQ intensities (see issue #763)
  - Normalization: 
     - None: as DIA-NN does some normalization
     - Quantile: forces all samples to have the same distribution. Ranks the proteins and replaces them with the average rank value. Not used for DEs studies.
@@ -135,8 +136,7 @@ V- Create the spectral library
 V- Read the update DIA-NN documentation
 
 V- Generate libraries for DIA-NN v2.2.0 astral with 1 and 2 missed cleavages
-
-- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version, of 1 (job 65240114) vs 2 (job ) missed cleavages
+- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version, of 1 (job 65240114) vs 2 (job 65240808) missed cleavages. Had issue that the Genes and Protein groups weren't annotated, its because (I think) I didn't input the mouse proteome. Tried again now with mouse proteome (job 65243816). Now I have the annotations! Nextup for miscleavage 1: job 65244300
 - Analyze Exp17 VCAM1 replicates ZenoTOF data with new DIA-NN version & compare with astral data
 
 - Perform the formal analysis for VCAM1 & GPR37L1 & make the final script
