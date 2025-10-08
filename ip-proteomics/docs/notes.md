@@ -136,10 +136,37 @@ V- Create the spectral library
 V- Read the update DIA-NN documentation
 
 V- Generate libraries for DIA-NN v2.2.0 astral with 1 and 2 missed cleavages
-- Analyze Exp17 VCAM1 replicates Astral data with new DIA-NN version, of 1 (job 65240114) vs 2 (job 65240808) missed cleavages. Had issue that the Genes and Protein groups weren't annotated, its because (I think) I didn't input the mouse proteome. Tried again now with mouse proteome (job 65243816). Now I have the annotations! Nextup for miscleavage 1: job 65244300
-- Analyze Exp17 VCAM1 replicates ZenoTOF data with new DIA-NN version & compare with astral data
 
-- Perform the formal analysis for VCAM1 & GPR37L1 & make the final script
+
+#### Comparative analysis - VCAM1
+
+VCAM1 - Astral data:
+V- 65254938: diann-v2.2.0_exp17_astral_1miscleavage_woGPR37L1sample
+V- 65254939: diann-v2.2.0_exp17_astral_2miscleavage_woGPR37L1sample
+
+VCAM1 - ZenoTOF data:
+X- 65254942: diann-v2.2.0_exp17_astral_1miscleavage, failed. No FASTA DB.
+X- 65254944: diann-v2.2.0_exp17_astral_2miscleavage, ran out of time.
+X- 65254948: diann-v2.2.0_exp17_astral_1miscleavage-wo-gpr37l1, failed, No FASTA DB.
+X- 65254947: diann-v2.2.0_exp17_astral_2miscleavage-wo-gpr37l1, ran out of time & not FASTA DB.
+
+V- 65256476: diann-v2.2.0_exp17_zenotof_1miscleavage
+V- 65256477: diann-v2.2.0_exp17_zenotof_2miscleavage
+V- 65256472: diann-v2.2.0_exp17_zenotof_2miscleavage-wo-gpr37l1
+V- 65256474: diann-v2.2.0_exp17_zenotof_1miscleavage-wo-gpr37l1
+
+- Make heatmap of IP'ed proteins
+
+#### Comparative analysis - GPR37L1
+GPR37L1 - ZenoTOF data:
+V- 65276112: convert files to .wiff
+V- 65276342: diann-v2.2.0_exp19_zenotof_1miscleavage
+- 65278032: diann-v2.2.0_exp19_zenotof_2miscleavage
+- 65277470: diann-v2.2.0_exp19_zenotof_1miscleavage with gen-spec-lib test
+
+
+
+#### Formal analysis for VCAM1 & GPR37L1 & make the final script
 
 
 

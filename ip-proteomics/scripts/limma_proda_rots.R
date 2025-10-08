@@ -21,23 +21,23 @@ library(ROTS)
 library(proDA)
 
 # for data viewing
-remotes::install_github("nx10/httpgd")
+# remotes::install_github("nx10/httpgd")
 library(httpgd)
 hgd()
 
 #### =============================== arguments =============================== ####
-input_data_filepath <- "/mnt/ip-proteomics/exp17-astral-diann-output-1miscleavage-20251002/exp17-astral-diann-output-1miscleavage.pg_matrix.tsv"
-ip_protein = "vcam1"
-ip_protein_id = "P29533"
+input_data_filepath <- "/mnt/ip-proteomics/exp17-zenotof-output-2miscleavage-wo-gpr37l1-20251007/exp17-zenotof-diann-output-2miscleavage-wo-gpr37l1.pg_matrix.tsv"
+ip_protein = "Vcam1"
 
 
 #### =============================== Loading the data =============================== ####
 raw_data <- read_tsv(input_data_filepath)
 View(raw_data)
 
+
 #### =============================== Filter out proteins =============================== ####
 
-# Filter out the antibodies fragments: starting with "Ig"
+# Filter out the antibodies fragments: starting with "Ig" & "A0A"
 antibodies_condition1 <- startsWith(raw_data$Protein.Group, "A0A")
 antibodies_condition2 <- startsWith(raw_data$Genes, "Ig")
 antibodies_to_filter_out <- antibodies_condition1 & antibodies_condition2
@@ -111,31 +111,51 @@ vcam1_exp10_synglio_col_names <- c(
   "p28_vcam1_igg_r4"= "/ip-proteomics/exp10-ms-convert-output/CG_16.mzML"
 )
 
-vcam1_exp17_astral_run_col_names <- c(
-  "gpr37l1_ip_r1" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_1.raw",
-  "gpr37l1_igg_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_2.raw",
-  "vcam1_ip_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_3.raw",
-  "vcam1_igg_r1"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_4.raw",
-  "vcam1_ip_r2"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_5.raw",
-  "vcam1_igg_r2"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_6.raw",
-  "vcam1_ip_r3" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_7.raw",
-  "vcam1_igg_r3"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_8.raw",
-  "vcam1_ip_r4" = "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_9.raw",
-  "vcam1_igg_r4"= "D:\\Proteomics2025\\VIB\\CBD\\JorisDeWitLab\\PCF000417\\DIA-NN\\CG_10.raw"
+vcam1_exp17_astral_col_names <- c(
+  "gpr37l1_ip_r1" = "/ip-proteomics/exp17-astral-raw-data/CG_1.raw",
+  "gpr37l1_igg_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_2.raw",
+  "vcam1_ip_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_3.raw",
+  "vcam1_igg_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_4.raw",
+  "vcam1_ip_r2"= "/ip-proteomics/exp17-astral-raw-data/CG_5.raw",
+  "vcam1_igg_r2"= "/ip-proteomics/exp17-astral-raw-data/CG_6.raw",
+  "vcam1_ip_r3" = "/ip-proteomics/exp17-astral-raw-data/CG_7.raw",
+  "vcam1_igg_r3"= "/ip-proteomics/exp17-astral-raw-data/CG_8.raw",
+  "vcam1_ip_r4" = "/ip-proteomics/exp17-astral-raw-data/CG_9.raw",
+  "vcam1_igg_r4"= "/ip-proteomics/exp17-astral-raw-data/CG_10.raw"
 )
 
-colnames(data_na_filtered)[match(gpr37l1_col_names, colnames(data_na_filtered))] <- names(gpr37l1_col_names)
+vcam1_exp17_zenotof_col_names <- c(
+  # "gpr37l1_ip_r1" = "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_1.mzML",
+  # "gpr37l1_igg_r1"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_2.mzML",
+  "vcam1_ip_r1"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_3.mzML",
+  "vcam1_igg_r1"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_4.mzML",
+  "vcam1_ip_r2"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_5.mzML",
+  "vcam1_igg_r2"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_6.mzML",
+  "vcam1_ip_r3" = "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_7.mzML",
+  "vcam1_igg_r3"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_8.mzML",
+  "vcam1_ip_r4" = "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_9.mzML",
+  "vcam1_igg_r4"= "/ip-proteomics/exp17-ms-zenotof-convert-output/2ul_CG_10.mzML"
+)
+
+# select the right columns for the experiment
+match_col_names <- vcam1_exp17_zenotof_col_names
+
+colnames(data_na_filtered)[match(match_col_names, colnames(data_na_filtered))] <- names(match_col_names)
 colnames(data_na_filtered)
 
 
 #### =============================== data wrangling =============================== ####
 df <- data_na_filtered %>%
         as_tibble() %>%
-        column_to_rownames(var = "Genes") %>% # The Genes column as rownames
+        column_to_rownames(var = "Genes") %>% # genes column as rownames
         select(
           -Protein.Group, 
           -Protein.Names, 
-          -First.Protein.Description
+          -First.Protein.Description,
+          -N.Sequences,
+          -N.Proteotypic.Sequences,
+          # -gpr37l1_ip_r1, # no samples of gpr37l1 replicate
+          # -gpr37l1_igg_r1 # no samples of gpr37l1 replicate
         )
 check <- df[ip_protein, ]
 print(check)
@@ -160,7 +180,7 @@ imputed_df <- as.data.frame(imputed_matrix)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df[ip_protein, ]
+row_values <- imputed_df["Vcam1", ]
 print(row_values)
 
 #### =============================== Plotting =============================== ####
@@ -218,7 +238,7 @@ plot_df_long <- imputed_df %>%
 print(head(plot_df_long))
 
 # Set the colors for the conditions
-condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6")# Choose your desired colors
+condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6")
 
 # Create the box plot
 ggplot(plot_df_long, aes(x = Sample, y = Intensity, fill = Condition)) +
@@ -266,7 +286,7 @@ pca_plot_df <- pca_scores %>%
 print(head(pca_plot_df))
 
 # define colors 
-condition_colors <- c("ip" = "#e69f00", "igg" = "#c6c6c6")
+condition_colors <- c("ip" = "#21a0e2", "igg" = "#c6c6c6")
 
 # create the PCA plot
 ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
@@ -290,8 +310,8 @@ ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sample)) +
     axis.title.x = element_text(size = 18, family = "Arial"), 
     plot.title = element_text(size = 20, family = "Arial"), 
   ) + 
-  xlim(-50, 40) +
-  ylim(-40, 40)
+  xlim(-75, 75) +
+  ylim(-75, 75)
 
 # save PCA plot as PDF
 ggsave(paste0("pca_", ip_protein".pdf"), height = 5, width = 6, dpi = 600, device=cairo_pdf)
@@ -300,7 +320,7 @@ ggsave(paste0("pca_", ip_protein".pdf"), height = 5, width = 6, dpi = 600, devic
 
 #### =============================== DEP Limma =============================== #####
 
-# Create factors for your experimental design
+# create factors for experimental design
 condition <- factor(c(
     "ip", 
     "igg", 
@@ -323,18 +343,20 @@ replicate <- factor(c(
     "rep_4"
     )
 )
+# paired sample design
 design <- model.matrix(~replicate + condition)
 colnames(design)
-# Fit the linear model
+# fit the linear model
 fit1 <- limma::lmFit(imputed_df, design)
 cont <- makeContrasts(conditionip, levels = design)
 fit2 <- contrasts.fit(fit1, contrasts = cont)
 fit3 <- eBayes(fit2)
 
-results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 3070)
+# get the dep results
+results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 6597)
 limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limma$logFC > 1, ]
 
-write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins.csv"), row.names = TRUE)
+write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins_zenotof_2miscleav_wo_gpr37l1.csv"), row.names = TRUE)
 
 
 #### =============================== Limma volcano plot without annotations =============================== ####
@@ -345,15 +367,15 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_proteins <- c("Gpr37l1", "Adgrb3", "Pmch", "Cdh4", "Cdh6", "Cdh8", "Cdh9")
-select_proteins <- c()
+select_proteins <- c("Vcam1", "Aqp4", "Prrt1", "Traj34", "Pmch", "Igdcc4", "Slc39a5", "Chgb", "Abca7", "Tnc")
+# select_proteins <- c()
 select_proteins_upper <- paste0(toupper(select_proteins))
 
 # making the statement color the points
 keyvals <- ifelse(
-    results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#e69f00', '#c6c6c6')
+    results_limma$logFC > 1 & results_limma$adj.P.Val < 0.05, '#21a0e2', '#c6c6c6')
 keyvals[is.na(keyvals)] <- '#c6c6c6'
-names(keyvals)[keyvals == '#e69f00'] <- 'ip'
+names(keyvals)[keyvals == '#21a0e2'] <- 'ip'
 names(keyvals)[keyvals == '#c6c6c6'] <- 'unspecific'
 
 # making the volcano plot
@@ -365,8 +387,8 @@ EnhancedVolcano(results_limma,
     colCustom = keyvals,
     #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-10, 10),
-    ylim = c(-0, 6),
+    xlim = c(-12, 12),
+    ylim = c(-0, 7),
     cutoffLineType = 'blank',
     colAlpha = 1,
     shape = 19,
