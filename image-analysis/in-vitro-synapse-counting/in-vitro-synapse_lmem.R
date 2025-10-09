@@ -22,7 +22,7 @@ hgd() # open the server for plotting
 ############################### Data prep & cleaning ################################
 
 # loading in the data
-pre_post_in_vitro <- read.csv("/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp10_11_12_13_data_cydric.csv")
+pre_post_in_vitro <- read.csv("/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.csv")
 dim(pre_post_in_vitro)
 
 # filter out FOVs that were not included in the analysis (had NA values)
@@ -109,7 +109,7 @@ summary(postsynapse_count_pairwise_comparisons)
 
 ############################### Data Visualization, puncta density ################################
 
-y_value_to_visualize = "normalized_postsynapse_count_per_100um"
+y_value_to_visualize = "normalized_presynapse_count_per_100um"
 
 # calculate the mean of each experiment
 experiment_means <- data_clean %>%
@@ -145,7 +145,7 @@ p <- ggplot(data_clean, aes(x = treatment, y = !!sym(y_value_to_visualize), colo
     coord_fixed(ratio = 1.2) 
 p
 
-ggsave("postsynapse_exc_norm.png", plot = p, 
+ggsave("presynapse_inh_norm.png", plot = p, 
        width = 1500, height = 1800, units = "px", bg = "white", dpi = 300)
 
 
@@ -233,7 +233,7 @@ p <- ggplot(data_clean, aes(x = treatment, y = !!sym(y_value_to_visualize), colo
     coord_fixed(ratio = 1.2) 
 p
 
-ggsave("postsynapse_size_exc_norm.png", plot = p, 
+ggsave("postsynapse_size_inh_norm.png", plot = p, 
        width = 1500, height = 1800, units = "px", bg = "white", dpi = 300)
-
+  
 

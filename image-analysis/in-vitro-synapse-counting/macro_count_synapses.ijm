@@ -5,13 +5,13 @@ imageList = getList("image.titles");
 pre_image = "";
 post_image = "";
 
-// check the vgat and geph image
+// check the pre and post image. !!! Asign here also the channels to the pre and postsynapse
 
 for (i = 0; i < imageList.length; i++) {
     title = imageList[i];
-    if (indexOf(title, "C1") != -1)
+    if (indexOf(title, "C1") != -1) // Change here the Channel to the post-synapse.
         post_image = title;
-    else if (indexOf(title, "C3") != -1)
+    else if (indexOf(title, "C3") != -1) // Change here the Channel to the pre-synapse.
         pre_image = title;
 }
 

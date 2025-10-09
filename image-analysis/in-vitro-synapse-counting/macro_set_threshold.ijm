@@ -2,9 +2,9 @@
 
 
 // !!! Adjust this threshold to the mean threshold that you calculated
-pre_threshold = 12966; // assuming presynapse is in C3
-map2_threshold = 14174; // assuming MAP2 is in C2
-post_threshold = 13120; // assuming postsynapse is in C1
+C3_threshold = 19373; // assuming presynapse is in C3
+C2_threshold = 21308; // assuming MAP2 is in C2
+C1_threshold = 23221; // assuming postsynapse is in C1
 
 list = getList("image.titles");
 
@@ -20,11 +20,11 @@ for (i = 0; i < copyList.length; i++) {
 
     // determine threshold based on filename
     if (indexOf(title, "C1") != -1) {
-        setThreshold(post_threshold, 65535); 
+        setThreshold(C1_threshold, 65535); 
     } else if (indexOf(title, "C2") != -1) {
-        setThreshold(map2_threshold, 65535);
+        setThreshold(C2_threshold, 65535);
     } else if (indexOf(title, "C3") != -1) {
-        setThreshold(pre_threshold, 65535);
+        setThreshold(C3_threshold, 65535);
     } 
     setOption("BlackBackground", true);
     selectWindow(copyList[i]);

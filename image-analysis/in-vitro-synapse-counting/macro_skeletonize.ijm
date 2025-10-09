@@ -9,7 +9,7 @@ imageList = getList("image.titles");
     	title = imageList[i];
     	
     	
-    // apply on C2 image, assuming  MAP2 is C2
+    // apply on C2 image, assuming  MAP2 is C2. !!! Change here if the MAP2 is in another channel.
     if (indexOf(title, "C2") != -1) {
         selectWindow(title);
         setOption("BlackBackground", true); // white is foreground
