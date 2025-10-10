@@ -11,6 +11,9 @@ library(tidyr)
 library(nlme)
 library(stringr)
 
+install.packages("readxl")
+library(readxl)
+
 install.packages("ggbeeswarm")
 library(ggbeeswarm)
 
@@ -22,7 +25,7 @@ hgd() # open the server for plotting
 ############################### Data prep & cleaning ################################
 
 # loading in the data
-pre_post_in_vitro <- read.csv("/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.csv")
+pre_post_in_vitro <- read_excel("/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.xlsx")
 dim(pre_post_in_vitro)
 
 # filter out FOVs that were not included in the analysis (had NA values)
