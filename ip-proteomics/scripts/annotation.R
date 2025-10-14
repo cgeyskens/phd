@@ -9,11 +9,11 @@ library(UniprotR)
 library(readxl)
 
 # loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/exp19-diann-output-20250522/exp19-diann_output.pg_matrix.tsv")
+raw_data <- read_tsv("/mnt/ip-proteomics/analyses-october/exp19-output-1miscleavage-20251008/exp19-diann-output-1miscleavage.pg_matrix.tsv")
 View(raw_data)
 
 # Loading in the results
-ip_data <- read.csv("gpr37l1_limma_ip_proteins.csv", row.names = 1)
+ip_data <- read.csv("Gpr37l1_limma_ip_proteins_zenotof_1miscleav.csv", row.names = 1)
 ip_data$Genes <- rownames(ip_data)
 View(ip_data)
 
@@ -119,7 +119,7 @@ num_proteins <- length(final_protein_list)
 results_list <- list()
 
 # Folder to save intermediate batch results
-dir.create("batch_results_gpr37l1_20250828", showWarnings = FALSE)
+dir.create("batch_results_gpr37l1_1misc_20251014", showWarnings = FALSE)
 
 # Process the protein list in batches
 for (i in 1:ceiling(num_proteins / batch_size)) {
@@ -127,7 +127,7 @@ for (i in 1:ceiling(num_proteins / batch_size)) {
   end_index <- min(i * batch_size, num_proteins)
   current_batch <- final_protein_list[start_index:end_index]
 
-  batch_file <- paste0("batch_results_gpr37l1_20250801/batch_", i, ".rds")
+  batch_file <- paste0("batch_results_gpr37l1_1misc_20251014/batch_", i, ".rds")
 
   # Skip if this batch has already been processed
   if (file.exists(batch_file)) {

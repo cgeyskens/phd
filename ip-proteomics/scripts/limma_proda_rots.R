@@ -5,7 +5,7 @@
 # Date: 2025-05-02
 ###############################################################################
 
-#### =============================== Setup =============================== ####
+#### =============================== setup =============================== ####
 library(readr)
 library(dplyr)
 library(tibble)
@@ -26,11 +26,11 @@ library(httpgd)
 hgd()
 
 #### =============================== arguments =============================== ####
-input_data_filepath <- "/mnt/ip-proteomics/exp17-zenotof-output-2miscleavage-wo-gpr37l1-20251007/exp17-zenotof-diann-output-2miscleavage-wo-gpr37l1.pg_matrix.tsv"
-ip_protein = "Vcam1"
+input_data_filepath <- "/mnt/ip-proteomics/analyses-october/exp19-output-2miscleavage-20251009/exp19-diann-output-2miscleavage.pg_matrix.tsv"
+ip_protein = "Gpr37l1"
 
 
-#### =============================== Loading the data =============================== ####
+#### =============================== loading the data =============================== ####
 raw_data <- read_tsv(input_data_filepath)
 View(raw_data)
 
@@ -57,15 +57,15 @@ data_na_filtered_out <- data_ab_filtered[gene_na_rows, ]
 colnames(data_na_filtered)
 
 # new colnames according to the experiments
-gpr37l1_col_names <- c(
-    "gpr37l1_ip_r1" = "/ip-proteomics/exp19-ms-convert-output/CG_01.mzML",
-    "gpr37l1_igg_r1"= "/ip-proteomics/exp19-ms-convert-output/CG_02.mzML",
-    "gpr37l1_ip_r2" = "/ip-proteomics/exp19-ms-convert-output/CG_03.mzML",
-    "gpr37l1_igg_r2"= "/ip-proteomics/exp19-ms-convert-output/CG_04.mzML",
-    "gpr37l1_ip_r3" = "/ip-proteomics/exp19-ms-convert-output/CG_05.mzML",
-    "gpr37l1_igg_r3"= "/ip-proteomics/exp19-ms-convert-output/CG_06.mzML",
-    "gpr37l1_ip_r4" = "/ip-proteomics/exp19-ms-convert-output/CG_07.mzML",
-    "gpr37l1_igg_r4"= "/ip-proteomics/exp19-ms-convert-output/CG_08.mzML"
+exp19_gpr37l1_col_names <- c(
+    "gpr37l1_ip_r1" = "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_01.mzML",
+    "gpr37l1_igg_r1"= "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_02.mzML",
+    "gpr37l1_ip_r2" = "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_03.mzML",
+    "gpr37l1_igg_r2"= "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_04.mzML",
+    "gpr37l1_ip_r3" = "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_05.mzML",
+    "gpr37l1_igg_r3"= "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_06.mzML",
+    "gpr37l1_ip_r4" = "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_07.mzML",
+    "gpr37l1_igg_r4"= "/ip-proteomics/exp19-ms-zenotof-convert-output/CG_08.mzML"
 )
 
 vcam1_col_names <- c(
@@ -138,7 +138,7 @@ vcam1_exp17_zenotof_col_names <- c(
 )
 
 # select the right columns for the experiment
-match_col_names <- vcam1_exp17_zenotof_col_names
+match_col_names <- exp19_gpr37l1_col_names
 
 colnames(data_na_filtered)[match(match_col_names, colnames(data_na_filtered))] <- names(match_col_names)
 colnames(data_na_filtered)
@@ -160,7 +160,10 @@ df <- data_na_filtered %>%
 check <- df[ip_protein, ]
 print(check)
 
-#### =============================== data transformation =============================== ####
+#### =========================== log2 transformation & imputation =============================== ####
+
+# setting seed for reproducibilty
+set.seed(123)
 
 # log2 transformation
 df_log2 <- df %>%
@@ -169,18 +172,17 @@ df_log2 <- df %>%
 check <- df_log2[ip_protein, ]
 print(check)
 
-# imputation
+# imputation, will use MinDet for reproducibility (no MinProb)
 data_matrix <- as.matrix(df_log2)
-imputed_matrix <- impute.MinProb(dataSet.mvs = data_matrix,
-                                      q = 0.01,      
-                                      tune.sigma = 1) 
+imputed_matrix <- impute.MinDet(dataSet.mvs = data_matrix,
+                                      q = 0.01) 
 imputed_df <- as.data.frame(imputed_matrix)
 
-# normalization if necessary (DIA-NN does a normalization step)
+# normalization necessary (DIA-NN does a normalization step)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Vcam1", ]
+row_values <- imputed_df["Gpr37l1", ]
 print(row_values)
 
 #### =============================== Plotting =============================== ####
@@ -318,7 +320,7 @@ ggsave(paste0("pca_", ip_protein".pdf"), height = 5, width = 6, dpi = 600, devic
 
 
 
-#### =============================== DEP Limma =============================== #####
+#### =============================== DEP: Limma =============================== #####
 
 # create factors for experimental design
 condition <- factor(c(
@@ -356,7 +358,13 @@ fit3 <- eBayes(fit2)
 results_limma <- topTable(fit3, adjust = "fdr", sort.by = "P", n = 6597)
 limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limma$logFC > 1, ]
 
-write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins_zenotof_2miscleav_wo_gpr37l1.csv"), row.names = TRUE)
+# before writing the file, also include the Protein.Names
+limma_ip_proteins2 <- limma_ip_proteins %>%
+  mutate(Genes = rownames(.)) %>%
+  left_join(data_na_filtered[, c("Genes", "Protein.Names")],
+            by = c("Genes" = "Genes"))
+
+write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins_zenotof_2miscleav.csv"), row.names = TRUE)
 
 
 #### =============================== Limma volcano plot without annotations =============================== ####
@@ -367,7 +375,7 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_proteins <- c("Vcam1", "Aqp4", "Prrt1", "Traj34", "Pmch", "Igdcc4", "Slc39a5", "Chgb", "Abca7", "Tnc")
+select_proteins <- c("Gpr37l1", "Dlg5", "Unc80", "Gabrb3", "Adgrb3", "Cldn12", "Ntng1", "Gabra5", "Tenm4", "Cdh11", "Cdh4", "Gpr158")
 # select_proteins <- c()
 select_proteins_upper <- paste0(toupper(select_proteins))
 
@@ -387,7 +395,7 @@ EnhancedVolcano(results_limma,
     colCustom = keyvals,
     #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-12, 12),
+    xlim = c(-6, 6),
     ylim = c(-0, 7),
     cutoffLineType = 'blank',
     colAlpha = 1,

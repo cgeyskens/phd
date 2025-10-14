@@ -155,7 +155,7 @@ V- 65256477: diann-v2.2.0_exp17_zenotof_2miscleavage
 V- 65256472: diann-v2.2.0_exp17_zenotof_2miscleavage-wo-gpr37l1
 V- 65256474: diann-v2.2.0_exp17_zenotof_1miscleavage-wo-gpr37l1
 
-- Make heatmap of IP'ed proteins
+V- Make heatmap of IP'ed proteins
 
 #### Comparative analysis - GPR37L1
 GPR37L1 - ZenoTOF data:
@@ -163,6 +163,14 @@ V- 65276112: convert files to .wiff
 V- 65276342: diann-v2.2.0_exp19_zenotof_1miscleavage
 V- 65278032: diann-v2.2.0_exp19_zenotof_2miscleavage
 V- 65277470: diann-v2.2.0_exp19_zenotof_1miscleavage with gen-spec-lib test
+
+### For downstream selection of candidates for BioPhysics followup:
+V- No MinProb, now MinDet for reproducibility (deterministic instead of stochiastic)
+- Redo now all the analyses with MinDet and also add the protein_ID in the IP proteins for further followup in the annotations from UniProt
+- Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
+- Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
+
+
 
 
 
