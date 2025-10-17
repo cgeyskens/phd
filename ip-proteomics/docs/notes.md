@@ -166,7 +166,8 @@ V- 65277470: diann-v2.2.0_exp19_zenotof_1miscleavage with gen-spec-lib test
 
 ### For downstream selection of candidates for BioPhysics followup:
 V- No MinProb, now MinDet for reproducibility (deterministic instead of stochiastic)
-- Redo now all the analyses with MinDet and also add the protein_ID in the IP proteins for further followup in the annotations from UniProt
+V- Redo now all the analyses with MinDet and also add the protein_ID in the IP proteins for further followup in the annotations from UniProt. 
+V- Also checked if parameter -gen-spec-lib does something different and its not the case/
 - Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
 - Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
 

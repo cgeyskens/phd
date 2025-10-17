@@ -8,21 +8,62 @@ library(dplyr)
 library(UniprotR)
 library(readxl)
 
-# loading in the raw data
-raw_data <- read_tsv("/mnt/ip-proteomics/analyses-october/exp19-output-1miscleavage-20251008/exp19-diann-output-1miscleavage.pg_matrix.tsv")
-View(raw_data)
+# define files
+# files <- c(
+#   Vcam1_astral_wo_1miscleavage   = "Vcam1_limma_ip_proteins_astral_1miscleav_wo_gpr37l1.csv",
+#   Vcam1_astral_with_1miscleavage = "Vcam1_limma_ip_proteins_astral_1miscleav.csv",
+#   Vcam1_astral_wo_2miscleavage   = "Vcam1_limma_ip_proteins_astral_2miscleav_wo_gpr37l1.csv",
+#   Vcam1_astral_with_2miscleavage = "Vcam1_limma_ip_proteins_astral_2miscleav.csv",
+#   Vcam1_zenotof_wo_1miscleavage  = "Vcam1_limma_ip_proteins_zenotof_1miscleav_wo_gpr37l1.csv",
+#   Vcam1_zenotof_with_1miscleavage= "Vcam1_limma_ip_proteins_zenotof_1miscleav.csv",
+#   Vcam1_zenotof_wo_2miscleavage  = "Vcam1_limma_ip_proteins_zenotof_2miscleav_wo_gpr37l1.csv",
+#   Vcam1_zenotof_with_2miscleavage= "Vcam1_limma_ip_proteins_zenotof_2miscleav.csv"
+# )
 
-# Loading in the results
-ip_data <- read.csv("Gpr37l1_limma_ip_proteins_zenotof_1miscleav.csv", row.names = 1)
-ip_data$Genes <- rownames(ip_data)
-View(ip_data)
+files <- c(
+  Gpr37l1_1miscleavage   = "Gpr37l1_limma_ip_proteins_zenotof_1miscleav.csv",
+  Gpr37l1_2miscleavage   = "Gpr37l1_limma_ip_proteins_zenotof_2miscleav.csv"
+)
 
-# merging to get protein IDs
-merged_df <- merge(ip_data,
-                    raw_data[, c("Genes", "Protein.Group")],
-                    by.x = "Genes",
-                    by.y = "Genes",
-                    all.x = TRUE)
+# Helper to pull proteins from column Genes
+clean_prots <- function(df) {
+  df <- df[, c("Genes", "Protein.Names", "Protein.Group")]
+  df$Genes <- trimws(as.character(df$Genes))
+  df$Protein.Names <- trimws(as.character(df$Protein.Names))
+  df <- df[!is.na(df$Genes) & nzchar(df$Genes), ]
+  df <- df[!is.na(df$Protein.Names) & nzchar(df$Protein.Names), ]
+  unique(df)
+}
+
+
+merged_prots <- do.call(rbind, lapply(files, function(f) {
+  clean_prots(read.csv(f))
+}))
+
+merged_prots <- unique(merged_prots)
+rownames(merged_prots) <- NULL
+
+# Optional: sort alphabetically by gene name
+merged_df <- merged_prots[order(merged_prots$Genes), ]
+
+
+
+
+# # loading in the raw data
+# raw_data <- read_tsv("/mnt/ip-proteomics/analyses-october/exp19-output-1miscleavage-20251008/exp19-diann-output-1miscleavage.pg_matrix.tsv")
+# View(raw_data)
+
+# # Loading in the results
+# ip_data <- read.csv("Gpr37l1_limma_ip_proteins_zenotof_1miscleav.csv", row.names = 1)
+# ip_data$Genes <- rownames(ip_data)
+# View(ip_data)
+
+# # merging to get protein IDs
+# merged_df <- merge(ip_data,
+#                     raw_data[, c("Genes", "Protein.Group")],
+#                     by.x = "Genes",
+#                     by.y = "Genes",
+#                     all.x = TRUE)
 
 
 ###### function to check presence in datasets
@@ -119,7 +160,7 @@ num_proteins <- length(final_protein_list)
 results_list <- list()
 
 # Folder to save intermediate batch results
-dir.create("batch_results_gpr37l1_1misc_20251014", showWarnings = FALSE)
+dir.create("batch_results_gpr37l1_allconditions_20251016", showWarnings = FALSE)
 
 # Process the protein list in batches
 for (i in 1:ceiling(num_proteins / batch_size)) {
@@ -127,7 +168,7 @@ for (i in 1:ceiling(num_proteins / batch_size)) {
   end_index <- min(i * batch_size, num_proteins)
   current_batch <- final_protein_list[start_index:end_index]
 
-  batch_file <- paste0("batch_results_gpr37l1_1misc_20251014/batch_", i, ".rds")
+  batch_file <- paste0("batch_results_gpr37l1_allconditions_20251016/batch_", i, ".rds")
 
   # Skip if this batch has already been processed
   if (file.exists(batch_file)) {
@@ -194,7 +235,7 @@ merged_df_updated <- merged_df_updated_syngo %>%
   left_join(subcellular_locations %>% select(Protein.Group, uniprot_membrane_related), by = "Protein.Group")
 
 
-write.csv(merged_df_updated,"gpr37l1_limma_ip_proteins_annotations.csv", row.names = TRUE)
+write.csv(merged_df_updated,"gpr37l1_all_limma_ip_proteins_annotations.csv", row.names = TRUE)
 
 
 

@@ -26,8 +26,8 @@ library(httpgd)
 hgd()
 
 #### =============================== arguments =============================== ####
-input_data_filepath <- "/mnt/ip-proteomics/analyses-october/exp19-output-2miscleavage-20251009/exp19-diann-output-2miscleavage.pg_matrix.tsv"
-ip_protein = "Gpr37l1"
+input_data_filepath <- "/mnt/ip-proteomics/analyses-october/exp17-zenotof-output-1miscleavage-wo-gpr37l1-20251007/exp17-zenotof-diann-output-1miscleavage-wo-gpr37l1.pg_matrix.tsv"
+ip_protein = "Vcam1"
 
 
 #### =============================== loading the data =============================== ####
@@ -35,7 +35,7 @@ raw_data <- read_tsv(input_data_filepath)
 View(raw_data)
 
 
-#### =============================== Filter out proteins =============================== ####
+#### =============================== filtering out contanimants =============================== ####
 
 # Filter out the antibodies fragments: starting with "Ig" & "A0A"
 antibodies_condition1 <- startsWith(raw_data$Protein.Group, "A0A")
@@ -112,8 +112,8 @@ vcam1_exp10_synglio_col_names <- c(
 )
 
 vcam1_exp17_astral_col_names <- c(
-  "gpr37l1_ip_r1" = "/ip-proteomics/exp17-astral-raw-data/CG_1.raw",
-  "gpr37l1_igg_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_2.raw",
+  # "gpr37l1_ip_r1" = "/ip-proteomics/exp17-astral-raw-data/CG_1.raw",
+  # "gpr37l1_igg_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_2.raw",
   "vcam1_ip_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_3.raw",
   "vcam1_igg_r1"= "/ip-proteomics/exp17-astral-raw-data/CG_4.raw",
   "vcam1_ip_r2"= "/ip-proteomics/exp17-astral-raw-data/CG_5.raw",
@@ -138,7 +138,7 @@ vcam1_exp17_zenotof_col_names <- c(
 )
 
 # select the right columns for the experiment
-match_col_names <- exp19_gpr37l1_col_names
+match_col_names <- vcam1_exp17_zenotof_col_names
 
 colnames(data_na_filtered)[match(match_col_names, colnames(data_na_filtered))] <- names(match_col_names)
 colnames(data_na_filtered)
@@ -172,17 +172,22 @@ df_log2 <- df %>%
 check <- df_log2[ip_protein, ]
 print(check)
 
+# save log2 raw values
+write.csv(df_log2, "Vcam1_1miscleav_raw_log2.csv", row.names = TRUE)
+
 # imputation, will use MinDet for reproducibility (no MinProb)
 data_matrix <- as.matrix(df_log2)
 imputed_matrix <- impute.MinDet(dataSet.mvs = data_matrix,
-                                      q = 0.01) 
+                                      q = 0.001) # protein missing = really not detected
 imputed_df <- as.data.frame(imputed_matrix)
+
+write.csv(imputed_df, "Vcam1_1miscleav_imput_log2.csv", row.names = TRUE)
 
 # normalization necessary (DIA-NN does a normalization step)
 #df_norm <- as.data.frame(scale(imputed_matrix, center = TRUE, scale = TRUE))
 
 # checking the imputed values for a given protein
-row_values <- imputed_df["Gpr37l1", ]
+row_values <- imputed_df[ip_protein, ]
 print(row_values)
 
 #### =============================== Plotting =============================== ####
@@ -361,10 +366,10 @@ limma_ip_proteins <- results_limma[results_limma$adj.P.Val < 0.05 & results_limm
 # before writing the file, also include the Protein.Names
 limma_ip_proteins2 <- limma_ip_proteins %>%
   mutate(Genes = rownames(.)) %>%
-  left_join(data_na_filtered[, c("Genes", "Protein.Names")],
+  left_join(data_na_filtered[, c("Genes", "Protein.Names", "Protein.Group")],
             by = c("Genes" = "Genes"))
 
-write.csv(limma_ip_proteins, paste0(ip_protein, "_limma_ip_proteins_zenotof_2miscleav.csv"), row.names = TRUE)
+write.csv(limma_ip_proteins2, paste0(ip_protein, "_limma_ip_proteins_zenotof_2miscleav.csv"), row.names = TRUE)
 
 
 #### =============================== Limma volcano plot without annotations =============================== ####
@@ -375,7 +380,7 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_proteins <- c("Gpr37l1", "Dlg5", "Unc80", "Gabrb3", "Adgrb3", "Cldn12", "Ntng1", "Gabra5", "Tenm4", "Cdh11", "Cdh4", "Gpr158")
+select_proteins <- c("Gpr37l1")
 # select_proteins <- c()
 select_proteins_upper <- paste0(toupper(select_proteins))
 
@@ -395,7 +400,7 @@ EnhancedVolcano(results_limma,
     colCustom = keyvals,
     #shapeCustom = keyvals.shape,
     drawConnectors = TRUE,
-    xlim = c(-6, 6),
+    xlim = c(-10, 10),
     ylim = c(-0, 7),
     cutoffLineType = 'blank',
     colAlpha = 1,
