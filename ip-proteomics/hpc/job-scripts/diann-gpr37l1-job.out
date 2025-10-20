@@ -1,0 +1,492 @@
+SLURM_JOB_ID: 65276342
+SLURM_JOB_USER: vsc35768
+SLURM_JOB_ACCOUNT: lp_big_wice_cpu
+SLURM_JOB_NAME: diann-v2.2.0_exp19_1miscleavage
+SLURM_CLUSTER_NAME: wice
+SLURM_JOB_PARTITION: dedicated_big_bigmem
+SLURM_NNODES: 1
+SLURM_NODELIST: i28l15
+SLURM_JOB_CPUS_PER_NODE: 72
+Date: Wed Oct  8 14:52:41 CEST 2025
+Walltime: 00-02:30:00
+========================================================================
+JOB STARTED
+
+DIA-NN 2.2.0 Academia  (Data-Independent Acquisition by Neural Networks)
+Compiled on May 29 2025 15:05:00
+Current date and time: Wed Oct  8 14:52:46 2025
+Logical CPU cores: 72
+Thread number set to 72
+Output will be filtered at 0.01 FDR
+Precursor/protein x samples expression level matrices will be saved along with the main report
+XICs within 10 seconds from the apex will be extracted for each precursor and saved in .parquet format, a folder will be created next to the main report for the XICs storage
+Peptides corresponding to protein sequence IDs tagged with cRAP- will be excluded from normalisation as well as quantification of protein groups that do not include proteins bearing the tag
+N-terminal methionine excision enabled
+Min peptide length set to 7
+Max peptide length set to 30
+Min precursor m/z set to 350
+Max precursor m/z set to 1250
+Min precursor charge set to 1
+Max precursor charge set to 4
+In silico digest will involve cuts at K*,R*
+Maximum number of missed cleavages set to 1
+Cysteine carbamidomethylation enabled as a fixed modification
+Maximum number of variable modifications set to 1
+Modification UniMod:35 with mass delta 15.9949 at M will be considered as variable
+Modification UniMod:1 with mass delta 42.0106 at *n will be considered as variable
+Peptidoform scoring enabled
+MBR enabled; .quant files will only be saved to disk during the first pass
+Heuristic protein grouping will be used, to reduce the number of protein groups obtained; this mode is recommended for benchmarking protein ID numbers, GO/pathway and system-scale analyses
+The spectral library (if generated) will retain the original spectra but will include empirically-aligned RTs
+Mass accuracy will be fixed to 2e-05 (MS2) and 1.2e-05 (MS1)
+The following variable modifications will be localised: UniMod:35 UniMod:1 
+
+8 files will be processed
+[0:00] Loading spectral library /ip-proteomics/mouse_ref_proteome_zenotof_1miscleavage_OxM_N-terAc_20251006_diann_lib.predicted.speclib
+[0:06] Library annotated with sequence database(s): /ip-proteomics/crap_fasta_20250304.fasta; /ip-proteomics/UP000000589_10090_20250930.fasta
+[0:08] Spectral library loaded: 21900 protein isoforms, 32566 protein groups and 4618816 precursors in 1818428 elution groups.
+[0:08] Loading protein annotations from FASTA /ip-proteomics/crap_fasta_20250304.fasta
+[0:08] Loading protein annotations from FASTA /ip-proteomics/UP000000589_10090_20250930.fasta
+[0:09] Annotating library proteins with information from the FASTA database
+[0:09] Protein names missing for some isoforms
+[0:09] Gene names missing for some isoforms
+[0:09] Library contains 21784 proteins, and 21478 genes
+[0:13] Initialising library
+
+First pass: generating a spectral library from DIA data
+
+[0:26] File #1/8
+[0:26] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_01.mzML
+[1:39] Pre-processing...
+[1:40] 1113 MS1 and 94710 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[1:41] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[3:11] RT window set to 2.71663
+[3:11] Peak width: 3.34
+[3:11] Scan window radius set to 7
+[3:12] Recommended MS1 mass accuracy setting: 24 ppm
+[4:08] Searching decoys
+[5:44] Main search
+[9:04] Removing low confidence identifications
+[9:10] Removing interfering precursors
+[9:13] Training neural networks on 29953 target and 13300 decoy PSMs
+[9:21] Training neural networks on 29953 target and 12592 decoy PSMs
+[9:26] Number of IDs at 0.01 FDR: 21218
+[9:26] Precursors at 1% peptidoform FDR: 20451
+[9:26] Calculating protein q-values
+[9:27] Number of genes identified at 1% FDR: 2193 (precursor-level), 1842 (protein-level) (inference performed using proteotypic peptides only)
+[9:27] Quantification
+[9:29] Precursors with scored PTMs at 1% FDR: 303 out of 370 considered
+[9:29] Precursors with all scored PTM sites unoccupied at 1% FDR: 20148
+[9:29] Precursors with PTMs localised (when required) with > 90% confidence: 294 out of 303
+[9:32] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_01_mzML.quant
+
+[9:32] File #2/8
+[9:32] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_02.mzML
+[10:15] Pre-processing...
+[10:15] 1113 MS1 and 94717 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[10:16] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[14:23] RT window set to 2.59483
+[14:24] Recommended MS1 mass accuracy setting: 13 ppm
+[18:03] Searching decoys
+[19:04] Main search
+[21:05] Removing low confidence identifications
+[21:08] Removing interfering precursors
+[21:11] Training neural networks on 3564 target and 2368 decoy PSMs
+[21:16] Training neural networks on 3564 target and 2296 decoy PSMs
+[21:18] Number of IDs at 0.01 FDR: 1438
+[21:18] Precursors at 1% peptidoform FDR: 1344
+[21:19] Calculating protein q-values
+[21:19] Number of genes identified at 1% FDR: 266 (precursor-level), 210 (protein-level) (inference performed using proteotypic peptides only)
+[21:19] Quantification
+[21:21] Precursors with scored PTMs at 1% FDR: 43 out of 54 considered
+[21:21] Precursors with all scored PTM sites unoccupied at 1% FDR: 1301
+[21:21] Precursors with PTMs localised (when required) with > 90% confidence: 43 out of 43
+[21:23] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_02_mzML.quant
+
+[21:23] File #3/8
+[21:23] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_03.mzML
+[22:15] Pre-processing...
+[22:16] 1113 MS1 and 94698 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[22:16] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[23:28] RT window set to 2.82198
+[23:29] Recommended MS1 mass accuracy setting: 26 ppm
+[24:15] Searching decoys
+[25:55] Main search
+[29:20] Removing low confidence identifications
+[29:25] Removing interfering precursors
+[29:28] Training neural networks on 30828 target and 13331 decoy PSMs
+[29:36] Training neural networks on 30828 target and 12784 decoy PSMs
+[29:41] Number of IDs at 0.01 FDR: 22132
+[29:41] Precursors at 1% peptidoform FDR: 21233
+[29:41] Calculating protein q-values
+[29:42] Number of genes identified at 1% FDR: 2298 (precursor-level), 1976 (protein-level) (inference performed using proteotypic peptides only)
+[29:42] Quantification
+[29:44] Precursors with scored PTMs at 1% FDR: 469 out of 535 considered
+[29:44] Precursors with all scored PTM sites unoccupied at 1% FDR: 20764
+[29:44] Precursors with PTMs localised (when required) with > 90% confidence: 455 out of 469
+[29:49] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_03_mzML.quant
+
+[29:49] File #4/8
+[29:49] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_04.mzML
+[30:21] Pre-processing...
+[30:22] 1113 MS1 and 94713 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[30:23] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[34:26] RT window set to 3.49343
+[34:27] Recommended MS1 mass accuracy setting: 14 ppm
+[38:02] Searching decoys
+[39:04] Main search
+[41:06] Removing low confidence identifications
+[41:09] Removing interfering precursors
+[41:12] Training neural networks on 3086 target and 2167 decoy PSMs
+[41:17] Training neural networks on 3086 target and 2107 decoy PSMs
+[41:19] Number of IDs at 0.01 FDR: 1142
+[41:19] Precursors at 1% peptidoform FDR: 1048
+[41:19] Calculating protein q-values
+[41:20] Number of genes identified at 1% FDR: 204 (precursor-level), 167 (protein-level) (inference performed using proteotypic peptides only)
+[41:20] Quantification
+[41:21] Precursors with scored PTMs at 1% FDR: 43 out of 50 considered
+[41:21] Precursors with all scored PTM sites unoccupied at 1% FDR: 1005
+[41:21] Precursors with PTMs localised (when required) with > 90% confidence: 43 out of 43
+[41:23] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_04_mzML.quant
+
+[41:23] File #5/8
+[41:23] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_05.mzML
+[42:19] Pre-processing...
+[42:20] 1113 MS1 and 94723 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[42:21] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[43:34] RT window set to 2.5076
+[43:35] Recommended MS1 mass accuracy setting: 26 ppm
+[44:20] Searching decoys
+[46:01] Main search
+[49:25] Removing low confidence identifications
+[49:31] Removing interfering precursors
+[49:34] Training neural networks on 33798 target and 14344 decoy PSMs
+[49:41] Training neural networks on 33798 target and 13704 decoy PSMs
+[49:46] Number of IDs at 0.01 FDR: 24368
+[49:47] Precursors at 1% peptidoform FDR: 23327
+[49:47] Calculating protein q-values
+[49:47] Number of genes identified at 1% FDR: 2339 (precursor-level), 1957 (protein-level) (inference performed using proteotypic peptides only)
+[49:48] Quantification
+[49:50] Precursors with scored PTMs at 1% FDR: 315 out of 403 considered
+[49:50] Precursors with all scored PTM sites unoccupied at 1% FDR: 23012
+[49:50] Precursors with PTMs localised (when required) with > 90% confidence: 309 out of 315
+[49:53] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_05_mzML.quant
+
+[49:53] File #6/8
+[49:53] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_06.mzML
+[50:33] Pre-processing...
+[50:34] 1113 MS1 and 94731 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[50:34] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[54:55] RT window set to 3.50533
+[54:56] Recommended MS1 mass accuracy setting: 19 ppm
+[58:38] Searching decoys
+[59:48] Main search
+[62:08] Removing low confidence identifications
+[62:11] Removing interfering precursors
+[62:14] Training neural networks on 3110 target and 2371 decoy PSMs
+[62:19] Training neural networks on 3110 target and 2314 decoy PSMs
+[62:21] Number of IDs at 0.01 FDR: 986
+[62:21] Precursors at 1% peptidoform FDR: 941
+[62:22] Calculating protein q-values
+[62:22] Number of genes identified at 1% FDR: 178 (precursor-level), 159 (protein-level) (inference performed using proteotypic peptides only)
+[62:22] Quantification
+[62:23] Precursors with scored PTMs at 1% FDR: 43 out of 45 considered
+[62:23] Precursors with all scored PTM sites unoccupied at 1% FDR: 898
+[62:23] Precursors with PTMs localised (when required) with > 90% confidence: 43 out of 43
+[62:26] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_06_mzML.quant
+
+[62:26] File #7/8
+[62:26] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_07.mzML
+[63:19] Pre-processing...
+[63:20] 1113 MS1 and 94739 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[63:20] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[64:35] RT window set to 2.73303
+[64:36] Recommended MS1 mass accuracy setting: 25 ppm
+[65:22] Searching decoys
+[66:59] Main search
+[70:19] Removing low confidence identifications
+[70:25] Removing interfering precursors
+[70:29] Training neural networks on 34145 target and 14937 decoy PSMs
+[70:38] Training neural networks on 34145 target and 14127 decoy PSMs
+[70:43] Number of IDs at 0.01 FDR: 24326
+[70:44] Precursors at 1% peptidoform FDR: 23248
+[70:44] Calculating protein q-values
+[70:45] Number of genes identified at 1% FDR: 2395 (precursor-level), 2000 (protein-level) (inference performed using proteotypic peptides only)
+[70:45] Quantification
+[70:47] Precursors with scored PTMs at 1% FDR: 553 out of 641 considered
+[70:47] Precursors with all scored PTM sites unoccupied at 1% FDR: 22695
+[70:47] Precursors with PTMs localised (when required) with > 90% confidence: 535 out of 553
+[70:50] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_07_mzML.quant
+
+[70:50] File #8/8
+[70:50] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_08.mzML
+[71:28] Pre-processing...
+[71:29] 1113 MS1 and 94728 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 4612513 precursors in range
+[71:29] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[75:33] RT window set to 2.89572
+[75:34] Recommended MS1 mass accuracy setting: 16 ppm
+[79:14] Searching decoys
+[80:08] Main search
+[81:56] Removing low confidence identifications
+[81:59] Removing interfering precursors
+[82:02] Training neural networks on 3455 target and 2444 decoy PSMs
+[82:07] Training neural networks on 3455 target and 2368 decoy PSMs
+[82:09] Number of IDs at 0.01 FDR: 1310
+[82:10] Precursors at 1% peptidoform FDR: 1106
+[82:10] Calculating protein q-values
+[82:10] Number of genes identified at 1% FDR: 222 (precursor-level), 178 (protein-level) (inference performed using proteotypic peptides only)
+[82:11] Quantification
+[82:12] Precursors with scored PTMs at 1% FDR: 38 out of 53 considered
+[82:12] Precursors with all scored PTM sites unoccupied at 1% FDR: 1068
+[82:12] Precursors with PTMs localised (when required) with > 90% confidence: 38 out of 38
+[82:14] Quantification information saved to /out/_ip-proteomics_exp19-ms-zenotof-convert-output_CG_08_mzML.quant
+
+[82:14] Cross-run analysis
+[82:14] Reading quantification information: 8 files
+[82:29] Quantifying peptides
+[83:00] Assembling protein groups
+[83:01] Quantifying proteins
+[83:01] Calculating q-values for protein and gene groups
+[83:04] Calculating global q-values for protein and gene groups
+[83:04] Protein groups with global q-value <= 0.01: 2427
+[83:04] Compressed report saved to /out/exp19-diann-output-1miscleavage-first-pass.parquet. Use R 'arrow' or Python 'PyArrow' package to process
+[83:04] Site report saved to /out/exp19-diann-output-1miscleavage-first-pass.site_report.parquet
+[83:04] Saving precursor levels matrix
+[83:05] Precursor levels matrix (1% precursor and protein group FDR) saved to /out/exp19-diann-output-1miscleavage-first-pass.pr_matrix.tsv.
+[83:05] Manifest saved to /out/exp19-diann-output-1miscleavage-first-pass.manifest.txt
+[83:05] Stats report saved to /out/exp19-diann-output-1miscleavage-first-pass.stats.tsv
+[83:05] Generating spectral library:
+[83:05] 29088 target and 293 decoy precursors saved
+[83:06] Spectral library saved to /out/exp19-diann-lib-1miscleavage.parquet
+
+[83:06] Loading spectral library /out/exp19-diann-lib-1miscleavage.parquet
+[83:07] Spectral library loaded: 3172 protein isoforms, 3079 protein groups and 29381 precursors in 25432 elution groups.
+[83:07] Loading protein annotations from FASTA /ip-proteomics/crap_fasta_20250304.fasta
+[83:07] Loading protein annotations from FASTA /ip-proteomics/UP000000589_10090_20250930.fasta
+[83:07] Annotating library proteins with information from the FASTA database
+[83:07] Protein names missing for some isoforms
+[83:07] Gene names missing for some isoforms
+[83:07] Library contains 3150 proteins, and 3127 genes
+[83:07] Initialising library
+[83:09] Saving the library to /out/exp19-diann-lib-1miscleavage.parquet.skyline.speclib
+
+
+Second pass: using the newly created spectral library to reanalyse the data
+
+[83:09] File #1/8
+[83:09] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_01.mzML
+[84:17] Pre-processing...
+[84:18] 1113 MS1 and 94710 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[84:18] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[84:18] RT window set to 0.860055
+[84:18] Recommended MS1 mass accuracy setting: 30 ppm
+[84:19] Searching decoys
+[84:19] Main search
+[84:20] Removing low confidence identifications
+[84:22] Removing interfering precursors
+[84:22] Training neural networks on 24586 target and 13172 decoy PSMs
+[84:26] Training neural networks on 24580 target and 13798 decoy PSMs
+[84:29] Number of IDs at 0.01 FDR: 26479
+[84:29] Precursors at 1% peptidoform FDR: 25313
+[84:29] Calculating protein q-values
+[84:29] Number of genes identified at 1% FDR: 2421 (precursor-level), 2062 (protein-level) (inference performed using proteotypic peptides only)
+[84:29] Quantification
+[84:31] Precursors with scored PTMs at 1% FDR: 504 out of 530 considered
+[84:31] Precursors with all scored PTM sites unoccupied at 1% FDR: 24809
+[84:31] Precursors with PTMs localised (when required) with > 90% confidence: 493 out of 504
+[84:35] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_01.xic.parquet
+
+[84:35] File #2/8
+[84:35] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_02.mzML
+[85:19] Pre-processing...
+[85:19] 1113 MS1 and 94717 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[85:19] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[85:21] RT window set to 0.790727
+[85:21] Recommended MS1 mass accuracy setting: 28 ppm
+[85:22] Searching decoys
+[85:22] Main search
+[85:23] Removing low confidence identifications
+[85:23] Removing interfering precursors
+[85:23] Training neural networks on 16263 target and 8244 decoy PSMs
+[85:26] Training neural networks on 16258 target and 8332 decoy PSMs
+[85:28] Number of IDs at 0.01 FDR: 7006
+[85:28] Precursors at 1% peptidoform FDR: 5914
+[85:28] Calculating protein q-values
+[85:28] Number of genes identified at 1% FDR: 1055 (precursor-level), 853 (protein-level) (inference performed using proteotypic peptides only)
+[85:28] Quantification
+[85:30] Precursors with scored PTMs at 1% FDR: 66 out of 121 considered
+[85:30] Precursors with all scored PTM sites unoccupied at 1% FDR: 5848
+[85:30] Precursors with PTMs localised (when required) with > 90% confidence: 66 out of 66
+[85:32] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_02.xic.parquet
+
+[85:32] File #3/8
+[85:32] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_03.mzML
+[85:57] Pre-processing...
+[85:58] 1113 MS1 and 94698 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[85:58] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[85:58] RT window set to 0.844501
+[85:58] Recommended MS1 mass accuracy setting: 31 ppm
+[85:59] Searching decoys
+[85:59] Main search
+[86:00] Removing low confidence identifications
+[86:02] Removing interfering precursors
+[86:02] Training neural networks on 24704 target and 13881 decoy PSMs
+[86:05] Training neural networks on 24698 target and 14222 decoy PSMs
+[86:09] Number of IDs at 0.01 FDR: 27009
+[86:09] Precursors at 1% peptidoform FDR: 25878
+[86:09] Calculating protein q-values
+[86:09] Number of genes identified at 1% FDR: 2507 (precursor-level), 2131 (protein-level) (inference performed using proteotypic peptides only)
+[86:09] Quantification
+[86:11] Precursors with scored PTMs at 1% FDR: 526 out of 559 considered
+[86:11] Precursors with all scored PTM sites unoccupied at 1% FDR: 25352
+[86:11] Precursors with PTMs localised (when required) with > 90% confidence: 516 out of 526
+[86:15] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_03.xic.parquet
+
+[86:15] File #4/8
+[86:15] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_04.mzML
+[86:30] Pre-processing...
+[86:30] 1113 MS1 and 94713 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[86:30] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[86:32] RT window set to 0.821312
+[86:32] Recommended MS1 mass accuracy setting: 27 ppm
+[86:33] Searching decoys
+[86:33] Main search
+[86:34] Removing low confidence identifications
+[86:34] Removing interfering precursors
+[86:34] Training neural networks on 16543 target and 8567 decoy PSMs
+[86:37] Training neural networks on 16539 target and 8496 decoy PSMs
+[86:40] Number of IDs at 0.01 FDR: 7137
+[86:40] Precursors at 1% peptidoform FDR: 6312
+[86:40] Calculating protein q-values
+[86:40] Number of genes identified at 1% FDR: 1132 (precursor-level), 972 (protein-level) (inference performed using proteotypic peptides only)
+[86:40] Quantification
+[86:41] Precursors with scored PTMs at 1% FDR: 71 out of 108 considered
+[86:41] Precursors with all scored PTM sites unoccupied at 1% FDR: 6241
+[86:41] Precursors with PTMs localised (when required) with > 90% confidence: 71 out of 71
+[86:43] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_04.xic.parquet
+
+[86:43] File #5/8
+[86:43] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_05.mzML
+[87:10] Pre-processing...
+[87:11] 1113 MS1 and 94723 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[87:11] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[87:11] RT window set to 0.856614
+[87:11] Recommended MS1 mass accuracy setting: 33 ppm
+[87:12] Searching decoys
+[87:12] Main search
+[87:13] Removing low confidence identifications
+[87:15] Removing interfering precursors
+[87:15] Training neural networks on 24874 target and 14093 decoy PSMs
+[87:19] Training neural networks on 24867 target and 14356 decoy PSMs
+[87:22] Number of IDs at 0.01 FDR: 27834
+[87:22] Precursors at 1% peptidoform FDR: 26784
+[87:22] Calculating protein q-values
+[87:22] Number of genes identified at 1% FDR: 2528 (precursor-level), 2079 (protein-level) (inference performed using proteotypic peptides only)
+[87:22] Quantification
+[87:24] Precursors with scored PTMs at 1% FDR: 547 out of 569 considered
+[87:24] Precursors with all scored PTM sites unoccupied at 1% FDR: 26237
+[87:24] Precursors with PTMs localised (when required) with > 90% confidence: 538 out of 547
+[87:28] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_05.xic.parquet
+
+[87:28] File #6/8
+[87:28] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_06.mzML
+[87:45] Pre-processing...
+[87:46] 1113 MS1 and 94731 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[87:46] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[87:47] RT window set to 0.830271
+[87:47] Recommended MS1 mass accuracy setting: 24 ppm
+[87:48] Searching decoys
+[87:48] Main search
+[87:49] Removing low confidence identifications
+[87:49] Removing interfering precursors
+[87:50] Training neural networks on 15346 target and 7646 decoy PSMs
+[87:52] Training neural networks on 15347 target and 7751 decoy PSMs
+[87:54] Number of IDs at 0.01 FDR: 6589
+[87:54] Precursors at 1% peptidoform FDR: 5678
+[87:54] Calculating protein q-values
+[87:54] Number of genes identified at 1% FDR: 1087 (precursor-level), 853 (protein-level) (inference performed using proteotypic peptides only)
+[87:54] Quantification
+[87:56] Precursors with scored PTMs at 1% FDR: 61 out of 93 considered
+[87:56] Precursors with all scored PTM sites unoccupied at 1% FDR: 5617
+[87:56] Precursors with PTMs localised (when required) with > 90% confidence: 61 out of 61
+[87:58] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_06.xic.parquet
+
+[87:58] File #7/8
+[87:58] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_07.mzML
+[88:23] Pre-processing...
+[88:23] 1113 MS1 and 94739 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[88:23] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[88:24] RT window set to 0.845913
+[88:24] Recommended MS1 mass accuracy setting: 31 ppm
+[88:24] Searching decoys
+[88:25] Main search
+[88:26] Removing low confidence identifications
+[88:27] Removing interfering precursors
+[88:27] Training neural networks on 24829 target and 14132 decoy PSMs
+[88:31] Training neural networks on 24821 target and 14383 decoy PSMs
+[88:34] Number of IDs at 0.01 FDR: 27526
+[88:34] Precursors at 1% peptidoform FDR: 26289
+[88:34] Calculating protein q-values
+[88:34] Number of genes identified at 1% FDR: 2519 (precursor-level), 2076 (protein-level) (inference performed using proteotypic peptides only)
+[88:34] Quantification
+[88:36] Precursors with scored PTMs at 1% FDR: 544 out of 575 considered
+[88:36] Precursors with all scored PTM sites unoccupied at 1% FDR: 25745
+[88:36] Precursors with PTMs localised (when required) with > 90% confidence: 534 out of 544
+[88:40] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_07.xic.parquet
+
+[88:40] File #8/8
+[88:40] Loading run /ip-proteomics/exp19-ms-zenotof-convert-output/CG_08.mzML
+[88:56] Pre-processing...
+[88:56] 1113 MS1 and 94728 MS2 scans in 557 (inferred) and 557 (encoded) cycles, 29088 precursors in range
+[88:56] Calibrating with mass accuracies 25 (MS1), 25 (MS2)
+[88:58] RT window set to 0.821165
+[88:58] Recommended MS1 mass accuracy setting: 23 ppm
+[88:58] Searching decoys
+[88:58] Main search
+[88:59] Removing low confidence identifications
+[88:59] Removing interfering precursors
+[89:00] Training neural networks on 17055 target and 9087 decoy PSMs
+[89:02] Training neural networks on 17050 target and 9008 decoy PSMs
+[89:05] Number of IDs at 0.01 FDR: 6920
+[89:05] Precursors at 1% peptidoform FDR: 5583
+[89:05] Calculating protein q-values
+[89:05] Number of genes identified at 1% FDR: 1079 (precursor-level), 919 (protein-level) (inference performed using proteotypic peptides only)
+[89:05] Quantification
+[89:06] Precursors with scored PTMs at 1% FDR: 68 out of 109 considered
+[89:06] Precursors with all scored PTM sites unoccupied at 1% FDR: 5515
+[89:06] Precursors with PTMs localised (when required) with > 90% confidence: 68 out of 68
+[89:08] XICs saved to /out/exp19-diann-output-1miscleavage_xic/CG_08.xic.parquet
+
+[89:08] Cross-run analysis
+[89:08] Reading quantification information: 8 files
+[89:08] Quantifying peptides
+[89:40] Quantification parameters: 0.355744, 0.00361127, 0.00701342, 0.0239189, 0.169366, 0.0938208, 0.240929, 0.0123852, 0.0124423, 0.0147944, 0.0148128, 0.0146598, 0.462923, 0.178331, 0.218046, 0.0614695
+[89:59] Quantifying proteins
+[89:59] Calculating q-values for protein and gene groups
+[89:59] Calculating global q-values for protein and gene groups
+[89:59] Protein groups with global q-value <= 0.01: 2275
+[90:00] Compressed report saved to /out/exp19-diann-output-1miscleavage.parquet. Use R 'arrow' or Python 'PyArrow' package to process
+[90:00] Site report saved to /out/exp19-diann-output-1miscleavage.site_report.parquet
+[90:00] Saving precursor levels matrix
+[90:00] Precursor levels matrix (1% precursor and protein group FDR) saved to /out/exp19-diann-output-1miscleavage.pr_matrix.tsv.
+[90:00] Saving protein group levels matrix
+[90:00] Protein groups matrix saved to /out/exp19-diann-output-1miscleavage.pg_matrix.tsv.
+[90:00] Saving gene group levels matrix
+[90:00] Gene groups matrix saved to /out/exp19-diann-output-1miscleavage.gg_matrix.tsv.
+[90:00] Saving unique genes levels matrix
+[90:00] Unique genes matrix saved to /out/exp19-diann-output-1miscleavage.unique_genes_matrix.tsv.
+[90:00] Manifest saved to /out/exp19-diann-output-1miscleavage.manifest.txt
+[90:00] Stats report saved to /out/exp19-diann-output-1miscleavage.stats.tsv
+Finished
+
+
+How to cite:
+using DIA-NN: Demichev et al, Nature Methods, 2020, https://www.nature.com/articles/s41592-019-0638-x
+analysing Scanning SWATH: Messner et al, Nature Biotechnology, 2021, https://www.nature.com/articles/s41587-021-00860-4
+analysing PTMs: Steger et al, Nature Communications, 2021, https://www.nature.com/articles/s41467-021-25454-1
+analysing dia-PASEF: Demichev et al, Nature Communications, 2022, https://www.nature.com/articles/s41467-022-31492-0
+analysing Slice-PASEF: Szyrwiel et al, biorxiv, 2022, https://doi.org/10.1101/2022.10.31.514544
+plexDIA / multiplexed DIA: Derks et al, Nature Biotechnology, 2023, https://www.nature.com/articles/s41587-022-01389-w
+CysQuant: Huang et al, Redox Biology, 2023, https://doi.org/10.1016/j.redox.2023.102908
+using QuantUMS: Kistner at al, biorxiv, 2023, https://doi.org/10.1101/2023.06.20.545604
+[90:00] Log saved to /out/exp19-diann-output-1miscleavage.log.txt

@@ -176,16 +176,43 @@ V- Also checked if parameter -gen-spec-lib does something different and its not 
 
 
 #### Formal analysis for VCAM1 & GPR37L1 & make the final script
+ZENOTOF data & 1 miscleav for VCAM1 & GPR37L1. And without GPR37L1 sample run for DIA-NN. All files for final paper analysis are in Intenso/ip-proteomics/analyses-paper/
+All scripts used on HPC are in /ip-proteomics/hpc/
 
 
+Main Figure Plots:
+- Workflow Graph
+  
+- VCAM1 PCA plot
+- VCAM1 DEP analysis plot
+- VCAM1 Rankplot
+
+
+- GPR37L1 PCA plot
+- GPR37l1 DEP analysis plot
+- GPR37L1 rankplot
+
+- VCAM1/GPR37L1 interactome overlap & size
+
+
+Suppl Figure Plots:
+- VCAM1 WB of IP & IgG
+- VCAM1 raw log2 line intensity plot
+- VCAM1 unique IDs plit
+- VCAM1 Sample Protein Intensity Distribution plots
+- VCAM1 synapse database crossreference
+
+- GPR37L1 raw log2 line intensity plot
+- GPR37L1 unique IDs plit
+- GPR37L1 Sample Protein Intensity Distribution plots
+- GPR37L1 synapse database crossreference
 
 
 
 QC plots:
  V- Nr of proteins per sample (barplot)
- - Sample Coefficient of Variation plots
+ (- Sample Coefficient of Variation plots)
  V- PCA plot of samples
- (- Abundance rank of proteins IP vs IgG)
  V- Intensity plots of raw log2 data per sample (boxplot)
  V- Intensity plots of normalized data (boxplot)
  V- Line plots of interesting candidates or heatmap
@@ -199,6 +226,7 @@ QC plots:
 
  - Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
  - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
+- 
  - Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  - Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
  - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
