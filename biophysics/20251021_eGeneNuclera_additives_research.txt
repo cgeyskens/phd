@@ -1,0 +1,204 @@
+Possible standard additives: Mn2+, Ca2+, Zn2+, Cofactor Mix, GSSG, 3C protease, PDI/GSSG, Dnak Mix, TRXB1.
+
+In general for all my proteins, I think the 3C protease is not needed because we have no tags.
+
+
+Based on ChatGPT analysis:
+
+### ========================= VCAM1_P29533 ========================= ###
+Glycoprotein with disulfide bonds. 
+
+Include:
+-PDI/GSSG: promotes formation/isomerization of the Ig-domain disulfides. Or GSSG.
+
+Coud include:
+-Mn2+: only if attempt N-glycosylation
+-Dnak Mix: helpfull during translation
+
+To avoid:
+-TRXB1: counteracting disulfide formation
+
+Not needed:
+-Zn2+
+-Ca2+
+-Cofactor Mix
+
+
+### ========================= PRRT1_O35449 ========================= ###
+Palmitoylated in brain and may carry a single N-glycosylation site.
+
+Include:
+-Custom: zDHHC palmitoyl-acyltransferase + palmitoyl-CoA.
+-Custom: a bacterial OST (e.g., PglB; N311V variant if you want native N-X-S/T sites) + an LLO or GlcNAc donor system.
+-Zn2+
+-DnaK Mix: helps fold OST and PRRT1
+-Mn2+: boosts PglB/OST activity
+
+Not needed:
+-PDI/GSSG
+-TRXB1
+-Ca2+ / Cofactor Mix
+
+
+### ========================= AQP4_P55088 ========================= ###
+N-glycan on an extracellular loop, and reported S-palmitoylation.
+
+Include:
+-DnaK Mix: Helps a multi-pass IMP fold.
+-Mn2+: only if you run glyco-CFPS (e.g., co-add a bacterial OST like PglB) to install a minimal N-glycan on the extracellular loop sequon.
+-Zn2+: only if you co-express a zDHHC palmitoyl-acyltransferase and supply palmitoyl-CoA; many zDHHCs are Zn-binding.
+
+Not needed:
+-PDI/GSSG
+-GSSG
+-TRXB1
+-Ca2+
+-Cofactor Mix
+
+
+### ========================= IGDCC4_Q9EQS9_only_TM_and_Extracel ========================= ###
+Type-I single-pass membrane Ig-superfamily receptor with a large Ig-domain ectodomain that’s N-glycosylated and stabilized by intradomain disulfide bonds.
+
+Include:
+-PDI/GSSG: promotes formation/isomerization of the Ig-domain disulfides. Or GSSG.
+
+Coud include:
+-Dnak Mix: multidomain ectodomain fold
+-Mn2+: only if attempt N-glycosylation
+-Custom: a bacterial OST (e.g., PglB—ideally a relaxed-sequon mutant like N311V)
+
+Not needed:
+-Zn2+
+-Ca2+
+-Cofactor Mix
+
+To avoid:
+-TRXB1: counteracting disulfide formation
+
+
+### ========================= SLC39A5_Q9D856 ========================= ###
+Multi-pass zinc importer, has a N-terminal ectodomain (PrP-like) and ZIP5 is N-glycosylated in that region; no essential disulfide network is reported for transport.
+
+Include:
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+-Custom: a bacterial oligosaccharyltransferase (OST) (e.g., PglB, ideally a relaxed-sequon variant like N311V.)
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-PDI/GSSG
+-GSSG
+-TRXB1
+
+
+### ========================= GPR37L1_Q99JG2 ========================= ###
+7 transmembrane GPCR, with disulfide, N-glycosylation and palmitoylation.
+
+Include:
+-Dnak Mix: add during CFPS to reduce aggregation
+-PDI/GSSG: Gentle oxidizing conditions support the conserved GPCR disulfide
+
+Could include:
+-GSSG: Can help form the single extracellular disulfide.
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+-Zn2+: only if you co-express a zDHHC palmitoyl-acyltransferase and supply palmitoyl-CoA; many zDHHCs are Zn-binding.
+
+Not needed:
+-Zn2+
+-Ca2+
+
+To avoid:
+-TRXB1: counteracting disulfide formation.
+
+
+### ========================= AGRB1_Q3UHD1_only_Extracel_TM_1intracel ========================= ###
+7 TM adhesion GPCR, large extracellular N-terminus containing thrombospondin type-1 repeat (TSR) modules and a GAIN/GPS site (NTF/CTF receptor). Glycans on the ectodomain.
+
+Include:
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+-PDI/GSSG: Needed for the conserved GPCR disulfide (TM3–ECL2) and the intradomain disulfides in TSRs; promotes correct pairing/isomerization.
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+-Zn2+: only if you co-express a zDHHC palmitoyl-acyltransferase and supply palmitoyl-CoA; many zDHHCs are Zn-binding.
+
+Not needed:
+-Ca2+
+-Cofactor Mix
+
+To avoid:
+-TRXB1: counteracting disulfide formation.
+
+
+### ========================= CDH9_P70407 ========================= ###
+Classical cadherin: a type-I single-pass membrane protein with five EC (extracellular cadherin) repeats that require Ca²⁺ at the inter-domain linkers for stability/adhesion.
+
+Include:
+-Ca2+: essential for cadherin adhesion.
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-PDI/GSSG
+-TRXB1
+-Zn2+
+-Cofactor Mix
+
+
+### ========================= GABRB3_P63080 ========================= ###
+β3 subunit of the GABAa receptor, a Cys-loop pentameric ligand-gated ion channel. Each subunit has a large extracellular N-terminus (with the conserved Cys-loop disulfide), 4 TMs, and a cytosolic M3–M4 loop. Functional receptors usually need co-assembly.
+
+Include:
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+-PDI/GSSG: Supports formation/isomerization of the N-terminal Cys-loop disulfide that’s critical for folding and assembly
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-Cofactor Mix
+
+To avoid:
+-TRXB1: counteracting disulfide formation.
+-Zn2+: may inhibit GABA receptor
+
+
+### ========================= NRN1_Q8CFV4 ========================= ###
+A small GPI-anchored, extracellular protein.
+
+To include:
+-PDI/GSSG: Promotes formation/isomerization of structural disulfides typical of extracellular proteins, improves stability and correct folding of the neuritin ectodomain.
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-Zn2+
+-Ca2+
+-Cofactor Mix
+
+To avoid:
+-TRXB1: counteracting disulfide formation.
+
+
+### ========================= GABRB1_P50571 ========================= ###
+Cys-loop pentameric ligand-gated Cl⁻ channel. Each subunit has a large extracellular N-terminus (with the conserved Cys-loop disulfide), 4 TMs, and a cytosolic M3–M4 loop.
+
+Include:
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+-PDI/GSSG: Supports formation/isomerization of the N-terminal Cys-loop disulfide that’s critical for folding and assembly
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-Cofactor Mix
+
+To avoid:
+-TRXB1: counteracting disulfide formation.
+-Zn2+: may inhibit GABA receptor
+
+

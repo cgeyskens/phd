@@ -170,7 +170,9 @@ V- Redo now all the analyses with MinDet and also add the protein_ID in the IP p
 V- Also checked if parameter -gen-spec-lib does something different and its not the case/
 - Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
 - Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
-
+- Perform GO analysis (ClusterProfiler, SynGO)
+- Perform check of Dan's filter (ID in 4 replicates in one condition)
+- Crossreference VCAM1 IP & GPR37L1 IP in nice UpSetPlot
 
 
 
@@ -182,7 +184,7 @@ All scripts used on HPC are in /ip-proteomics/hpc/
 
 Main Figure Plots:
 - Workflow Graph
-  
+
 - VCAM1 PCA plot
 - VCAM1 DEP analysis plot
 - VCAM1 Rankplot

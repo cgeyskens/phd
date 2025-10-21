@@ -239,36 +239,6 @@ write.csv(merged_df_updated,"gpr37l1_all_limma_ip_proteins_annotations.csv", row
 
 
 
-
-##### Clusterprofiler analysis 
-BiocManager::install("org.Mm.eg.db")
-library(org.Mm.eg.db)
-
-values_uniprot <- merged_df_updated[["Protein.Group"]]
-length(values_uniprot)
-values_background_uniprot <- raw_data[["Protein.Group"]]
-length(values_background_uniprot)
-
-go <- enrichGO(gene = values_uniprot,
-                OrgDb = org.Mm.eg.db,
-                keyType = "UNIPROT",
-                ont = "BP", # or CC or MF
-                pvalueCutoff = 0.05,
-                pAdjustMethod = "BH",
-                #universe = values_background_uniprot, # specifiying background list, if not just the entire genome
-                readable = TRUE)
-head(summary(go))
-
-dotplot(go, showCategory=30)
-
-
-##### for gProfiler check through webportal
-check <- annotations_data$Genes
-print(check)
-for (item in check) {
-  cat(item, "\n")
-}
-
 ##### make the percentage match graph
 
 # calculate the percentages for each of the annotations
