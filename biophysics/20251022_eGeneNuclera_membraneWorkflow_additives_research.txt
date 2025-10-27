@@ -1,6 +1,6 @@
 Possible standard additives: Mn2+, Ca2+, Zn2+, Cofactor Mix, GSSG, 3C protease, PDI/GSSG, Dnak Mix, TRXB1.
 
-In general for all my proteins, I think the 3C protease is not needed because we have no tags.
+In general for all my membrane proteins, I think the 3C protease is not needed because we have no tags.
 
 
 Based on ChatGPT analysis:
@@ -201,4 +201,18 @@ To avoid:
 -TRXB1: counteracting disulfide formation.
 -Zn2+: may inhibit GABA receptor
 
+### ========================= CADH8_MOUSE ========================= ###
+Classical cadherin: a type-I single-pass membrane protein with five EC (extracellular cadherin) repeats that require Ca²⁺ at the inter-domain linkers for stability/adhesion.
 
+Include:
+-Ca2+: essential for cadherin adhesion.
+-Dnak Mix: Helps a multi-pass transporter fold and avoid aggregation.
+
+Could include:
+-Mn2+: only when you run glyco-CFPS; it boosts PglB/OST activity.
+
+Not needed:
+-PDI/GSSG
+-TRXB1
+-Zn2+
+-Cofactor Mix

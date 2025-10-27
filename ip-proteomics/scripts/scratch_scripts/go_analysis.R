@@ -1,7 +1,9 @@
 library(readr)
 library(clusterProfiler)
 library(dplyr)
+library(ggplot2)
 
+### ============================ GO analysis of GPR37L1 data ============================= ###
 
 BiocManager::install("org.Mm.eg.db")
 library(org.Mm.eg.db)
@@ -10,7 +12,7 @@ library(org.Mm.eg.db)
 ip_data <- read.csv("Gpr37l1_limma_ip_proteins_zenotof_1miscleav.csv", row.names = 1)
 View(ip_data)
 
-##### Clusterprofiler analysis 
+# Clusterprofiler analysis 
 values_uniprot <- ip_data[["Protein.Group"]]
 length(values_uniprot)
 
@@ -22,7 +24,8 @@ go_bp <- enrichGO(gene = values_uniprot,
                 pAdjustMethod = "BH",
                 #universe = values_background_uniprot, # specifiying background list, if not just the entire genome
                 readable = TRUE)
-head(summary(go_bp))
+head(go_bp, 20)
+as.data.frame(go_bp)
 
 go_cc <- enrichGO(gene = values_uniprot,
                 OrgDb = org.Mm.eg.db,
@@ -44,21 +47,17 @@ go_mf <- enrichGO(gene = values_uniprot,
                 readable = TRUE)
 head(summary(go_mf))
 
-dotplot(go_mf, showCategory=10)
+p <- dotplot(go_bp, showCategory=10)
 
+p <- barplot(go_bp, 
+        x = "Count",
+        drop = TRUE, 
+        showCategory = 10, 
+        title = "GO Biological Pathways",
+        font.size = 8)
 
-genes <- bitr(
-  values_uniprot,
-  fromType = "UNIPROT",
-  toType = c("ENTREZID", "SYMBOL", "ENSEMBL"),
-  OrgDb = org.Mm.eg.db
-)
-
-
-ggo <- groupGO(gene     = values_uniprot,
-               OrgDb    = org.Mm.eg.db,
-               ont      = "CC",
-               level    = 3,
-               readable = TRUE)
-
-head(ggo)
+p + 
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )

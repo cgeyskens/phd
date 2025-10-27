@@ -12,6 +12,7 @@ work/
 *.svg
 *.png
 *.sif
+*.pdf
 data/
 # all folders related to the hpc
 ppi-hpc/
@@ -28,6 +29,7 @@ hackathon-2025-owkin/
 # for proteomics
 msdap_results
 batch_results*
+uniprot_results*
 
 # for clustermap 
 ClusterMap/

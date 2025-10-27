@@ -26,12 +26,17 @@ library(httpgd)
 hgd()
 
 #### =============================== arguments =============================== ####
-input_data_filepath <- "/mnt/ip-proteomics/analyses-october/exp17-zenotof-output-1miscleavage-wo-gpr37l1-20251007/exp17-zenotof-diann-output-1miscleavage-wo-gpr37l1.pg_matrix.tsv"
-ip_protein = "Vcam1"
+input_data_filepath_vcam1 <- "/mnt/ip-proteomics/analyses-paper/exp17-zenotof-output-1miscleavage-wo-gpr37l1-20251007/exp17-zenotof-diann-output-1miscleavage-wo-gpr37l1.pg_matrix.tsv"
+input_protein = "Vcam1"
+
+input_data_filepath_gpr37l1 <- "/mnt/ip-proteomics/analyses-paper/exp19-output-1miscleavage-20251008/exp19-diann-output-1miscleavage.pg_matrix.tsv"
+ip_protein = "Gpr37l1"
+
+
 
 
 #### =============================== loading the data =============================== ####
-raw_data <- read_tsv(input_data_filepath)
+raw_data <- read_tsv(input_data_filepath_gpr37l1)
 View(raw_data)
 
 
@@ -138,7 +143,7 @@ vcam1_exp17_zenotof_col_names <- c(
 )
 
 # select the right columns for the experiment
-match_col_names <- vcam1_exp17_zenotof_col_names
+match_col_names <- exp19_gpr37l1_col_names
 
 colnames(data_na_filtered)[match(match_col_names, colnames(data_na_filtered))] <- names(match_col_names)
 colnames(data_na_filtered)
@@ -159,6 +164,30 @@ df <- data_na_filtered %>%
         )
 check <- df[ip_protein, ]
 print(check)
+
+#### =================================== at least 4 times in one condition ===================== ####
+
+# sorting column names
+df_sorted <- df[, sort(names(df))]
+
+# setting conditioms
+igg_cond <- df_sorted[, 1:4] #igg
+ip_cond <- df_sorted[, 5:8] #ip
+
+# check if they are 4 times in each condition
+igg_cond_valid <- rowSums(!is.na(igg_cond)) >= 4
+ip_cond_valid <- rowSums(!is.na(ip_cond)) >= 4
+
+# the genes with 4nonNA
+rows_with_4_nonNA <- igg_cond_valid | ip_cond_valid
+
+# how many genes got through the filter
+sum(rows_with_4_nonNA)
+
+# checking
+df_check_noNA <- df_sorted[rows_with_4_nonNA, ]
+df_check_NA <- df_sorted[!rows_with_4_nonNA, ]
+
 
 #### =========================== log2 transformation & imputation =============================== ####
 

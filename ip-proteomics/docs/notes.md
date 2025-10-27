@@ -169,10 +169,10 @@ V- No MinProb, now MinDet for reproducibility (deterministic instead of stochias
 V- Redo now all the analyses with MinDet and also add the protein_ID in the IP proteins for further followup in the annotations from UniProt. 
 V- Also checked if parameter -gen-spec-lib does something different and its not the case/
 - Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
-- Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
-- Perform GO analysis (ClusterProfiler, SynGO)
-- Perform check of Dan's filter (ID in 4 replicates in one condition)
-- Crossreference VCAM1 IP & GPR37L1 IP in nice UpSetPlot
+V- Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
+V- Perform GO analysis (ClusterProfiler, SynGO): only necessary for GPR37L1 
+V- Crossreference VCAM1 IP & GPR37L1 IP in nice UpSetPlot
+V- Check whether all your protein are at least in 3/4 in 1 condition.
 
 
 
@@ -185,9 +185,9 @@ All scripts used on HPC are in /ip-proteomics/hpc/
 Main Figure Plots:
 - Workflow Graph
 
-- VCAM1 PCA plot
-- VCAM1 DEP analysis plot
-- VCAM1 Rankplot
+V- VCAM1 PCA plot
+V- VCAM1 DEP analysis plot
+V- VCAM1 Rankplot
 
 
 - GPR37L1 PCA plot
@@ -198,16 +198,22 @@ Main Figure Plots:
 
 
 Suppl Figure Plots:
-- VCAM1 WB of IP & IgG
-- VCAM1 raw log2 line intensity plot
-- VCAM1 unique IDs plit
-- VCAM1 Sample Protein Intensity Distribution plots
-- VCAM1 synapse database crossreference
+V- Scheme of Sample preperation (like Dan)
+V- Scheme of analysis worklfow
+V- VCAM1 WB of IP & IgG
+V- VCAM1 raw log2 line intensity plot
+V- VCAM1 unique IDs plit
+V- VCAM1 Sample Protein Intensity Distribution plots
+V- VCAM1 synapse database crossreference
+- Heatmap of VCAM1 IP proteins
 
 - GPR37L1 raw log2 line intensity plot
 - GPR37L1 unique IDs plit
 - GPR37L1 Sample Protein Intensity Distribution plots
 - GPR37L1 synapse database crossreference
+- GPR37L1 GO ontology analysis
+- GPR37L1 SynGO analysis
+- Heatmap of GPR37L1 IP proteins
 
 
 
@@ -224,11 +230,10 @@ QC plots:
  V- Differential expression analysis, bar plot, of crossref with synaptic proteome databases, (of Sorokina, Mclean, Croning et al. 2021 synapse proteome database ) 
  V- Differential expression analysis, Volcano plot, of crossref with van Oostrum et al. 2023
  V- Intensity line plots of raw data per sample of selected candidates
- - (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
-
- - Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
+ V- (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
+ V- Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
  - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
-- 
- - Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
- - Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
+
+ V- Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
+ V- Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
  - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
