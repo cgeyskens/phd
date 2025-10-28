@@ -1,5 +1,5 @@
 ###############################################################################
-# Script: 03_annotations.R
+# Script: 02_annotations.R
 # Purpose: annotate co-IPed hits with relevant databases and datasets: UniProt, 
 # Van Oostrum et al. 2023, Sorokina et al. 2021, SynGO
 # Author: Cydric Geyskens
@@ -12,6 +12,7 @@ library(stringr)
 library(dplyr)
 library(UniprotR)
 library(readxl)
+library(ggplot2)
 
 library(httpgd)
 hgd()
@@ -21,11 +22,11 @@ hgd()
 # only need to change these arguments for full analysis
 
 # vcam1
-ip_limma_file_path <- "Vcam1_limma_ip_proteins_paper.csv"
+ip_limma_file_path <- "results/Vcam1_limma_ip_proteins_paper.csv"
 ip_protein = "Vcam1"
 
 # gpr37l1
-ip_limma_file_path <- "Gpr37l1_limma_ip_proteins_paper.csv"
+ip_limma_file_path <- "results/Gpr37l1_limma_ip_proteins_paper.csv"
 ip_protein = "Gpr37l1" 
 
 # loading the ip results
@@ -285,14 +286,14 @@ p <- ggplot(
             panel.grid.major.y = element_blank(),  
             panel.grid.minor = element_blank()     
         ) +
-        geom_text(
-            aes(label = categories),
-            x = 7,          
-            hjust = 0,
-            size = 10,
-            color = "black",
-            family = "Arial"
-        ) +
+        # geom_text(
+        #     aes(label = categories),
+        #     x = 7,          
+        #     hjust = 0,
+        #     size = 10,
+        #     color = "black",
+        #     family = "Arial"
+        # ) +
         scale_x_continuous(
             expand = c(0.03, 0),
             limits = c(0, 100),
@@ -300,7 +301,7 @@ p <- ggplot(
         ) 
 p
 
-ggsave(paste0(ip_protein, "_bar_plot_annotations.svg"), 
+ggsave(paste0(ip_protein, "_bar_plot_annotations_paper.svg"), 
     plot = p, 
     device = cairo_pdf,
     width = 23, height = 20, units = "cm", dpi=300)

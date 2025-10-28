@@ -190,30 +190,31 @@ V- VCAM1 DEP analysis plot
 V- VCAM1 Rankplot
 
 
-- GPR37L1 PCA plot
-- GPR37l1 DEP analysis plot
-- GPR37L1 rankplot
+V- GPR37L1 PCA plot
+V- GPR37l1 DEP analysis plot
+V- GPR37L1 rankplot, only membrane-related proteins shown
 
-- VCAM1/GPR37L1 interactome overlap & size
+V- VCAM1/GPR37L1 interactome overlap & size
 
 
 Suppl Figure Plots:
 V- Scheme of Sample preperation (like Dan)
 V- Scheme of analysis worklfow
+
 V- VCAM1 WB of IP & IgG
 V- VCAM1 raw log2 line intensity plot
 V- VCAM1 unique IDs plit
 V- VCAM1 Sample Protein Intensity Distribution plots
 V- VCAM1 synapse database crossreference
-- Heatmap of VCAM1 IP proteins
+X- Heatmap of VCAM1 IP proteins
 
-- GPR37L1 raw log2 line intensity plot
-- GPR37L1 unique IDs plit
-- GPR37L1 Sample Protein Intensity Distribution plots
-- GPR37L1 synapse database crossreference
-- GPR37L1 GO ontology analysis
-- GPR37L1 SynGO analysis
-- Heatmap of GPR37L1 IP proteins
+V- GPR37L1 raw log2 line intensity plot
+V- GPR37L1 unique IDs plit
+V- GPR37L1 Sample Protein Intensity Distribution plots
+V- GPR37L1 synapse database crossreference
+V- GPR37L1 GO ontology analysis
+V- GPR37L1 SynGO analysis
+X- Heatmap of GPR37L1 IP proteins
 
 
 
@@ -232,8 +233,8 @@ QC plots:
  V- Intensity line plots of raw data per sample of selected candidates
  V- (SYNGO cellular compartment enrichment analysis plots of synaptic proteins in VCAM1 IP condition)
  V- Use Kaulich et al. 2025 for annotation of hipppocampal synaptic laminae (full tissue) or regions (synaptosomes)
- - Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
+ X- Overlap plot of VCAM1 & GPR37L1 IP conditions that are membrane proteins (also include non-mitocochondrial CSPs, see Chan et al. 2025)
 
  V- Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  V- Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
- - Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
+ X Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.

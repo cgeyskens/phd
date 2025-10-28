@@ -1,5 +1,5 @@
 ###############################################################################
-# Script: 01_ip-analysis.R
+# Script: 01_qc_limma.R
 # Purpose: formal analysis script to analyze the IP MS-DIA proteomics
 # Author: Cydric Geyskens
 # Date: 2025-10-24
@@ -261,7 +261,7 @@ p1 <- ggplot(data=df_merge, aes(x=condition, y=raw_log2_intensities, group=prote
             x="Condition",
             y="Log2 Intensity") + theme(text=element_text(size=20,  family="Arial"))
 p1
-ggsave(paste0(ip_protein, "_line_plot.svg"), 
+ggsave(paste0(ip_protein, "_line_plot_paper.svg"), 
     plot = p1, 
     device = cairo_pdf,
     width = 25, height = 20, units = "cm", dpi=300)
@@ -281,16 +281,16 @@ plot_df <- df %>%
 # create barplot
 p2 <- ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
         geom_bar(stat = "identity") +
-        geom_text(aes(label = UniqueProteins),
-                    hjust = 0.5, 
-                    vjust = 2, 
-                    color = "white",
-                    size = 5) + 
+        # geom_text(aes(label = UniqueProteins),
+        #             hjust = 0.5, 
+        #             vjust = 2, 
+        #             color = "white",
+        #             size = 5) + 
         scale_fill_manual(values = condition_colors) + 
         scale_y_continuous(
             expand = c(0, 0),
-            limits = c(0, 2000),   
-            breaks = c(0, 500, 1000, 1500, 2000)  
+            limits = c(0, 2500),   
+            breaks = c(0, 500, 1000, 1500, 2000, 2500)  
         ) +
         labs(
             title = "Number of Unique Proteins Identified in Each Sample",
@@ -314,7 +314,7 @@ p2 <- ggplot(plot_df, aes(x = Sample, y = UniqueProteins, fill = Condition)) +
         )
 p2
 
-ggsave(paste0(ip_protein, "_bar_plot_ids.svg"), 
+ggsave(paste0(ip_protein, "_bar_plot_ids_paper.svg"), 
     plot = p2, 
     device = cairo_pdf,
     width = 25, height = 20, units = "cm", dpi=300)
@@ -363,7 +363,7 @@ p3 <- ggplot(plot_df_long, aes(x = Sample, y = Intensity, fill = Condition)) +
             ) 
 p3
 
-ggsave(paste0(ip_protein, "_box_plot_intensity.svg"), 
+ggsave(paste0(ip_protein, "_box_plot_intensity_paper.svg"), 
     plot = p3, 
     device = cairo_pdf,
     width = 20, height = 20, units = "cm", dpi=300)
@@ -429,7 +429,7 @@ p4 <- ggplot(pca_plot_df, aes(x = PC1, y = PC2, color = Condition, label = Sampl
             )
 p4
 
-ggsave(paste0(ip_protein, "_pca.svg"), 
+ggsave(paste0(ip_protein, "_pca_paper.svg"), 
     plot = p4, 
     device = cairo_pdf,
     width = 22, height = 20, units = "cm", dpi=300)
@@ -491,8 +491,8 @@ results_limma <- tibble::rownames_to_column(results_limma, "Genes")
 labels <- results_limma$Genes
 labels_upper <- paste0(toupper(labels))
 
-select_proteins <- c(ip_protein, "Chgb", "Pmch", "Prrt1", "Igdcc4", "Slc39a5", "Aqp4")
-# select_proteins <- c()
+select_proteins <- c(ip_protein, "Cdh9", "Cdh8", "Adgrb1", "Nrn1", "Gabrb3", "Gabrb1")
+select_proteins <- c()
 select_proteins_upper <- paste0(toupper(select_proteins))
 
 # making the statement color the points
@@ -541,8 +541,8 @@ p5 <- EnhancedVolcano(results_limma,
         ) +
         scale_x_continuous(
             expand = c(0, 0),
-            limits = c(-12, 12),
-            breaks = seq(-12, 12, by = 2)  
+            limits = c(-8, 8),
+            breaks = seq(-8, 8, by = 2)  
         ) +
         scale_y_continuous(
             expand = c(0, 0),
@@ -550,7 +550,7 @@ p5 <- EnhancedVolcano(results_limma,
             breaks = seq(0, 7, by = 2) 
         )
 p5
-ggsave(paste0(ip_protein, "_volcano.svg"), 
+ggsave(paste0(ip_protein, "_volcano_paper.svg"), 
     plot = p5, 
     device = cairo_pdf,
     width = 20, height = 20, units = "cm", dpi=300)
