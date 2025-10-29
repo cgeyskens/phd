@@ -105,6 +105,11 @@ rank_tbl <- merged_df %>%
   ) %>%
   arrange(rank)
 
+# write out the ranked genes
+rank_tbl_to_write_out <- rank_tbl %>% arrange(desc(rank))
+write.csv(rank_tbl_to_write_out, paste0(ip_protein, "_co-ip_ranked.csv"), row.names = TRUE)
+
+
 # Identify top enriched proteins (highest ranks)
 top_candidates <- rank_tbl %>%
   arrange(desc(rank)) 
@@ -179,8 +184,8 @@ p <- ggplot(rank_tbl, aes(x = rank, y = ratio)) +
   ) +   
   scale_x_continuous(
       expand = c(0, 0),
-      limits = c(0, 115),
-      breaks = seq(0, 113, by = 20)  
+      limits = c(0, 81),
+      breaks = seq(0, 80, by = 20)  
   ) +
   scale_y_continuous(
       expand = c(0, 0),

@@ -6,7 +6,7 @@
 # GPR37L1 constructs
 # GPR37L1, ARVCF (no TM), CDH9, UNC80 (too long), GABRB3, ADGRB1 (only Extracel, TM & first Intracel), GABRB1, NRN1 (GPI-anchored), CDH8.
 #
-# Limits/Specifics of the Nuclera protein production screen:
+# Limits/Specifics of the Nuclera membrane workflow protein production screen:
 # - Canonical sequences were chose.
 # - Max 986 long AA sequence.
 # - No GPI-anchored proteins.

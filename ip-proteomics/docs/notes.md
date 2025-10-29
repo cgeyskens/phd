@@ -183,7 +183,7 @@ All scripts used on HPC are in /ip-proteomics/hpc/
 
 
 Main Figure Plots:
-- Workflow Graph
+V- Workflow Graph
 
 V- VCAM1 PCA plot
 V- VCAM1 DEP analysis plot
@@ -237,4 +237,7 @@ QC plots:
 
  V- Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  V- Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
- X Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
+ V-Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
+ - try reactome like Dan
+ - try STRING analysis
+ - in UniProt filtering, do not include when cell membrane: peripheral protein

@@ -169,11 +169,15 @@ subcellular_locations <- do.call(rbind, results_list)
 # membrane related terms
 membrane_terms <- tolower(c(
   "cell membrane",
-  "cell junction",
   "secreted",
   "extracellular space",
   "extracellular matrix",
   "cell surface"
+))
+
+exclude_terms <- tolower(c(
+  "peripheral membrane protein",
+  "mitochondrion membrane"
 ))
 
 # create the new column 'is_membrane_related' initialized to FALSE
@@ -182,18 +186,27 @@ subcellular_locations$uniprot_membrane_related <- FALSE
 # get the correct column name
 location_column_name <- "Subcellular.location..CC."
 
-# tterate through each row of the data frame
+# iterate through each row of the data frame
 for (i in 1:nrow(subcellular_locations)) {
   location_text <- tolower(subcellular_locations[[location_column_name]][i])
 
   # check if location_text is not NA and has a length greater than 0
   if (!is.na(location_text) && length(location_text) > 0) {
-    # iterate through the membrane-related terms
-    for (term in membrane_terms) {
-      if (grepl(term, location_text, fixed = TRUE)) {
-        subcellular_locations$uniprot_membrane_related[i] <- TRUE
-        break # if one term is found, no need to check others for this row
+
+    # first, check if any of the exclusion terms are present
+    exclude_match <- any(sapply(exclude_terms, grepl, location_text, fixed = TRUE))
+
+    if (!exclude_match) {
+      # only look for membrane-related terms if no exclusion match
+      for (term in membrane_terms) {
+        if (grepl(term, location_text, fixed = TRUE)) {
+          subcellular_locations$uniprot_membrane_related[i] <- TRUE
+          break
+        }
       }
+    } else {
+      # explicitly set to FALSE if exclusion term is found
+      subcellular_locations$uniprot_membrane_related[i] <- FALSE
     }
   }
 }
