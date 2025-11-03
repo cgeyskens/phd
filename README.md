@@ -1,4 +1,4 @@
-**This repository contains the analysis pipelines, processing scripts, and figure-generation code associated with the paper::**
+**This repository contains the analysis pipelines, processing scripts, and figure-generation code associated with the paper:**
 
 A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 and GPR37L1 as Regulators of Hippocampal Synapse Development
 --------------------------------------------------------------------------------------------------------------------------
@@ -21,20 +21,19 @@ phd/
 
 | Figure | Experiment/Modality | Raw Data Repo | Code Repo | 
 | --- | ---| --- | --- | 
-| 1 & S1     | Spatial Transcriptomics |  | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
-| 3, S3 & S4 | Imaging Data (synapse in-vivo) | | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
-| 4 & S5 | co-IP Proteomics | | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
-| 5 | Imaging Data (synapse in-vitro) | | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
+| 1, S1     | Spatial Transcriptomics |  | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
+| 3, S3, S4 | Synapse In-Vivo Imaging Data | | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
+| 4,  S5 | co-IP Proteomics | | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
+| 5 | Synapse In-Vitro Imaging Data | | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
 
 ## Installation / Dependencies setup
-Each sub-repository contains its own dependencies, either Conda, Apptainer or Docker.
+Each sub-repo contains its own dependencies, either Conda, Apptainer or Docker.
 
 ## Author Contributions
 
-
 ```markdown
 C.G. developed and implemented all analysis pipelines.  
-F.P. reviewed the Resolve Bioscience spatial transcriptomics pipeline.  
+F.P. reviewed the Resolve Bioscience spatial transcriptomics analysis.  
 B.P. reviewed the synapse image processing workflow.  
 S.F. advised on statistical modeling.  
 P.M. and D.D. provided input on proteomics analysis.
@@ -48,4 +47,4 @@ For questions or requests, please contact:
 
 If you use this code, please cite:
 
-Geyskens, C., et al. (2025). *A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 and GPR37L1 as Regulators of Hippocampal Synapse Development.* [GitHub Repository](https://github.com/cgeyskens/phd)
+Geyskens, C., et al. (2026). *A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 and GPR37L1 as Regulators of Hippocampal Synapse Development.* [GitHub Repository](https://github.com/cgeyskens/phd)
