@@ -168,7 +168,7 @@ V- 65277470: diann-v2.2.0_exp19_zenotof_1miscleavage with gen-spec-lib test
 V- No MinProb, now MinDet for reproducibility (deterministic instead of stochiastic)
 V- Redo now all the analyses with MinDet and also add the protein_ID in the IP proteins for further followup in the annotations from UniProt. 
 V- Also checked if parameter -gen-spec-lib does something different and its not the case/
-- Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
+V- Also add the UniProt (NOT IN annotation, like the paper Chan et al. 2025)
 V- Make the ComplexHeatmap with all the annotations (UniProt, Sorokina, Van Oostrum, SynGO)
 V- Perform GO analysis (ClusterProfiler, SynGO): only necessary for GPR37L1 
 V- Crossreference VCAM1 IP & GPR37L1 IP in nice UpSetPlot
@@ -238,6 +238,10 @@ QC plots:
  V- Gene ontology analysis plots of GPR37L1 IP proteins, use as background the whole mouse proteome
  V- Heatmap of GPR37L1 IP membrane proteins that are interesting (substitute of the Line plots)
  V-Crossreference VCAM1 and GPR37L1 IP datasets with the in silico PPI datasets.
- - try reactome like Dan
- - try STRING analysis
- - in UniProt filtering, do not include when cell membrane: peripheral protein
+ V- try reactome like Dan
+ V- try STRING analysis
+ V- in UniProt filtering, do not include when cell membrane: peripheral protein
+
+
+ Further refinements:
+ - Only Go ontology analysis on CSPs

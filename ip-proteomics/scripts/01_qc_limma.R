@@ -14,6 +14,7 @@ library(ggplot2)
 library(tidyr)
 library(stringr)
 library(EnhancedVolcano)
+library(svglite)
 
 library(limma)
 library(imputeLCMD)
@@ -23,8 +24,7 @@ library(imputeLCMD)
 library(httpgd)
 hgd()
 
-#install.packages("svglite")
-library(svglite)
+
 
 #### =============================== arguments =============================== ####
 # only need to change these arguments for full analysis

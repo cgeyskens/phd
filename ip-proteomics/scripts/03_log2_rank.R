@@ -8,9 +8,8 @@
 library(patchwork)
 library(ggplot2)
 library(readr)
-library(httpgd)
 library(dplyr)
-library (tibble)
+library(tibble)
 library(ggrepel)
 
 library(httpgd)

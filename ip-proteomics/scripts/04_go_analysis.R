@@ -9,8 +9,6 @@ library(readr)
 library(clusterProfiler)
 library(dplyr)
 library(ggplot2)
-
-#BiocManager::install("org.Mm.eg.db")
 library(org.Mm.eg.db)
 
 library(httpgd)

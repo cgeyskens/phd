@@ -62,7 +62,7 @@
         },
         {
             "package": "EnhancedVolcano",
-            "version": "1.24.0"
+            "version": "1.27.0"
         },
         {
             "package": "MSstats",
@@ -91,6 +91,50 @@
         {
             "package": "UniprotR",
             "version": "2.4.0"
+        },
+        {
+            "package": "readr",
+            "version": "2.1.5"
+        },
+        {
+            "package": "tibble",
+            "version": "3.3.0"
+        },
+        {
+            "package": "stringr",
+            "version": "1.5.2"
+        },
+        {
+            "package": "imputeLCMD",
+            "version": "2.1"
+        },
+        {
+            "package": "svglite",
+            "version": "2.2.2"
+        },
+        {
+            "package": "RSQLite",
+            "version": "2.4.3"
+        },
+        {
+            "package": "readxl",
+            "version": "1.4.5"
+        },
+        {
+            "package": "patchwork",
+            "version": "1.3.2"
+        },
+        {
+            "package": "ggrepel",
+            "version": "0.9.6"
+        },
+        {
+            "package": "org.Mm.eg.db",
+            "version": "3.21.0"
+        },
+        {
+            "package": "VennDiagram",
+            "version": "1.7.3"
         }
     ]
 }
