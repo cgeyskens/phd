@@ -1,7 +1,7 @@
 **This repository contains the analysis pipelines, processing scripts, and figure-generation code associated with the paper::**
 
 A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 and GPR37L1 as Regulators of Hippocampal Synapse Development
-==========================================================================================================================
+--------------------------------------------------------------------------------------------------------------------------
 
 _Cydric Geyskens, Dan Danscenco, Elke Leysen, Efstathia Kotoula, Kjen Bogaert, Joris Vandenbempt, Francisco Pestana, Benjamin Pavia, Steffen Fieuws, Lars Lefever, Pedro Magalhaes and Joris de Wit._
 
@@ -19,12 +19,12 @@ phd/
 
 ## Data & Code availability
 
-| Figure | Experiment/Modality | Raw Data Processing | Raw Data Repo |  Downstream Data Analysis | Code Repo | 
-| --- | ---| --- | --- | --- | --- | 
-| 1 & S1     | Spatial Transcriptomics |  | | Python | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
-| 3, S3 & S4 | Imaging Data (synapse in-vivo) | Custom automated Nextflow & Python Pipeline | | R: lme4 | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
-| 4 & S5 | co-IP Proteomics | DIA-NN | | R: Limma | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
-| 5 | Imaging Data (synapse in-vitro) | Custom semi-automated Fiji pipeline | | R: lme4 | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
+| Figure | Experiment/Modality | Raw Data Repo | Code Repo | 
+| --- | ---| --- | --- | 
+| 1 & S1     | Spatial Transcriptomics |  | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
+| 3, S3 & S4 | Imaging Data (synapse in-vivo) | | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
+| 4 & S5 | co-IP Proteomics | | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
+| 5 | Imaging Data (synapse in-vitro) | | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
 
 ## Installation / Dependencies setup
 Each sub-repository contains its own dependencies, either Conda, Apptainer or Docker.
