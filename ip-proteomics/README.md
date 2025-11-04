@@ -1,6 +1,7 @@
 # Synaptosome co-immunoprecipitation coupled with mass spectrometry (MS)
 
 This repository documents the complete workflow for **co-immunoprecipitation (co-IP) coupled with mass spectrometry (MS)** analysis of synaptosomal proteins.  
+
 The workflow covers both **raw MS data processing on the Flemish HPC (Vlaams Supercomputer Centrum, VSC)** and **downstream R-based data analysis** within a reproducible containerized environment.
 
 ## MS raw data processing
@@ -78,7 +79,7 @@ hpc/job-scripts/diann-vcam1-job.out
 
 ## MS downstream data analysis
 
-All data analysis was performed inside a **reproducible Docker development container** (.devcontainer) in Visual Studio Code.
+All R-based data analysis was performed inside a **reproducible Docker development container** (.devcontainer) in Visual Studio Code. Please see the [documentation](https://github.com/RamiKrispin/vscode-r) for more info.
 
 Analysis steps:
 
