@@ -79,7 +79,7 @@ hpc/job-scripts/diann-vcam1-job.out
 
 ## MS downstream data analysis
 
-All R-based data analysis was performed inside a **reproducible Docker development container** (.devcontainer) in Visual Studio Code. Please see the [documentation](https://github.com/RamiKrispin/vscode-r) for more info.
+All R-based data analysis was performed inside a **reproducible Docker development container** `.devcontainer` in Visual Studio Code. Please see the [documentation](https://github.com/RamiKrispin/vscode-r) for more info.
 
 Analysis steps:
 
