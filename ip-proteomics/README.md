@@ -76,7 +76,7 @@ hpc/job-scripts/diann-vcam1-job.out
 ``` 
 
 
-### MS downstream data analysis
+## MS downstream data analysis
 
 All data analysis was performed inside a **reproducible Docker development container** (.devcontainer) in Visual Studio Code.
 
