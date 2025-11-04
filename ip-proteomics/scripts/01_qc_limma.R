@@ -13,17 +13,17 @@ library(tibble)
 library(ggplot2)
 library(tidyr)
 library(stringr)
-library(EnhancedVolcano)
 library(svglite)
-
 library(limma)
 library(imputeLCMD)
 
-# for data viewing
+# these packages need to be installed manually:
+# install.packages("devtools")
+# devtools::install_github("kevinblighe/EnhancedVolcano")
+library(EnhancedVolcano)
 # remotes::install_github("nx10/httpgd")
 library(httpgd)
-hgd()
-
+hgd() # to open up the viewer
 
 
 #### =============================== arguments =============================== ####
