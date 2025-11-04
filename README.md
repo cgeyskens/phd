@@ -1,4 +1,4 @@
-**This repository contains the analysis pipelines, processing scripts, and figure-generation code associated with the paper:**
+**This repository contains the processing pipelines, analysis scripts, and figure-generation code associated with the paper:**
 
 A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 and GPR37L1 as Regulators of Hippocampal Synapse Development
 --------------------------------------------------------------------------------------------------------------------------
@@ -7,7 +7,7 @@ _Cydric Geyskens, Dan Danscenco, Elke Leysen, Efstathia Kotoula, Kjen Bogaert, J
 
 The code spans multiple experimental modalities (spatial transcriptomics, imaging, and proteomics) and is organized by figure. Each sub-repository includes scripts for raw data processing, analysis, and figure reproduction.
 
-## Repository Structure
+### Repository Structure
 ```
 phd/
 ├── spatial-transcriptomics/ # Spatial transcriptomics analysis scripts
@@ -17,33 +17,33 @@ phd/
 └── ip-proteomics/ # DIA-NN proteomics analysis and downstream statistics
 ```
 
-## Data & Code availability
+### Data & Code availability
 
 | Figure | Experiment/Modality | Raw Data Repo | Code Repo | 
 | --- | ---| --- | --- | 
-| 1, S1     | Spatial Transcriptomics |  | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
+| 1, S1     | Image-based Spatial Transcriptomics |  | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
 | 3, S3, S4 | Synapse In-Vivo Imaging Data | | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
 | 4,  S5 | co-IP Proteomics | | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
 | 5 | Synapse In-Vitro Imaging Data | | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
 
-## Installation / Dependencies setup
+### Dependencies
 Each sub-repo contains its own dependencies, either Conda, Apptainer or Docker.
 
-## Author Contributions
+### Author Contributions
 
 ```markdown
 C.G. developed and implemented all analysis pipelines.  
-F.P. reviewed the Resolve Bioscience spatial transcriptomics analysis.  
+F.P. advised on the Resolve Bioscience spatial transcriptomics analysis.  
 B.P. reviewed the synapse image processing workflow.  
 S.F. advised on statistical modeling.  
 P.M. and D.D. provided input on proteomics analysis.
 ```
-## Contact
+### Contact
 
 For questions or requests, please contact:
 **Cydric Geyskens** (cydric.geyskens@kuleuven.be) or **Joris de Wit** (joris.dewit@kuleuven.be)
 
-## Citation
+### Citation
 
 If you use this code, please cite:
 
