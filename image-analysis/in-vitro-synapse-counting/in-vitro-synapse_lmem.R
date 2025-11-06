@@ -8,18 +8,17 @@
 
 #### ====================== loading packages ======================== ####
 
-#### Trying to fit a linear mixed model
-# (Dev Container from synapse-counting)
 
+# (Dev Container from synapse-counting)
+library(tidyr)
+library(tibble)
 library(dplyr)
-library(ggplot2)
-library(lme4)
 library(stringr)
 library(emmeans)
-library(tibble)
-library(tidyr)
-library(nlme)
 library(stringr)
+library(lme4)
+library(RColorBrewer)
+library(ggplot2)
 
 # install.packages("readxl")
 library(readxl)
@@ -36,17 +35,26 @@ hgd() # open the server for plotting
 
 # loading in the data
 pre_post_in_vitro <- read_excel(
-  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.xlsx"
+  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.xlsx", "raw_data"
 )
 dim(pre_post_in_vitro)
 
 # filter out FOVs that were not included in the analysis (had NA values)
-data_clean <- pre_post_in_vitro[!is.na(pre_post_in_vitro$raw_synapse_count_per_100um), ]
+data_clean <- pre_post_in_vitro[!is.na(pre_post_in_vitro$raw_synapse_puncta_nr), ]
 dim(data_clean)
 
 # ensure that treatment is a factor for the downstream model
 data_clean$treatment <- factor(data_clean$treatment , levels = c("Fc", "VCAM1-Fc"))
 
+
+#### ============== Calculate the synapse density =================== ####
+
+data_clean <- data_clean %>%
+  mutate(
+    raw_synapse_count_per_100um = (raw_synapse_puncta_nr / total_dendritic_length_um)*100,  
+    raw_presynapse_count_per_100um = (raw_presynapse_puncta_nr / total_dendritic_length_um)*100,
+    raw_postsynapse_count_per_100um = (raw_postsynapse_puncta_nr / total_dendritic_length_um)*100
+  )
 
 #### ================= Normalization & Log2 Transformation =========== ####
 
