@@ -33,10 +33,13 @@ hgd() # open the server for plotting
 
 #### ====================== Data prep & cleaning ======================== ####
 
-# loading in the data
+# loading in the data and setting arguments
 pre_post_in_vitro <- read_excel(
-  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.xlsx", "raw_data"
+  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp10_11_12_13_data.xlsx", "raw_data"
 )
+
+synapse_type = "exc"
+
 dim(pre_post_in_vitro)
 
 # filter out FOVs that were not included in the analysis (had NA values)
@@ -144,14 +147,14 @@ summary(postsynapse_count_pairwise_comparisons)
 
 #### =============== Data Visualization, puncta density =============== ####
 
-y_value_to_visualize = "norm_postsynapse_count_per_100um_log2"
+y_value_to_visualize = "norm_postsynapse_count_per_100um"
 
 # calculate the mean of each experiment to also plot the means
 experiment_means <- data_clean %>%
   group_by(experiment, treatment) %>%
-  summarize(mean_norm_synapse_count_per_100um_log2 = mean(norm_synapse_count_per_100um_log2),
-            mean_norm_presynapse_count_per_100um_log2 = mean(norm_presynapse_count_per_100um_log2),
-            mean_norm_postsynapse_count_per_100um_log2 = mean(norm_postsynapse_count_per_100um_log2)
+  summarize(mean_norm_synapse_count_per_100um = mean(norm_synapse_count_per_100um),
+            mean_norm_presynapse_count_per_100um = mean(norm_presynapse_count_per_100um),
+            mean_norm_postsynapse_count_per_100um = mean(norm_postsynapse_count_per_100um)
   )
 
 # create a column combining experiment and treatment for the coloring of the points
@@ -178,15 +181,23 @@ for (i in seq_along(experiments)) {
 }
 
 # actual plotting
-p <- ggplot(data_clean, aes(x = treatment, 
+p1 <- ggplot(data_clean, aes(x = treatment, 
                             y = !!sym(y_value_to_visualize), 
                             color = exp_treat)) +
-    geom_beeswarm(cex = 4, size = 4, alpha = 0.8, priority = "ascending") + 
+    geom_beeswarm(
+      cex = 4, 
+      size = 5, 
+      alpha = 0.8, 
+      priority = "ascending", 
+      stroke = 0,
+      corral = "wrap",
+      corral.width = 0.6
+      ) + 
     geom_point(data = experiment_means, 
               aes(x = as.numeric(as.factor(treatment)) + 0.45, 
               y = !!sym(paste0("mean_", y_value_to_visualize)), 
               color = exp_treat),
-              size = 7, shape = 19, alpha = 0.6, show.legend = FALSE) +  
+              size = 7, shape = 19, alpha = 0.6, stroke = 0, show.legend = FALSE) +  
     labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
         y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
         color = "Experiment") +
@@ -195,19 +206,26 @@ p <- ggplot(data_clean, aes(x = treatment,
       legend.position = "top",  
       panel.background = element_blank(),
       panel.grid = element_blank(), 
-      axis.line = element_line(color = "black", size = 1),  
+      axis.line = element_line(color = "black", size = 1.2),  
       axis.ticks.x = element_blank(),
-      axis.ticks.y = element_line(color = "black", size = 1),
-      axis.ticks.length.y = unit(.25, "cm"),
+      axis.ticks.y = element_line(color = "black", size = 1.2),
+      axis.ticks.length.y = unit(.3, "cm"),
       axis.text = element_text(size = 14), 
       axis.title.x = element_blank(),
       axis.title.y = element_text(size = 16)
-    ) + 
-    ylim(0, 3) + 
-    coord_fixed(ratio = 1.8) 
+    ) +
+    scale_y_continuous(
+        expand = c(0, 0),
+        limits = c(0, 5.2),
+        breaks = c(0, 1, 2, 3, 4, 5) 
+    ) +  
+    coord_fixed(ratio = 1.2) 
+p1
 
-p
-
+ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
+    plot = p1, 
+    device = cairo_pdf,
+    width = 25, height = 20, units = "cm", dpi=300)
 
 
 # visualize the data
@@ -292,14 +310,14 @@ summary(postsynapse_size_pairwise_comparisons)
 
 #### ================== Data Visualization, puncta size ================== ####
 
-y_value_to_visualize = "norm_postsynapse_puncta_size_log2"
+y_value_to_visualize = "norm_postsynapse_puncta_size"
 
 # calculate the mean of each experiment to also plot the means
 experiment_means <- data_clean %>%
   group_by(experiment, treatment) %>%
-  summarize(mean_norm_synapse_puncta_size_log2 = mean(norm_synapse_puncta_size_log2),
-            mean_norm_presynapse_puncta_size_log2 = mean(norm_presynapse_puncta_size_log2),
-            mean_norm_postsynapse_puncta_size_log2 = mean(norm_postsynapse_puncta_size_log2)
+  summarize(mean_norm_synapse_puncta_size = mean(norm_synapse_puncta_size),
+            mean_norm_presynapse_puncta_size = mean(norm_presynapse_puncta_size),
+            mean_norm_postsynapse_puncta_size = mean(norm_postsynapse_puncta_size)
   )
 
 # create a column combining experiment and treatment for the coloring of the points
@@ -326,15 +344,29 @@ for (i in seq_along(experiments)) {
 }
 
 # actual plotting
-p <- ggplot(data_clean, aes(x = treatment, 
+p2 <- ggplot(data_clean, aes(x = treatment, 
                             y = !!sym(y_value_to_visualize), 
                             color = exp_treat)) +
-    geom_beeswarm(cex = 4, size = 4, alpha = 0.8, priority = "ascending") + 
-    geom_point(data = experiment_means, 
-              aes(x = as.numeric(as.factor(treatment)) + 0.45, 
-              y = !!sym(paste0("mean_", y_value_to_visualize)), 
-              color = exp_treat),
-              size = 7, shape = 19, alpha = 0.6, show.legend = FALSE) +  
+    geom_beeswarm(
+      cex = 4, 
+      size = 5, 
+      alpha = 0.8, 
+      priority = "ascending", 
+      stroke = 0,
+      corral = "wrap",
+      corral.width = 0.6
+    ) + 
+    geom_point(
+      data = experiment_means, 
+      aes(x = as.numeric(as.factor(treatment)) + 0.45, 
+      y = !!sym(paste0("mean_", y_value_to_visualize)), 
+      color = exp_treat),
+      size = 7, 
+      shape = 19, 
+      alpha = 0.6, 
+      stroke = 0, 
+      show.legend = FALSE
+    ) +  
     labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
         y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
         color = "Experiment") +
@@ -343,18 +375,26 @@ p <- ggplot(data_clean, aes(x = treatment,
       legend.position = "top",  
       panel.background = element_blank(),
       panel.grid = element_blank(), 
-      axis.line = element_line(color = "black", size = 1),  
+      axis.line = element_line(color = "black", size = 1.2),  
       axis.ticks.x = element_blank(),
-      axis.ticks.y = element_line(color = "black", size = 1),
-      axis.ticks.length.y = unit(.25, "cm"),
+      axis.ticks.y = element_line(color = "black", size = 1.2),
+      axis.ticks.length.y = unit(.3, "cm"),
       axis.text = element_text(size = 14), 
       axis.title.x = element_blank(),
       axis.title.y = element_text(size = 16)
-    ) + 
-    ylim(0, 2) + 
-    coord_fixed(ratio = 2.5) 
+    ) +
+    scale_y_continuous(
+        expand = c(0, 0),
+        limits = c(0, 3),
+        breaks = c(0, 1, 2, 3) 
+    ) +
+    coord_fixed(ratio = 1.8) 
+p2
 
-p
+ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
+    plot = p2, 
+    device = cairo_pdf,
+    width = 25, height = 20, units = "cm", dpi=300)
 
 # # visualize the data
 # p <- ggplot(data_clean, aes(x = treatment, y = !!sym(y_value_to_visualize), color = as.factor(experiment))) +
