@@ -7,6 +7,8 @@
 
 ## Semi-automatic ImageJ Macro Protocol
 
+Scripts can be found in `/image-processing-scripts/`
+
 ### 1.	Calculate mean threshold over all images and channels per experiment
 
 a. Open an image manually.
@@ -54,6 +56,14 @@ b. Restart with Step 2 for the next image.
 
 
 # Downstream data analysis
+
+## Data
+
+Processed data can be found inside `/data/` folder. Data:
+
+VGLUT1-PSD95 dataset: `exp10_11_12_13_data.xlsx`
+
+VGAT-GEPH dataset: `exp17_20_23_24_data.xlsx`
 
 ## Dependencies
 
