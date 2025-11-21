@@ -113,7 +113,7 @@ qqline(resid(synapse_count_model))
 synapse_count_emm <- emmeans(synapse_count_model, ~ treatment)
 summary(synapse_count_emm)
 
-synapse_count_pairwise_comparisons <- contrast(synapse_count_emm, method = "pairwise")
+synapse_count_pairwise_comparisons <- contrast(synapse_count_emm, method = "pairwise", adjust = "tukey")
 summary(synapse_count_pairwise_comparisons)
 
 # presynapse count model
@@ -127,7 +127,7 @@ qqline(resid(presynapse_count_model))
 presynapse_count_emm <- emmeans(presynapse_count_model, ~ treatment)
 summary(presynapse_count_emm)
 
-presynapse_count_pairwise_comparisons <- contrast(presynapse_count_emm, method = "pairwise")
+presynapse_count_pairwise_comparisons <- contrast(presynapse_count_emm, method = "pairwise", adjust = "tukey")
 summary(presynapse_count_pairwise_comparisons)
 
 # postsynapse count model
@@ -141,7 +141,7 @@ qqline(resid(postsynapse_count_model))
 postsynapse_count_emm <- emmeans(postsynapse_count_model, ~ treatment)
 summary(postsynapse_count_emm)
 
-postsynapse_count_pairwise_comparisons <- contrast(postsynapse_count_emm, method = "pairwise")
+postsynapse_count_pairwise_comparisons <- contrast(postsynapse_count_emm, method = "pairwise", adjust = "tukey")
 summary(postsynapse_count_pairwise_comparisons)
 
 
@@ -276,7 +276,7 @@ qqline(resid(synapse_size_model))
 synapse_size_emm <- emmeans(synapse_size_model, ~ treatment)
 summary(synapse_size_emm)
 
-synapse_size_pairwise_comparisons <- contrast(synapse_size_emm, method = "pairwise")
+synapse_size_pairwise_comparisons <- contrast(synapse_size_emm, method = "pairwise", adjust = "tukey")
 summary(synapse_size_pairwise_comparisons)
 
 # presynapse size model
@@ -290,7 +290,7 @@ qqline(resid(presynapse_size_model))
 presynapse_size_emm <- emmeans(presynapse_size_model, ~ treatment)
 summary(synapse_size_emm)
 
-presynapse_size_pairwise_comparisons <- contrast(presynapse_size_emm, method = "pairwise")
+presynapse_size_pairwise_comparisons <- contrast(presynapse_size_emm, method = "pairwise", adjust = "tukey")
 summary(presynapse_size_pairwise_comparisons)
 
 # postsynapse size model
@@ -304,7 +304,7 @@ qqline(resid(postsynapse_size_model))
 postsynapse_size_emm <- emmeans(postsynapse_size_model, ~ treatment)
 summary(synapse_size_emm)
 
-postsynapse_size_pairwise_comparisons <- contrast(postsynapse_size_emm, method = "pairwise")
+postsynapse_size_pairwise_comparisons <- contrast(postsynapse_size_emm, method = "pairwise", adjust = "tukey")
 summary(postsynapse_size_pairwise_comparisons)
 
 

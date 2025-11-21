@@ -1,11 +1,11 @@
-# Semi-automatic in-vitro synapse counting using Fiji Macro's
+# Semi-automated image processing and analysis protocol
 
 ## Dependencies
 (1) [Fiji](https://fiji.sc/). Analysis performed with v2.16.0/1.54p; Java 21.0.7 [64-bit]. Downloaded for MacOS Apple Silicon.
 
 (2) [Fiji hiPNAT Plugin](https://github.com/tferr/hIPNAT/tree/1.0.2). Download the .jar file under releases from v1.0.2, drag & drop it under the plugins folder in the Fiji files. Now you should see the `Summarize Skeleton` function under `Analyze/Skeleton`.
 
-## Analysis protocol
+## Semi-automatic ImageJ Macro Protocol
 
 ### 1.	Calculate mean threshold over all images and channels per experiment
 
@@ -53,5 +53,26 @@ a. Run `macro_closing.ijm` to close all image, tables, and clear our the ROI man
 b. Restart with Step 2 for the next image.
 
 
+# Downstream data analysis
+
+## Dependencies
+
+A single R script for data analysis was used inside a reproducible Docker development container .devcontainer in Visual Studio Code. Please see the [documentation](https://github.com/RamiKrispin/vscode-r) for more info.
+
+Same Docker Development environment as in `image-analysis/synapse-counting/notebooks/`
+
+## Analysis steps:
+
+`in-vitro-synapse-lmem.R`
+
+1. Filtering out FOVs that were not included in the image processing due to poor image quality (2 for VGLUT1-PSD95 and 2 for VGAT-GEPH)
+2. Calculate synapse density = synapse count / dendritic length
+3. Normalize values using control (Fc) mean across experiments
+4. Log2 transformation for better fit in linear mixed effects model
+5. Fitting of a linear mixed effects model to account for inter-experimental variability
+6. Post-hoc pairwise comparisons using Tukey's HSD test
+7. Do this for VGLUT1-PSD95 synapse puncta density and synapse puncta size
+8. Do this for VGAT-GEPH synapse puncta density and synapse puncta size
+
 ## Credits
-Workflow and Fiji Macro's were based on Efstathia Kotoula's macro's and adjusted to better flow.
+Semi-automatic image processing and Fiji Macro's were based on Efstathia Kotoula's macro's and adjusted to better flow.
