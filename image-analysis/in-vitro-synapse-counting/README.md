@@ -1,4 +1,4 @@
-# Semi-automated image processing and analysis protocol
+# Semi-automated image processing
 
 ## Dependencies
 (1) [Fiji](https://fiji.sc/). Analysis performed with v2.16.0/1.54p; Java 21.0.7 [64-bit]. Downloaded for MacOS Apple Silicon.
