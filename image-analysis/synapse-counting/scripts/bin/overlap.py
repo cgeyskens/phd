@@ -89,7 +89,7 @@ def measure_image_overlap(filename,
     }
 
 # get a list of files in that input_folder
-file_list = os.listdir(input_folder)
+file_list = [f for f in os.listdir(input_folder) if f.endswith('.czi')]
 
 # compute the results using a dask delayed object
 delayed_results = [measure_image_overlap(filename = filename, 

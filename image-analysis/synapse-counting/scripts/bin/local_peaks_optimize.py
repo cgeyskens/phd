@@ -220,7 +220,7 @@ def optimize_parameters_for_hippocampal_layer(file_list,
 ### ------------------------------------------ The actual optimization ------------------------------------------- ###
 
 # additional parameters for master definition
-file_list = os.listdir(input_folder)
+file_list = [f for f in os.listdir(input_folder) if f.endswith('.czi')]
     
 if synaptic_marker == "VGLUT1_PSD95":
     hippocampal_layers = helpers.get_regions_from_dict(opt_param_ranges_dict, "VGLUT1_PSD95")

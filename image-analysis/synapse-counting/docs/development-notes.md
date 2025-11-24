@@ -269,3 +269,11 @@ model_3 <- lme(
         - VGAT-GEPH_CA1-SLM
         - VGAT-GEPH_CA3-SR
     - Check the preprocessing parameters for GPR37L1 (separate JSON files for VCAM1 & GPR37L1?).
+
+#### 11.2025
+V- Test pipeline again
+V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse types (VGLUT1-PSD95 & VGAT-GEPH), because of airyscan processing
+- make new preprocessing parameters for VGLUT1-PSD95 & VGAT-GEPH
+- Launch pipeline on HPC
+- Downstream analysis
+

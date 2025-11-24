@@ -138,7 +138,7 @@ def local_peak_colocalizaion(filename,
     }
 
 # get a list of files in that input_folder
-file_list = os.listdir(input_folder)
+file_list = [f for f in os.listdir(input_folder) if f.endswith('.czi')]
 
 # compute the results using a dask delayed object
 delayed_results = [local_peak_colocalizaion(filename = file_name, 
