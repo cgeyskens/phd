@@ -270,10 +270,29 @@ model_3 <- lme(
         - VGAT-GEPH_CA3-SR
     - Check the preprocessing parameters for GPR37L1 (separate JSON files for VCAM1 & GPR37L1?).
 
-#### 11.2025
+(11.2025)
 V- Test pipeline again
 V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse types (VGLUT1-PSD95 & VGAT-GEPH), because of airyscan processing
 - make new preprocessing parameters for VGLUT1-PSD95 & VGAT-GEPH
+    VGLUT1-PSD95
+        V- CA1 SO
+        V- CA1 SR
+        V- CA1 SLM
+        V- CA3 SO
+        V- CA3 SL
+        V- CA3 SR
+        V- DG Hilus
+        V- DG ML
+    VGAT-GEPH
+        V- CA1 SO
+        V- CA1 SR
+        V- CA1 SLM
+        V- CA3 SO
+        V- CA3 SL
+        V- CA3 SR
+        V- DG Hilus
+        V- DG ML
+- make parameter ranges for local peak maxima
     VGLUT1-PSD95
         - CA1 SO
         - CA1 SR
@@ -292,6 +311,7 @@ V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse ty
         - CA3 SR
         - DG Hilus
         - DG ML
+- Move to cluster, only necessary scripts and data
 - Launch pipeline on HPC
 - Downstream analysis
 
