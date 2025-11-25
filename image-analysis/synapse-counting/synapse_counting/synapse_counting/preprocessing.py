@@ -118,7 +118,7 @@ class ImagePreprocessing:
         return presynapse_image, postsynapse_image
 
 
-def thresholding(presynapse_image, postsynapse_image, threshold_algorithm="triangle", threshold_scale = 1):
+def thresholding(presynapse_image, postsynapse_image, threshold_algorithm="triangle", pre_threshold_scale = 1, post_threshold_scale = 1):
     if threshold_algorithm == "otsu":
         presynapse_threshold = filters.threshold_otsu(presynapse_image)
         postsynapse_threshold = filters.threshold_otsu(postsynapse_image)
@@ -133,8 +133,8 @@ def thresholding(presynapse_image, postsynapse_image, threshold_algorithm="trian
         postsynapse_threshold = filters.threshold_yen(postsynapse_image)
     
     # scaling the threshold
-    presynapse_threshold *= threshold_scale
-    postsynapse_threshold *= threshold_scale
+    presynapse_threshold *= pre_threshold_scale
+    postsynapse_threshold *= post_threshold_scale
 
     # applying the threshold
     presynapse_image_threshold = presynapse_image >= presynapse_threshold
