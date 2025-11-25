@@ -128,6 +128,9 @@ def thresholding(presynapse_image, postsynapse_image, threshold_algorithm="trian
     elif threshold_algorithm == "triangle":
         presynapse_threshold = filters.threshold_triangle(presynapse_image)
         postsynapse_threshold = filters.threshold_triangle(postsynapse_image)
+    elif threshold_algorithm == "yen":
+        presynapse_threshold = filters.threshold_yen(presynapse_image)
+        postsynapse_threshold = filters.threshold_yen(postsynapse_image)
     
     presynapse_image_threshold = presynapse_image >= presynapse_threshold
     postsynapse_image_threshold = postsynapse_image >= postsynapse_threshold

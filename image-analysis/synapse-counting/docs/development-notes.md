@@ -260,7 +260,7 @@ model_3 <- lme(
 
 - Make the preprocessing parameters for GPR37L1 better. When set, do the same downstream analysis for GPR37L1 as you did for VCAM1.
     - Check the preprocessing parameters for VCAM1 again on the values that show significance. Input the optimizated values for local-peak-maxima and check visually.
-        - VGLUT1-PSD95_CA3-SO, preprocess params ok (only 3 images confounded by bleedthrough from Lck-GFP). local-peaks-optimal-params-ok.
+        - VGLUT1-PSD95_CA3-SO, preprocess params ok. local-peaks-optimal-params-ok.
         - VGLUT1-PSD95_CA3-SL, preprocess params ok. local-peaks-optimal-params-ok.
         - VGLUT1-PSD95_CA3-SR, preprocess params ok. local-peaks-optimal-params-ok.
         - VGLUT1-PSD95_DG-Hilus
@@ -274,6 +274,28 @@ model_3 <- lme(
 V- Test pipeline again
 V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse types (VGLUT1-PSD95 & VGAT-GEPH), because of airyscan processing
 - make new preprocessing parameters for VGLUT1-PSD95 & VGAT-GEPH
+    VGLUT1-PSD95
+        - CA1 SO
+        - CA1 SR
+        - CA1 SLM
+        - CA3 SO
+        - CA3 SL
+        - CA3 SR
+        - DG Hilus
+        - DG ML
+    VGAT-GEPH
+        - CA1 SO
+        - CA1 SR
+        - CA1 SLM
+        - CA3 SO
+        - CA3 SL
+        - CA3 SR
+        - DG Hilus
+        - DG ML
 - Launch pipeline on HPC
 - Downstream analysis
+
+
+PyPI Token:
+pypi-AgEIcHlwaS5vcmcCJDgxMzFmZTQxLTFhZGEtNGFhNS05MjgzLTMyODk0Yjg0MGNiMAACGFsxLFsic3luYXBzZS1jb3VudGluZyJdXQACLFsyLFsiNDAwMTAyNTktYjYxNy00OWZkLTg3MGUtMGJjOWY3YTRlNmI5Il1dAAAGIBbzd7CQkweyhGB9BMU9uP62TNaZ1L_mh9qnuRLE-tYA
 
