@@ -294,21 +294,21 @@ V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse ty
         V- DG ML
 - make parameter ranges for local peak maxima
     VGLUT1-PSD95
-        - CA1 SO
-        - CA1 SR
-        - CA1 SLM
-        - CA3 SO
-        - CA3 SL
-        - CA3 SR
-        - DG Hilus
-        - DG ML
+        V- CA1 SO
+        V- CA1 SR
+        V- CA1 SLM
+        V- CA3 SO
+        V- CA3 SL
+        V- CA3 SR
+        V- DG Hilus
+        V- DG ML
     VGAT-GEPH
-        - CA1 SO
-        - CA1 SR
-        - CA1 SLM
-        - CA3 SO
-        - CA3 SL
-        - CA3 SR
+        V- CA1 SO
+        V- CA1 SR
+        V- CA1 SLM
+        V- CA3 SO
+        V- CA3 SL
+        V- CA3 SR
         - DG Hilus
         - DG ML
 - Move to cluster, only necessary scripts and data
