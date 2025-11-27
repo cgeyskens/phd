@@ -1,5 +1,5 @@
 # Use official Python 3.11 image as the base, ensuring the correct architecture
-FROM --platform=linux/amd64 python:3.11-slim
+FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
     dask \
-    synapse-counting \
+    synapse-counting==0.1.2 \
     seaborn \
     optuna
 

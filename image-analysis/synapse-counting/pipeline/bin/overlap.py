@@ -68,7 +68,9 @@ def measure_image_overlap(filename,
     presynapse_threshold, postsynapse_threshold = preprocessing.thresholding(
         pre_1, 
         post_1, 
-        threshold_algorithm=params["threshold_algorithm"])
+        threshold_algorithm=params["threshold_algorithm"],
+        pre_threshold_scale=params["pre_threshold_scale"],
+        post_threshold_scale=params["post_threshold_scale"])
     presynapse_watersheded = preprocessing.custom_watershed(
         presynapse_threshold, 
         sigma = params["watershed_sigma"])
