@@ -1,0 +1,151 @@
+SLURM_JOB_ID: 65509279
+SLURM_JOB_USER: vsc35768
+SLURM_JOB_ACCOUNT: lp_big_wice_cpu
+SLURM_JOB_NAME: synapse_counting_pipeline
+SLURM_CLUSTER_NAME: wice
+SLURM_JOB_PARTITION: dedicated_big_bigmem
+SLURM_ARRAY_JOB_ID: 65509278
+SLURM_ARRAY_TASK_ID: 1
+SLURM_NNODES: 1
+SLURM_NODELIST: i28l15
+SLURM_JOB_CPUS_PER_NODE: 20
+Date: Thu Nov 27 14:56:56 CET 2025
+Walltime: 00-04:00:00
+========================================================================
+JOB STARTED
+
+      N E X T F L O W
+      version 25.04.8 build 5956
+      created 06-10-2025 21:19 UTC (23:19 CEST)
+      cite doi:10.1038/nbt.3820
+      http://nextflow.io
+
+[33mNextflow 25.10.0 is available - Please consider updating your version to it(B[m
+
+ N E X T F L O W   ~  version 25.04.8
+
+Launching `/scratch/leuven/357/vsc35768/synapse-counting/pipeline/run-pipeline.nf` [nostalgic_dubinsky] DSL2 - revision: bdad08efa2
+
+=====================================================================
+                    SYNAPSE COUNTING PIPELINE
+=====================================================================
+----------------------------
+Input from         : /scratch/leuven/357/vsc35768/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95
+Output to          : /scratch/leuven/357/vsc35768/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data
+----------------------------
+Synaptic markers           : VGLUT1_PSD95
+Protein & Control          : VCAM1_LacZ
+Nr of optimization trials  : 100
+----------------------------
+Preprocessing params JSON file       : /scratch/leuven/357/vsc35768/synapse-counting/pipeline/preprocess_params_202511.json
+Optimization param ranges JSON file  : /scratch/leuven/357/vsc35768/synapse-counting/pipeline/optimization_param_ranges_local_peaks_202511.json
+----------------------------
+
+[-        ] RunLocalPeaksOptimization   -
+[-        ] RunLocalPeaksColocalization -
+[-        ] RunPearsonsAnalysis         -
+
+[-        ] RunLocalPeaksOptimization   | 0 of 1
+[-        ] RunLocalPeaksColocalization -
+[-        ] RunPearsonsAnalysis         | 0 of 1
+[-        ] RunMandersAnalysis          | 0 of 1
+[-        ] RunOverlapAnalysis          | 0 of 1
+[-        ] RunPunctaAnalysis           | 0 of 1
+[-        ] ResultsPlots                -
+
+executor >  local (5)
+[3d/36b2a1] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[5c/0764a0] RunPearsonsAnalysis (1)       | 0 of 1
+[ad/ddfd6b] RunMandersAnalysis (1)        | 0 of 1
+[70/d41b31] RunOverlapAnalysis (1)        | 0 of 1
+[31/532e2e] RunPunctaAnalysis (1)         | 0 of 1
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[3d/36b2a1] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[5c/0764a0] RunPearsonsAnalysis (1)       | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)        | 0 of 1
+[70/d41b31] RunOverlapAnalysis (1)        | 0 of 1
+[31/532e2e] RunPunctaAnalysis (1)         | 0 of 1
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[3d/36b2a1] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[5c/0764a0] RunPearsonsAnalysis (1)       | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)        | 0 of 1
+[70/d41b31] RunOverlapAnalysis (1)        | 0 of 1
+[31/532e2e] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[3d/36b2a1] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[5c/0764a0] RunPearsonsAnalysis (1)       | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)        | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)        | 0 of 1
+[31/532e2e] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[3d/36b2a1] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[5c/0764a0] RunPearsonsAnalysis (1)       | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)        | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)        | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (6)
+[3d/36b2a1] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[17/883164] Run…calPeaksColocalization (1) | 0 of 1
+[5c/0764a0] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)         | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[-        ] ResultsPlots                   -
+
+executor >  local (6)
+[3d/36b2a1] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[17/883164] Run…calPeaksColocalization (1) | 0 of 1
+[5c/0764a0] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)         | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[-        ] ResultsPlots                   -
+
+executor >  local (7)
+[3d/36b2a1] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[17/883164] Run…calPeaksColocalization (1) | 1 of 1 ✔
+[5c/0764a0] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)         | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[de/34988c] ResultsPlots (1)               | 0 of 1
+
+executor >  local (7)
+[3d/36b2a1] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[17/883164] Run…calPeaksColocalization (1) | 1 of 1 ✔
+[5c/0764a0] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)         | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[de/34988c] ResultsPlots (1)               | 0 of 1
+
+executor >  local (7)
+[3d/36b2a1] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[17/883164] Run…calPeaksColocalization (1) | 1 of 1 ✔
+[5c/0764a0] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[ad/ddfd6b] RunMandersAnalysis (1)         | 1 of 1 ✔
+[70/d41b31] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[31/532e2e] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[de/34988c] ResultsPlots (1)               | 1 of 1 ✔
+Completed at: 27-Nov-2025 15:40:16
+Duration    : 43m 15s
+CPU hours   : 1.9
+Succeeded   : 7
+
+
+JOB ENDED

@@ -1,0 +1,138 @@
+SLURM_JOB_ID: 65509278
+SLURM_JOB_USER: vsc35768
+SLURM_JOB_ACCOUNT: lp_big_wice_cpu
+SLURM_JOB_NAME: synapse_counting_pipeline
+SLURM_CLUSTER_NAME: wice
+SLURM_JOB_PARTITION: dedicated_big_bigmem
+SLURM_ARRAY_JOB_ID: 65509278
+SLURM_ARRAY_TASK_ID: 4
+SLURM_NNODES: 1
+SLURM_NODELIST: i28l17
+SLURM_JOB_CPUS_PER_NODE: 20
+Date: Thu Nov 27 14:56:56 CET 2025
+Walltime: 00-04:00:00
+========================================================================
+JOB STARTED
+
+      N E X T F L O W
+      version 25.04.8 build 5956
+      created 06-10-2025 21:19 UTC (23:19 CEST)
+      cite doi:10.1038/nbt.3820
+      http://nextflow.io
+
+[33mNextflow 25.10.0 is available - Please consider updating your version to it(B[m
+
+ N E X T F L O W   ~  version 25.04.8
+
+Launching `/scratch/leuven/357/vsc35768/synapse-counting/pipeline/run-pipeline.nf` [mad_goldberg] DSL2 - revision: bdad08efa2
+
+=====================================================================
+                    SYNAPSE COUNTING PIPELINE
+=====================================================================
+----------------------------
+Input from         : /scratch/leuven/357/vsc35768/synapse-counting/IHC_Exp11_GPR37L1_VGAT-GEPH
+Output to          : /scratch/leuven/357/vsc35768/synapse-counting/IHC_Exp11_GPR37L1_VGAT-GEPH_output_data
+----------------------------
+Synaptic markers           : VGAT_GEPH
+Protein & Control          : GPR37L1_LacZ
+Nr of optimization trials  : 100
+----------------------------
+Preprocessing params JSON file       : /scratch/leuven/357/vsc35768/synapse-counting/pipeline/preprocess_params_202511.json
+Optimization param ranges JSON file  : /scratch/leuven/357/vsc35768/synapse-counting/pipeline/optimization_param_ranges_local_peaks_202511.json
+----------------------------
+
+[-        ] RunLocalPeaksOptimization   -
+[-        ] RunLocalPeaksColocalization -
+[-        ] RunPearsonsAnalysis         -
+[-        ] RunMandersAnalysis          -
+[-        ] RunOverlapAnalysis          -
+[-        ] RunPunctaAnalysis           -
+[-        ] ResultsPlots                -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 0 of 1
+[3b/739260] RunMandersAnalysis (1)        | 0 of 1
+[ba/825867] RunOverlapAnalysis (1)        | 0 of 1
+[bc/23566a] RunPunctaAnalysis (1)         | 0 of 1
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 0 of 1
+[3b/739260] RunMandersAnalysis (1)        | 0 of 1
+[ba/825867] RunOverlapAnalysis (1)        | 0 of 1
+[bc/23566a] RunPunctaAnalysis (1)         | 0 of 1
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 0 of 1
+[3b/739260] RunMandersAnalysis (1)        | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)        | 0 of 1
+[bc/23566a] RunPunctaAnalysis (1)         | 0 of 1
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 0 of 1
+[3b/739260] RunMandersAnalysis (1)        | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)        | 0 of 1
+[bc/23566a] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 0 of 1
+[3b/739260] RunMandersAnalysis (1)        | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)        | 1 of 1 ✔
+[bc/23566a] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (5)
+[cc/f54331] RunLocalPeaksOptimization (1) | 0 of 1
+[-        ] RunLocalPeaksColocalization   -
+[ec/dc22f2] RunPearsonsAnalysis (1)       | 1 of 1 ✔
+[3b/739260] RunMandersAnalysis (1)        | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)        | 1 of 1 ✔
+[bc/23566a] RunPunctaAnalysis (1)         | 1 of 1 ✔
+[-        ] ResultsPlots                  -
+
+executor >  local (6)
+[cc/f54331] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[c6/99c652] Run…calPeaksColocalization (1) | 0 of 1
+[ec/dc22f2] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[3b/739260] RunMandersAnalysis (1)         | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[bc/23566a] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[-        ] ResultsPlots                   -
+
+executor >  local (7)
+[cc/f54331] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[c6/99c652] Run…calPeaksColocalization (1) | 1 of 1 ✔
+[ec/dc22f2] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[3b/739260] RunMandersAnalysis (1)         | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[bc/23566a] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[84/477e16] ResultsPlots (1)               | 0 of 1
+
+executor >  local (7)
+[cc/f54331] RunLocalPeaksOptimization (1)  | 1 of 1 ✔
+[c6/99c652] Run…calPeaksColocalization (1) | 1 of 1 ✔
+[ec/dc22f2] RunPearsonsAnalysis (1)        | 1 of 1 ✔
+[3b/739260] RunMandersAnalysis (1)         | 1 of 1 ✔
+[ba/825867] RunOverlapAnalysis (1)         | 1 of 1 ✔
+[bc/23566a] RunPunctaAnalysis (1)          | 1 of 1 ✔
+[84/477e16] ResultsPlots (1)               | 1 of 1 ✔
+Completed at: 27-Nov-2025 15:15:35
+Duration    : 18m 35s
+CPU hours   : 1.0
+Succeeded   : 7
+
+
+JOB ENDED

@@ -25,16 +25,48 @@ The pipeline will analyze 8 synapse metrics with 5 processes, 4 metrics assess c
 
 Python scripts were parallelized with Nextflow, in each script the image data was parallelized using Dask.
 
-## Usage
-In our case the image was gathered as below: 
+## Dependencies
+You can run the pipeline using on of the following:
 
-<p align="center">
-    <img src="image-readme-2.png">
-</p>  
+1. **Conda environment** 
+    
+    From this folder, run:
+    ```bash
+    conda env create -f ./synapse-counting-env.yml
+    ```
 
-Running the pipeline example: 
+2. **Docker (muli-arch image)**
+
+    Pull from Docker Hub:
+
+    ```bash
+    docker pull cgeyskens/synapse-counting:v5
+    ```
+
+3. **Apptainer**
+
+    Also pull from Docker Hub:
+
+    ```bash
+    apptainer pull cgeyskens/synapse-counting:v5
+    ```
+
+## Nextflow pipeline execution
+
+Configure first the pipeline in  `nextflow.config`
+
+This pipeline provides three Nextflow profiles, depending on how you want to run it:
+
+- `-profile conda` — uses the Conda environment in this folder (`./synapse-counting-env.yml`)
+- `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting`
+- `-profile apptainer` — runs with Apptainer/Singularity by pulling the same Docker image
+
+Example usage:
+
 ```bash
+nextflow run run-pipeline.nf -profile conda
 nextflow run run-pipeline.nf -profile docker
+nextflow run run-pipeline.nf -profile apptainer
 ```
 
 ## Pipeline input

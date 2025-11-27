@@ -273,7 +273,7 @@ model_3 <- lme(
 (11.2025)
 V- Test pipeline again
 V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse types (VGLUT1-PSD95 & VGAT-GEPH), because of airyscan processing
-- make new preprocessing parameters for VGLUT1-PSD95 & VGAT-GEPH
+V- make new preprocessing parameters for VGLUT1-PSD95 & VGAT-GEPH
     VGLUT1-PSD95
         V- CA1 SO
         V- CA1 SR
@@ -292,7 +292,7 @@ V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse ty
         V- CA3 SR
         V- DG Hilus
         V- DG ML
-- make parameter ranges for local peak maxima
+V- make parameter ranges for local peak maxima
     VGLUT1-PSD95
         V- CA1 SO
         V- CA1 SR
@@ -309,10 +309,10 @@ V- acquired new images for both datasets (VCAM1 and GPR37L1) for both synapse ty
         V- CA3 SO
         V- CA3 SL
         V- CA3 SR
-        - DG Hilus
-        - DG ML
-- Move to cluster, only necessary scripts and data
-- Launch pipeline on HPC
+        V- DG Hilus
+        V- DG ML
+V- Move to cluster, only necessary scripts and data
+V- Launch pipeline on HPC
 - Downstream analysis
 
 
