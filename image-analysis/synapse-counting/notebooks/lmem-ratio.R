@@ -71,7 +71,8 @@ protein = "VCAM1"
 metric_assessed = "local_peak_colocalized_spots"
 
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data/metric_results.csv")
+
 dim(vcam1_data)
 
 # data preprocessing for only one dependent variable (one synaptic metric, here it is presynaptic MFI)

@@ -12,10 +12,10 @@ remotes::install_github("nx10/httpgd")
 library(httpgd)
 hgd() # open the server for plotting
 
-metric_assessed = "VGAT.GEPH_CA1.SLM_local_peak_colocalized_spots"  
+metric_assessed = "VGLUT1.PSD95_CA1.SLM_local_peak_colocalized_spots"  
 
 # load in already log2 transformed mean data from PCA.ipynb
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
 dim(vcam1_data)
 
 colnames(vcam1_data)
@@ -51,7 +51,7 @@ print(residuals(model_for_pca))
 ############## Function to get all the residuals for each metric
 
 # loading in the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
 
 # get all the metrics for looping
 column_names <- as.list(colnames(vcam1_data))

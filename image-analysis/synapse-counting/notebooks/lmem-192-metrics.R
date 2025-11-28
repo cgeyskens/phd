@@ -12,10 +12,10 @@ remotes::install_github("nx10/httpgd")
 library(httpgd)
 hgd() # open the server for plotting
 
-metric_assessed = "VGAT.GEPH_CA1.SLM_local_peak_colocalized_spots"  
+metric_assessed = "VGLUT1.PSD95_CA1.SLM_local_peak_colocalized_spots"  
 
 # loading in the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
 
 # add the gRNA and Brain column to the original data
 vcam1_data_with_Brain_gRNA <- vcam1_data %>%
@@ -57,9 +57,9 @@ results_df <- data.frame(
 ############################# Functions ###############################
 
 # loading in the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/vcam1_vglut1_vgat_wide_mean_log2_data.csv")
 
-# subset data
+# subset dataxs
 process_data_for_metric <- function(data, metric_assessed){
     data_metric <- data %>%
         select(Brain, gRNA, metric_assessed)

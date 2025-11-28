@@ -51,6 +51,8 @@ You can run the pipeline using on of the following:
     apptainer pull cgeyskens/synapse-counting:v5
     ```
 
+When running multiple Nextflow pipelines in parallel using SLURM, its best to pull the container before running the pipeline. Otherwise, it will try to pull it at the same time from Docker Hub and it will crash.
+
 ## Nextflow pipeline execution
 
 Configure first the pipeline in  `nextflow.config`
@@ -135,9 +137,6 @@ The pipeline will produce following files:
 5. `plotted_data.png` an image that lets you inspect the plotted results
 6. `all_statistics.csv` containes the statistics
 7. `internal_coloc_controls.png` an image that plots the difference between actual and rotated presynapse/postsynapses colocalization images
-
-## Dependencies
-The pipeline can be run inside a Conda environment or a Docker image. Apptainer can also pull the docker image from DockerHub to run it in a HPC system.
 
 ## Limitations
 The pipeline can only be used for ZEISS image format (.czi).

@@ -25,10 +25,10 @@ metrics_to_assess = c("local_peak_colocalized_spots",
                       "pre_mean_puncta_size_um2",
                       "post_mean_puncta_size_um2")
 
-metric_assessed = "presynapse_image_mfi"
+metric_assessed <- "post_mean_puncta_size_um2"
 
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data/metric_results.csv")
 dim(vcam1_data)
 
 # data preprocessing for only one dependent variable (one synaptic metric, here it is presynaptic MFI)
@@ -45,7 +45,7 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     )
 
 # Log-transform the raw data
-vcam1_data_metric_assessed[[paste0(metric_assessed, "_log")]] <- log(vcam1_data_metric_assessed[[metric_assessed]])
+vcam1_data_metric_assessed[[paste0(metric_assessed, "_log")]] <- log(vcam1_data_metric_assessed[[metric_assessed]] + 1)
 
 # standardizing the values
 vcam1_data_metric_assessed[[paste0(metric_assessed, "_scaled")]] <- scale(vcam1_data_metric_assessed[paste0(metric_assessed, "_log")])
@@ -60,7 +60,7 @@ class(vcam1_data_metric_assessed$gRNA)
 class(vcam1_data_metric_assessed$hippocampal_layer)
 
 # checking all the values in a boxplot
-plot(vcam1_data_metric_assessed$presynapse_image_mfi ~ vcam1_data_metric_assessed$gRNA, col="skyblue", xlab="gRNA", ylab="variable")
+plot(vcam1_data_metric_assessed[[metric_assessed]] ~ vcam1_data_metric_assessed$gRNA, col="skyblue", xlab="gRNA", ylab="variable")
 
 # model
 improved_model <- lmer(
@@ -72,7 +72,7 @@ improved_model <- lmer(
 summary(improved_model)
 
 # The best model to fit my data
-improved_model <- lmer(presynapse_image_mfi ~ gRNA * hippocampal_layer +   # fixed effects with interaction between gRNA & hippocampal layer
+improved_model <- lmer(metric_assessed ~ gRNA * hippocampal_layer +   # fixed effects with interaction between gRNA & hippocampal layer
                      (1|Brain) +                             # between-brain variation because of perfusion/viral injection
                      (1|Brain:gRNA) +                        # paired design of hemispheres
                      (1|Brain:section:hippocampal_layer),    # nested measurements
