@@ -316,11 +316,19 @@ V- Launch pipeline on HPC
 - 2 issues:
     - binerized image analysis don't show anything
         V- tried TopHat filter: False, CLAHE: False. No luck
-        - solutions: from yen to otsu
-    - local_peak_metrics has a lot of zero value in certain layers  
-        - solution: more stringent param ranges: max distance of least 1 seems to help
-- Run the analysis again with optimal parameters
+        V- solutions: from yen to otsu
+    V- local_peak_metrics has a lot of zero value in certain layers  
+        V- solution: more stringent param ranges: max distance of least 1 seems to help
+V- Run the analysis again with optimal parameters
 - Downstream analysis
+    - Compare the lme4 model vs the nlme model in on section level ration vs raw data
+    - Try out the 192 metrics model to get residuals for PCA
+
+- Visualization in the end:
+    Heatmap instead of dotplot because it shows much more information (i.e. trends). You also negate the question: why local peaks and not puncta size? Because you also show non-significant results.
+
+- Check out the notebooks
+dotplot.ipynb gets input from an R script
 
 
 PyPI Token:

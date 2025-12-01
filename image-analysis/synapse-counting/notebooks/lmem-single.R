@@ -9,8 +9,9 @@ library(emmeans)
 library(tibble)
 library(tidyr)
 
-remotes::install_github("nx10/httpgd")
+#remotes::install_github("nx10/httpgd")
 library(httpgd)
+hgd()
 
 metrics_to_assess = c("local_peak_colocalized_spots",
                       "overlap_coeff",
@@ -25,10 +26,10 @@ metrics_to_assess = c("local_peak_colocalized_spots",
                       "pre_mean_puncta_size_um2",
                       "post_mean_puncta_size_um2")
 
-metric_assessed <- "post_mean_puncta_size_um2"
+metric_assessed <- "overlap_coeff"
 
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_145813/metric_results.csv")
 dim(vcam1_data)
 
 # data preprocessing for only one dependent variable (one synaptic metric, here it is presynaptic MFI)

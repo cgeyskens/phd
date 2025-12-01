@@ -5,56 +5,56 @@
             "post_distance": [1, 5], 
             "pre_threshold": [150, 300], 
             "post_threshold": [100, 250], 
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         },
         "CA1_SR": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [120, 270],
             "post_threshold": [100, 250],
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         },
         "CA1_SLM": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [80, 230],
-            "post_threshold": [100, 250],
-            "max_distance_um": [0.01, 1]
+            "post_threshold": [100, 200],
+            "max_distance_um": [1, 3]
         },
         "CA3_SO": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [100, 250],
             "post_threshold": [100, 250],
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         },
         "CA3_SL": {
             "pre_distance": [10, 15],
             "post_distance": [5, 10],
-            "pre_threshold": [200, 350],
-            "post_threshold": [120, 300],
-            "max_distance_um": [0.01, 1]
+            "pre_threshold": [200, 300],
+            "post_threshold": [120, 250],
+            "max_distance_um": [1, 3]
         },
         "CA3_SR": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [150, 300],
             "post_threshold": [130, 270],
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         },
         "DG_Hilus": {
             "pre_distance": [5, 15],
             "post_distance": [1, 10],
-            "pre_threshold": [200, 400],
-            "post_threshold": [100, 250],
-            "max_distance_um": [0.01, 1]
+            "pre_threshold": [200, 350],
+            "post_threshold": [100, 200],
+            "max_distance_um": [1, 3]
         },
         "DG_ML": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
-            "pre_threshold": [150, 300],
+            "pre_threshold": [150, 250],
             "post_threshold": [100, 180],
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         }
     }, 
     
@@ -63,57 +63,57 @@
             "pre_distance": [1, 5], 
             "post_distance": [1, 5], 
             "pre_threshold": [220, 400], 
-            "post_threshold": [250, 1000], 
-            "max_distance_um": [0.01, 1]
+            "post_threshold": [250, 800], 
+            "max_distance_um": [1, 3]
         },
         "CA1_SR": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
-            "pre_threshold": [200, 400],
-            "post_threshold": [300, 1000],
-            "max_distance_um": [0.01, 1]
+            "pre_threshold": [200, 280],
+            "post_threshold": [300, 550],
+            "max_distance_um": [1, 3]
         },       
         "CA1_SLM": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
-            "pre_threshold": [250, 400],
-            "post_threshold": [300, 900],
-            "max_distance_um": [0.01, 1]
+            "pre_threshold": [200, 280],
+            "post_threshold": [300, 380],
+            "max_distance_um": [1, 3]
         },
         "CA3_SO": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [200, 300],
             "post_threshold": [400, 1000],
-            "max_distance_um": [0.01, 1]
+            "max_distance_um": [1, 3]
         },
         "CA3_SL": {
-            "pre_distance": [10, 15],
-            "post_distance": [5, 15],
-            "pre_threshold": [250, 400],
-            "post_threshold": [350, 1000],
-            "max_distance_um": [0.01, 1]
+            "pre_distance": [10, 14],
+            "post_distance": [5, 10],
+            "pre_threshold": [250, 330],
+            "post_threshold": [350, 600],
+            "max_distance_um": [1, 3]
         },
         "CA3_SR": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
             "pre_threshold": [200, 300],
-            "post_threshold": [350, 1000],
-            "max_distance_um": [0.01, 1]
+            "post_threshold": [350, 700],
+            "max_distance_um": [1, 3]
         },
         "DG_Hilus": {
-            "pre_distance": [5, 15],
-            "post_distance": [5, 15],
-            "pre_threshold": [250, 350],
-            "post_threshold": [400, 1000],
-            "max_distance_um": [0.01, 1]
+            "pre_distance": [10, 15],
+            "post_distance": [5, 10],
+            "pre_threshold": [250, 330],
+            "post_threshold": [350, 430],
+            "max_distance_um": [1, 3]
         },
         "DG_ML": {
             "pre_distance": [1, 5],
             "post_distance": [1, 5],
-            "pre_threshold": [200, 300],
-            "post_threshold": [350, 700],
-            "max_distance_um": [0.01, 1]
+            "pre_threshold": [200, 250],
+            "post_threshold": [350, 450],
+            "max_distance_um": [1, 3]
         }            
     }
 }

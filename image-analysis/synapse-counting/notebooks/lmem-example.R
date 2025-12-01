@@ -35,7 +35,7 @@ library(stringr)
 library(emmeans)
 
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_145813/metric_results.csv")
 
 # preprocessing the data
 vcam1_data_metric_assessed <- vcam1_data %>%
@@ -43,7 +43,7 @@ vcam1_data_metric_assessed <- vcam1_data %>%
     section = str_extract(img_filename, "section-\\d+")
     ) %>%
     select(
-    post_puncta_density_per_100_um2,
+    local_peak_colocalized_spots,
     gRNA,
     hippocampal_layer,
     section,

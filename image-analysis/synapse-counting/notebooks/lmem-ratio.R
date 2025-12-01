@@ -7,8 +7,9 @@ library(tibble)
 library(tidyr)
 library(nlme)
 
-remotes::install_github("nx10/httpgd")
+# remotes::install_github("nx10/httpgd")
 library(httpgd)
+hgd()
 
 ####################### For VCAM1 ###
 # For VLGUT1-PSD95
@@ -71,7 +72,7 @@ protein = "VCAM1"
 metric_assessed = "local_peak_colocalized_spots"
 
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251128_135431/metric_results.csv")
 
 dim(vcam1_data)
 
@@ -205,14 +206,14 @@ results_df$p.value.adj = p.adjust(results_df$p.value, method = "fdr")
 
 ################################## Functions ################################
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/VCAM1/VCAM1-LacZ_VGAT-GEPH_output_data/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_145813/metric_results.csv")
 dim(vcam1_data)
 
 # protein
 protein = "VCAM1"
 
 # synapse type
-synapse_type = "VGAT-GEPH"
+synapse_type = "VGLUT1-PSD95"
 
 # metrics
 metrics_to_assess = c("local_peak_colocalized_spots",
@@ -269,9 +270,9 @@ data_log2 <- function(data_to_format, metric, protein){
     return(log2_ratio)
 }
 
-# run the linear mixed effects model
-modelling <- function(data, metric){
-    model_5 <- lme(
+# run the linear mixed effects model - nlme on ratio
+modelling_1 <- function(data, metric){
+    model_5 <- nlme::lme(
         fixed = as.formula(paste0(metric, "_log2_ratio ~ hippocampal_layer")),
         data = data,
         random = ~1 | Brain,
@@ -279,6 +280,14 @@ modelling <- function(data, metric){
         control = lmeControl(maxIter = 100, msMaxIter = 100, opt = "optim", singular.ok = TRUE)
     )
     return(model_5)
+}
+
+modelling_2 <- function(data, metric){
+    model <- lme4::lmer(
+      formula = as.formula(paste0(metric, "_log2_ratio ~ gRNA * hippocampal_layer + 
+                                  (1|Brain) + (1|Brain:gRNA) + (1|Brain:section:hippocampal_layer)")),
+      data = data,
+      REML = TRUE)
 }
 
 # extract model params
@@ -290,12 +299,16 @@ model_extract_params <- function(model_to_extract){
 }
 
 # main function for full analysis
-run_full_analysis <- function(data, metrics_to_assess, protein){
+run_full_analysis <- function(data, metrics_to_assess, protein, which_model){
     all_results_list <- list() # empty list
     for (metric_assessed in metrics_to_assess){
-        preprocessed_metric <- process_data_for_metric(data = vcam1_data, metric = metric_assessed)
+        preprocessed_metric <- process_data_for_metric(data = data, metric = metric_assessed)
         preprocessed_log2 <- data_log2(data_to_format = preprocessed_metric, metric = metric_assessed, protein = protein)
-        model <- modelling(data = preprocessed_log2, metric = metric_assessed)
+        if (which_model == "nlme_ratio"){
+          model <- modelling_1(data = preprocessed_log2, metric = metric_assessed)
+        } else if (which_model == "lme_ratio_1") {
+           model <- modelling_2(data = preprocessed_log2, metric = metric_assessed)
+        }
         results <- model_extract_params(model_to_extract = model)
 
         results$analyzed_metric <- metric_assessed
@@ -310,14 +323,25 @@ run_full_analysis <- function(data, metrics_to_assess, protein){
 }
 
 # running the pipeline
-data_analyzed <- run_full_analysis(
+data_analyzed_nlme_ratio <- run_full_analysis(
     data = vcam1_data,
     metrics_to_assess = metrics_to_assess,
-    protein = protein
+    protein = protein,
+    which_model = "nlme_ratio"
 )
 
+data_analyzed_lme_ratio_1 <- run_full_analysis(
+    data = vcam1_data,
+    metrics_to_assess = metrics_to_assess,
+    protein = protein,
+    which_model = "lme_ratio_1"
+)
+
+
+
+
 # saving 
-output_directory <- "/mnt/image-analysis/synapse-counting/VCAM1"
+output_directory <- "/mnt/image-analysis/synapse-counting/results_202512"
 output_filename <- paste0(protein, "_", synapse_type, "_lmem_analysis_results.csv")
 output_filepath <- file.path(output_directory, output_filename)
 write.csv(data_analyzed, file = output_filepath, row.names = FALSE)
