@@ -321,11 +321,11 @@ V- Launch pipeline on HPC
         V- solution: more stringent param ranges: max distance of least 1 seems to help
 V- Run the analysis again with optimal parameters
 - Downstream analysis
-    - Compare the lme4 model vs the nlme model in on section level ration vs raw data
+    V- Compare the lme4 model vs the nlme model in on section level ration vs raw data
     - Try out the 192 metrics model to get residuals for PCA
 
 - Visualization in the end:
-    Heatmap instead of dotplot because it shows much more information (i.e. trends). You also negate the question: why local peaks and not puncta size? Because you also show non-significant results.
+    Heatmap instead or dotplot because it shows much more information (i.e. trends). You also negate the question: why local peaks and not puncta size? Because you also show non-significant results. ==> It will be heatmap with selected metrics.
 
 - Check out the notebooks
 dotplot.ipynb gets input from an R script

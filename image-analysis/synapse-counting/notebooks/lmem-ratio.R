@@ -206,14 +206,14 @@ results_df$p.value.adj = p.adjust(results_df$p.value, method = "fdr")
 
 ################################## Functions ################################
 # loading the data
-vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_145813/metric_results.csv")
+vcam1_data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv")
 dim(vcam1_data)
 
 # protein
 protein = "VCAM1"
 
 # synapse type
-synapse_type = "VGLUT1-PSD95"
+synapse_type = "VGAT-GEPH"
 
 # metrics
 metrics_to_assess = c("local_peak_colocalized_spots",
@@ -242,6 +242,11 @@ process_data_for_metric <- function(data, metric){
             section,
             Brain
         )
+    data_metric_assessed$gRNA <- factor(data_metric_assessed$gRNA)
+    data_metric_assessed$hippocampal_layer <- factor(data_metric_assessed$hippocampal_layer)
+    data_metric_assessed$section <- factor(data_metric_assessed$section)
+    data_metric_assessed$Brain <- factor(data_metric_assessed$Brain)
+    
     return(data_metric_assessed)
 }
 
@@ -250,7 +255,13 @@ data_log2 <- function(data_to_format, metric, protein){
     protein_gRNA_col_name <- paste0(protein, "-gRNA")
     lacZ_gRNA_col_name <- "LacZ-gRNA"
     
+    # add pseudocount in case of zero's
+    pseudocount <- 1e-6
+
     log2_ratio_section <- data_to_format %>%
+        mutate(
+          !!sym(metric) := !!sym(metric) + pseudocount
+        ) %>%
         pivot_wider(
             names_from = gRNA,
             values_from = !!sym(metric)
@@ -272,45 +283,57 @@ data_log2 <- function(data_to_format, metric, protein){
 
 # run the linear mixed effects model - nlme on ratio
 modelling_1 <- function(data, metric){
-    model_5 <- nlme::lme(
+    model <- nlme::lme(
         fixed = as.formula(paste0(metric, "_log2_ratio ~ hippocampal_layer")),
         data = data,
         random = ~1 | Brain,
         weights = varIdent(form = ~1 | hippocampal_layer),
         control = lmeControl(maxIter = 100, msMaxIter = 100, opt = "optim", singular.ok = TRUE)
     )
-    return(model_5)
-}
-
-modelling_2 <- function(data, metric){
-    model <- lme4::lmer(
-      formula = as.formula(paste0(metric, "_log2_ratio ~ gRNA * hippocampal_layer + 
-                                  (1|Brain) + (1|Brain:gRNA) + (1|Brain:section:hippocampal_layer)")),
-      data = data,
-      REML = TRUE)
+    return(model)
 }
 
 # extract model params
 model_extract_params <- function(model_to_extract){
     em_means <- emmeans(model_to_extract, ~hippocampal_layer)
-    results_df <- as.data.frame(test(em_means))
-    results_df$p.value.adj = p.adjust(results_df$p.value, method = "fdr")
+    results_df <- as.data.frame(test(em_means, null = 0, adjust = "fdr"))
     return(results_df)
 }
 
+# Function to generate diagnostic plots for a fitted nlme::lme model
+check_diagnostics_nlme <- function(model, metric_name) {
+
+    model_residuals <- residuals(model, type = "normalized")
+    
+    fitted_values <- fitted(model)
+
+    opar <- par(mfrow = c(1, 2)) # Save original parameters
+
+    qqnorm(model_residuals, 
+           main = paste("Q-Q Plot:", metric_name))
+    qqline(model_residuals, col = "red")
+    
+    plot(fitted_values, model_residuals,
+         xlab = "Fitted Values",
+         ylab = "Normalized Residuals",
+         main = paste("Residuals vs. Fitted:", metric_name))
+    abline(h = 0, col = "red", lty = 2)
+    
+    par(opar) 
+}
+
 # main function for full analysis
-run_full_analysis <- function(data, metrics_to_assess, protein, which_model){
+run_full_analysis <- function(data, metrics_to_assess, protein){
     all_results_list <- list() # empty list
     for (metric_assessed in metrics_to_assess){
         preprocessed_metric <- process_data_for_metric(data = data, metric = metric_assessed)
         preprocessed_log2 <- data_log2(data_to_format = preprocessed_metric, metric = metric_assessed, protein = protein)
-        if (which_model == "nlme_ratio"){
-          model <- modelling_1(data = preprocessed_log2, metric = metric_assessed)
-        } else if (which_model == "lme_ratio_1") {
-           model <- modelling_2(data = preprocessed_log2, metric = metric_assessed)
-        }
-        results <- model_extract_params(model_to_extract = model)
+        
+        model <- modelling_1(data = preprocessed_log2, metric = metric_assessed)
 
+        check_diagnostics_nlme(model = model, metric_name = metric_assessed)
+
+        results <- model_extract_params(model_to_extract = model)
         results$analyzed_metric <- metric_assessed
         results$analyzed_protein <- protein
     
@@ -326,16 +349,9 @@ run_full_analysis <- function(data, metrics_to_assess, protein, which_model){
 data_analyzed_nlme_ratio <- run_full_analysis(
     data = vcam1_data,
     metrics_to_assess = metrics_to_assess,
-    protein = protein,
-    which_model = "nlme_ratio"
+    protein = protein
 )
 
-data_analyzed_lme_ratio_1 <- run_full_analysis(
-    data = vcam1_data,
-    metrics_to_assess = metrics_to_assess,
-    protein = protein,
-    which_model = "lme_ratio_1"
-)
 
 
 
