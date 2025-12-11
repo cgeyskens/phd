@@ -223,8 +223,8 @@ model_3 <- lme(
 
 
 ### Statistician meeting with Steffen Fieuws 02.07.2025
-- oppassen met adj-p-values, q values and FDR. Check Storey vs BH.
-- Do PCA loadings instead of correlation of metrics with PCs. Loadings are real correlations. For each PC, the metrics loadings it will sum to one. Use squared loadings of the PCs.
+V- oppassen met adj-p-values, q values and FDR. Check Storey vs BH.
+V- Do PCA loadings instead of correlation of metrics with PCs. Loadings are real correlations. For each PC, the metrics loadings it will sum to one. Use squared loadings of the PCs.
 
 
 
@@ -242,11 +242,11 @@ V- PCA loadings of metrics (dougnut graph of percentage significant correlated m
 - PLS-DA (see Kaulich et al. 2025)
 
 ### Notes, implementing a linear mixed model on the log2 ratio values 
-- most metrics can work with the model. 
+V- most metrics can work with the model. 
     I do see some times conflicting results between the paired t-test and the simplified linear model.
         example: local_peaks_colocalized_spots for VCAM1 & VGAT_GEPH doesnt show any significance, 
                 but it is very clear from the data points that there IS a diference.
-- The nice thing about this setup is that its a paired design and now we just take the log2 ratio and don't account for the piared design in the model
+V- The nice thing about this setup is that its a paired design and now we just take the log2 ratio and don't account for the piared design in the model
 
 
 ### Next
@@ -258,7 +258,7 @@ model_3 <- lme(
   weights = varIdent(form = ~1 | hippocampal_layer)
 )
 
-- Make the preprocessing parameters for GPR37L1 better. When set, do the same downstream analysis for GPR37L1 as you did for VCAM1.
+V- Make the preprocessing parameters for GPR37L1 better. When set, do the same downstream analysis for GPR37L1 as you did for VCAM1.
     - Check the preprocessing parameters for VCAM1 again on the values that show significance. Input the optimizated values for local-peak-maxima and check visually.
         - VGLUT1-PSD95_CA3-SO, preprocess params ok. local-peaks-optimal-params-ok.
         - VGLUT1-PSD95_CA3-SL, preprocess params ok. local-peaks-optimal-params-ok.

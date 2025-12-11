@@ -203,6 +203,6 @@ p
 
 # saving
 ggsave(paste0(protein, "_pca_paper.svg"), 
-    plot = p4, 
+    plot = p, 
     device = cairo_pdf,
-    width = 22, height = 20, units = "cm", dpi=300)
+    width = 23, height = 20, units = "cm", dpi=300)
