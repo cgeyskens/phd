@@ -18,14 +18,13 @@ synapse-counting/
 | ├── 05_heatmap_lmem.ipynb  # plotting the Log2 FC in a heatmap across synaptic metrics x hippocampal laminae
 | ├── 06_plot_single_metric.R  # plotting of single synaptic metric
 | ├── handcrafted_parameters.ipynb # empirically setting the preprocessing parameters per synapse type and hippocampal lamina
-| ├── local-peaks-epoch.ipynb # to check the local peak maxima parameter optimization across N runs
-│ └── scratch_noteboooks/ # development scripts, not used in paper
+│ └── local-peaks-epoch.ipynb # to check the local peak maxima parameter optimization across N runs
 ├── pipeline/
 | ├── bin/ # scripts used in the pipeline
 | ├── nextflow.config # config file for nextflow pipeline
 | ├── optimization_param_ranges_local_peaks_202511.json # used as input for the pipeline and empirically setted in `handcrafted_parameters.ipynb`
 | ├── preprocess_params_202511.json # used as input for the pipeline and and empirically setted in `handcrafted_parameters.ipynb`
-| ├── run-pipeline.nf # main pipeline script
+│ └── run-pipeline.nf # main pipeline script
 ├── synapse_counting/ # Python package used in the pipeline
 ├── Dockerfile # used for the pipeline
 └── synapse-counting-env.yml # Conda env used for the pipeline and downstream analysis
