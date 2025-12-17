@@ -1,3 +1,14 @@
+# ============================================================================
+# Title: Getting the residuals for each metric and plot in PCA
+# Input: Output of the pipeline with the all metrics analyzed
+# Description: 
+# (1) data processing
+# (2) linear mixed effects modelling to extract residuals and account for brain-brain variability
+# (3) PCA on residuals to visualize differences between hemispheres based synaptic
+# Author: Cydric Geyskens
+# Date: Nov 2025
+# ============================================================================
+
 library(dplyr)
 library(ggplot2)
 library(lme4)

@@ -1,3 +1,13 @@
+# ============================================================================
+# Title: Analysis VCAM1-gRNA QC in astrocyte culture
+# Input: raw WB Fiji band intensity data
+# Description: 
+# (1) normalization in each experiment
+# (2) statistics using ANOVA with posthoc Dunnet's test
+# Author: Cydric Geyskens
+# Date: Nov 2025
+# ============================================================================
+
 library(dplyr)
 library(ggplot2)
 library(readxl)

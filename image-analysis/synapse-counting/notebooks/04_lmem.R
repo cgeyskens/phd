@@ -1,3 +1,15 @@
+# ============================================================================
+# Title: 
+# Input: Output of the pipeline with the all metrics analyzed
+# Description: 
+# (1) data processing
+# (2) linear mixed effects modelling to extract residuals and account for brain-brain variability
+# (3) PCA on residuals to visualize differences between hemispheres based synaptic metrics
+# Author: Cydric Geyskens
+# Date: Nov 2025
+# ============================================================================
+
+
 library(dplyr)
 library(ggplot2)
 library(lme4)
@@ -5,7 +17,6 @@ library(stringr)
 library(emmeans)
 library(tibble)
 library(tidyr)
-library(nlme)
 
 library(httpgd)
 hgd()
