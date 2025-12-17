@@ -4,7 +4,7 @@
 ![Development Status](https://img.shields.io/badge/development%20status-alpha-red)
 [![License](https://img.shields.io/pypi/l/synapse-counting.svg?color=green)](https://github.com/cgeyskens/phd/image-analysis/synapse-counting/synapse_counnting/blob/main/LICENSE)
 
-**synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
+**synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A small custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
 
 <p align="center">
     <img src="image-readme.png">
@@ -40,7 +40,7 @@ You can run the pipeline using on of the following:
     Pull from Docker Hub:
 
     ```bash
-    docker pull cgeyskens/synapse-counting:v5
+    docker pull cgeyskens/synapse-counting:v6
     ```
 
 3. **Apptainer**
@@ -48,7 +48,7 @@ You can run the pipeline using on of the following:
     Also pull from Docker Hub:
 
     ```bash
-    apptainer pull cgeyskens/synapse-counting:v5
+    apptainer pull docker://cgeyskens/synapse-counting:v6
     ```
 
 When running multiple Nextflow pipelines in parallel using SLURM, its best to pull the container before running the pipeline. Otherwise, it will try to pull it at the same time from Docker Hub and it will crash.
@@ -66,8 +66,6 @@ This pipeline provides three Nextflow profiles, depending on how you want to run
 Example usage:
 
 ```bash
-nextflow run run-pipeline.nf -profile conda
-nextflow run run-pipeline.nf -profile docker
 nextflow run run-pipeline.nf -profile apptainer
 ```
 

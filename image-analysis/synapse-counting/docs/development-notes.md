@@ -324,7 +324,7 @@ V- Downstream analysis
     V- Compare the lme4 model vs the nlme model in on section level ration vs raw data
     V- Try out the 192 metrics model to get residuals for PCA
 
-- Visualization in the end:
+V- Visualization in the end:
     Heatmap instead or dotplot because it shows much more information (i.e. trends). You also negate the question: why local peaks and not puncta size? Because you also show non-significant results. ==> It will be heatmap with selected metrics.
 
 
