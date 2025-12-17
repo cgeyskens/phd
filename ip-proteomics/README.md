@@ -99,7 +99,7 @@ Analysis steps:
 
 1. Annotations of co-IPed proteins with Van Oostrum et al. 2023, Sorokina et al. 2021, SynGO and UniProt (cell surface proteins)
 
-2. Generata the annotation plot
+2. Generate the annotation plot
 
 `scripts/03_log2_rank.R`
 

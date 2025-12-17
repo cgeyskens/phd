@@ -44,3 +44,5 @@ gdf_path_save/
 !/image-analysis/in-vitro-synapse-counting/data/exp17_20_23_24_data.xlsx
 !/image-analysis/synapse-counting/notebooks/.devcontainer
 !/image-analysis/synapse-counting/notebooks/.vscode
+!/image-analysis/synapse-counting/pipeline/image-readme.png
+

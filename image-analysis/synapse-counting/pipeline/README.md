@@ -4,7 +4,7 @@
 ![Development Status](https://img.shields.io/badge/development%20status-alpha-red)
 [![License](https://img.shields.io/pypi/l/synapse-counting.svg?color=green)](https://github.com/cgeyskens/phd/image-analysis/synapse-counting/synapse_counnting/blob/main/LICENSE)
 
-**synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from high-zoom images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A small custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
+**synapse-counting** is a Nextflow pipeline for processing and analyzing immunostained synapses from super-resolution images. It takes as input ZEISS Airyscan images (.czi format), preprocessing parameters, parameter ranges for local peak detection, and other parameters necessary for analyzing synapses. When these parameters are set the pipeline will process the imaging data. A small custom python package was also developed based on existing scikit-image functions but tailored towards synapse analysis.
 
 <p align="center">
     <img src="image-readme.png">
@@ -26,18 +26,20 @@ The pipeline will analyze 8 synapse metrics with 5 processes, 4 metrics assess c
 Python scripts were parallelized with Nextflow, in each script the image data was parallelized using Dask.
 
 ## Dependencies
-You can run the pipeline using on of the following:
+You can run the pipeline using one of the following:
 
 1. **Conda environment** 
     
     From this folder, run:
     ```bash
-    conda env create -f ./synapse-counting-env.yml
+    conda env create -f ../synapse-counting-env.yml
     ```
 
-2. **Docker (muli-arch image)**
+2. **Docker (multi-arch image)**
 
-    Pull from Docker Hub:
+    Image on Docker Hub: `cgeyskens/synapse-counting`  
+    https://hub.docker.com/r/cgeyskens/synapse-counting
+    or `../Dockerfile` 
 
     ```bash
     docker pull cgeyskens/synapse-counting:v6
@@ -51,7 +53,7 @@ You can run the pipeline using on of the following:
     apptainer pull docker://cgeyskens/synapse-counting:v6
     ```
 
-When running multiple Nextflow pipelines in parallel using SLURM, its best to pull the container before running the pipeline. Otherwise, it will try to pull it at the same time from Docker Hub and it will crash.
+NOTE: When running multiple Nextflow pipelines in parallel using SLURM, its best to pull the container before running the pipeline. Otherwise, it will try to pull it at the same time from Docker Hub and it will crash.
 
 ## Nextflow pipeline execution
 
@@ -59,9 +61,9 @@ Configure first the pipeline in  `nextflow.config`
 
 This pipeline provides three Nextflow profiles, depending on how you want to run it:
 
-- `-profile conda` — uses the Conda environment in this folder (`./synapse-counting-env.yml`)
-- `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting`
-- `-profile hpc` — runs with Apptainer/Singularity by pulling the same Docker image
+- `-profile conda` — uses the Conda environment in the parent folder (`../synapse-counting-env.yml`)
+- `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting:v6` (or builds from `../Dockerfile` if you choose)
+- `-profile hpc` — runs with Apptainer/Singularity using `docker://cgeyskens/synapse-counting:v6`
 
 Example usage:
 
@@ -103,8 +105,8 @@ The processing parameters could include:
 6. minimum puncta size threshold
 7. threshold algorithm for binary images
 
-You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/handcrafted_parameters.ipynb` \
-Then you can copy these parameters in: `scripts/preprocess_params.json` 
+You can set preprocessing parameters inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `../notebooks/handcrafted_parameters.ipynb` \
+Then you can copy these parameters in: `../notebooks/preprocess_params.json` 
 
 ### C. Parameter ranges for local peak maxima colocalization assessment
 For the local peak maxima colocalization, we need to set some ranges for certain parameters to detect local peak maxima's.
@@ -112,8 +114,8 @@ For the local peak maxima colocalization, we need to set some ranges for certain
 2. pre_threshold & post_threshold: threshold at which a local peak is detected
 3. max_distance_um: maximum distance at which a pre and postsynaptic local peak is considered a synapse.
 
-You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `notebooks/local_peaks_maxima.ipynb` \
-Then you can copy these parameters in: `scripts/optimization_param_ranges_local_peaks.json` 
+You can set parameter ranges inside a JSON file that the pipeline uses. You can customize these parameters before you run the pipeline with a notebook: `../notebooks/handcrafted_parameters.ipynb` \
+Then you can copy these parameters in: `../notebooks/optimization_param_ranges_local_peaks.json` 
 
 ### D. Other input parameters
 Inside the `nextflow.config` file you can the following pipeline parameters:
