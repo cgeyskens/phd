@@ -61,12 +61,12 @@ This pipeline provides three Nextflow profiles, depending on how you want to run
 
 - `-profile conda` — uses the Conda environment in this folder (`./synapse-counting-env.yml`)
 - `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting`
-- `-profile apptainer` — runs with Apptainer/Singularity by pulling the same Docker image
+- `-profile hpc` — runs with Apptainer/Singularity by pulling the same Docker image
 
 Example usage:
 
 ```bash
-nextflow run run-pipeline.nf -profile apptainer
+nextflow run run-pipeline.nf -profile hpc
 ```
 
 ## Pipeline input

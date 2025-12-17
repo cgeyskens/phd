@@ -4,7 +4,6 @@
 # Description: 
 # (1) normalization in each experiment
 # (2) statistics using ANOVA with posthoc Dunnet's test
-# Author: Cydric Geyskens
 # Date: Nov 2025
 # ============================================================================
 

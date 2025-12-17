@@ -1,3 +1,13 @@
+# ============================================================================
+# Title: Visualization of specific metrics 
+# Input: Output of the pipeline with the all metrics analyzed
+# Description: 
+# (1) data processing
+# (2) normalization
+# (3) plotting
+# Date: Nov 2025
+# ============================================================================
+
 library(dplyr)
 library(ggplot2)
 

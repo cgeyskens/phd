@@ -1,11 +1,21 @@
-name: synapse-counting
+name: synapse-counting-v2
 channels:
   - defaults
 dependencies:
   - python=3.11
-  - dask
-  - conda-forge::optuna
-  - seaborn
   - pip
   - pip:
-    - synapse_counting
+    - synapse_counting==0.1.3
+    - dask==2025.2.0 
+    - distributed==2025.2.0 
+    - optuna==4.3.0 
+    - seaborn==0.13.2
+    - numpy==2.2.5 
+    - pandas==2.2.3 
+    - scipy==1.15.3 
+    - scikit-image==0.25.2 
+    - scikit-learn==1.6.1
+    - matplotlib==3.10.0 
+    - pillow==11.1.0 
+    - lxml==5.4.0 
+    - czifile==2019.7.2.1

@@ -5,7 +5,6 @@
 # (1) data processing
 # (2) linear mixed effects modelling to extract residuals and account for brain-brain variability
 # (3) PCA on residuals to visualize differences between hemispheres based synaptic
-# Author: Cydric Geyskens
 # Date: Nov 2025
 # ============================================================================
 

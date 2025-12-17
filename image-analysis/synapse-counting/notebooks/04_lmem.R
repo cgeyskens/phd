@@ -1,11 +1,10 @@
 # ============================================================================
-# Title: 
+# Title: Testing for differences in synaptic metrics between LacZ-gRNA- and VCAM1-gRNA- or GPR37L1-gRNA-injected hemispheres
 # Input: Output of the pipeline with the all metrics analyzed
 # Description: 
 # (1) data processing
 # (2) linear mixed effects modelling to extract residuals and account for brain-brain variability
 # (3) PCA on residuals to visualize differences between hemispheres based synaptic metrics
-# Author: Cydric Geyskens
 # Date: Nov 2025
 # ============================================================================
 
