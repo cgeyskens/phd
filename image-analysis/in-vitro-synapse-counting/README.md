@@ -13,7 +13,7 @@ Scripts can be found in `/image-processing-scripts/`
 
 a. Open an image manually.
 
-b. Run `macro_z-stack_split_grey.ijm`; it will split the channels, max project, set LUT to grey and delete the original image.
+b. Run `01_macro_z-stack_split_grey.ijm`; it will split the channels, max project, set LUT to grey and delete the original image.
 
 c. Manually find the best threshold (`Image/Adjust/Threshold) for each channel & note it in an excel sheet. Close this image.
 
@@ -24,33 +24,33 @@ d. Do this for every image in the experiment & calculate the mean threshold in t
 
 a. Open an image manually
 
-b. Run `macro_z-stack_split_grey.ijm`; it will split the channels, max project, set LUT to grey, and delete the original image.
+b. Run `01_macro_z-stack_split_grey.ijm`; it will split the channels, max project, set LUT to grey, and delete the original image.
 
 c. Open the ROI Manager (`Analyze/Tools/ROI Manager`), manually draw an ROI around each soma in the image with the polygon tool, add these ROIs to the ROI Manager and save these ROIs in soma_roi folder inside each condition (expX/Fc/).
 
-d. Run `macro_clear_rois.ijm` to clear all the information inside the ROIs from all channels, as the antibodies detected unspecific staining in the soma's.
+d. Run `02_macro_clear_rois.ijm` to clear all the information inside the ROIs from all channels, as the antibodies detected unspecific staining in the soma's.
 
 ### 3.	Set the mean threshold & create mask
 
-a. In `macro_set_threshold.ijm`, copy paste the mean threshold from the excel sheet (from step 1) inside the macro.
+a. In `03_macro_set_threshold.ijm`, copy paste the mean threshold from the excel sheet (from step 1) inside the macro.
 
-b. Run `macro_set_threshold.ijm` to set the mean threshold in all channels and create a mask of all channels.
+b. Run `03_macro_set_threshold.ijm` to set the mean threshold in all channels and create a mask of all channels.
 
 ### 4.	Count the synapses
 
-a. Run `macro_count_synapses.ijm` to count the pre & post synapses with analyze particles function. Be aware of the channels corresponding to the pre, post or MAP2 marker.
+a. Run `04_macro_count_synapses.ijm` to count the pre & post synapses with analyze particles function. Be aware of the channels corresponding to the pre, post or MAP2 marker.
 
 b. Copy paste the count numbers and the average particle size in the excel sheet.
 
 ### 5.	Skeletonize to calculate total branch length 
 
-a. Run `macro_skeletonize.ijm` to get the total branch length, this will also close all the channels but not the produced tables with numbers.
+a. Run `05_macro_skeletonize.ijm` to get the total branch length, this will also close all the channels but not the produced tables with numbers.
 
 b. Copy paste the numbers in th excel sheets. Calculate the now the presynapse, postsynapse and synapse density in the excel sheet.
 
 ### 6. Close all the images and tables
 
-a. Run `macro_closing.ijm` to close all image, tables, and clear our the ROI manager.
+a. Run `06_macro_closing.ijm` to close all image, tables, and clear our the ROI manager.
 
 b. Restart with Step 2 for the next image.
 
