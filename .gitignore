@@ -39,7 +39,7 @@ gdf_path_save/
 *.devcontainer
 *Rplots.pdf
 
-/image-analysis/synapse-counting/notebooks/scratch_notebooks/
+image-analysis/synapse-counting/notebooks/scratch_notebooks
 
 
 
