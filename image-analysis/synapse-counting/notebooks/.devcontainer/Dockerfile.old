@@ -1,0 +1,24 @@
+FROM rocker/tidyverse:latest
+
+# Install system dependencies that might be needed for package installation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxml2-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install R packages from CRAN
+RUN R -e "install.packages(c('samr'))"
+
+# Install Bioconductor packages
+RUN R -e "if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager'); \
+    BiocManager::install(c('limma', 'MSstats', 'DEP', 'ROTS'))"
+
+# Install package from GitHub
+RUN R -e "remotes::install_github('ftwkoopmans/msdap')"
+
+# Install R packages from CRAN
+RUN R -e "install.packages(c('languageserver'))"

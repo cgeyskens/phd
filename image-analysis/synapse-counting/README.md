@@ -1,8 +1,8 @@
 # Multi-metric high throughput synapse analysis
 
-This repository documents the complete workflow for **Hippocampal lamina-resolved and multi-metric synapse analysis of CRISPR/Cas9-mediated KO of VCAM1 or GPR37L1**.  
+This repository documents the complete workflow for **hippocampal lamina-resolved and multi-metric synapse analysis of CRISPR/Cas9-mediated KO of VCAM1 or GPR37L1**.  
 
-The repo covers both **Custom multi-metric high throughput image processing pipeline** and **downstream data analyses** within a reproducible environment.
+The repo covers both the **custom multi-metric high throughput image processing pipeline** and **downstream data analyses** within a reproducible environment.
 
 
 ### Repository Structure
@@ -33,7 +33,11 @@ synapse-counting/
 
 ## Custom multi-metric high throughput image processing pipeline
 
-You can find this in `pipeline/` with detailed documentation.
+You can find this in `/pipeline/` with detailed documentation.
 
 ## Downstream data analysis
+
+All R-based data analysis was performed inside a **reproducible Docker development container** `.notebooks/devcontainer` in Visual Studio Code. Please see the [documentation](https://github.com/RamiKrispin/vscode-r) for more info.
+
+All Python-based data analysis was performed inside a **reproducible Conda environment**.
 

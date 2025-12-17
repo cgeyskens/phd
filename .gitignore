@@ -42,3 +42,5 @@ gdf_path_save/
 # Do include:
 !/image-analysis/in-vitro-synapse-counting/data/exp10_11_12_13_data.xlsx
 !/image-analysis/in-vitro-synapse-counting/data/exp17_20_23_24_data.xlsx
+!/image-analysis/synapse-counting/notebooks/.devcontainer
+!/image-analysis/synapse-counting/notebooks/.vscode
