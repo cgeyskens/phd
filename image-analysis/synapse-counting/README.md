@@ -2,6 +2,10 @@
 
 This repository documents the complete workflow for **hippocampal lamina-resolved, multi-metric synapse analysis** following **CRISPR/Cas9-mediated KO of VCAM1 or GPR37L1**.  
 
+<p align="center">
+    <img src="fig_exp.png">
+</p> 
+
 The repo covers both the **custom multi-metric high throughput image processing pipeline** and **downstream data analyses** within a reproducible environment.
 
 

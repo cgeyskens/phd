@@ -49,4 +49,4 @@ image-analysis/synapse-counting/notebooks/scratch_notebooks
 !/image-analysis/synapse-counting/notebooks/.devcontainer
 !/image-analysis/synapse-counting/notebooks/.vscode
 !/image-analysis/synapse-counting/pipeline/image-readme.png
-
+!/image-analysis/synapse-counting/fig_exp.png
