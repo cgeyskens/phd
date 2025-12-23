@@ -1,0 +1,177 @@
+Possible standard additives: PDI/GSSG, TRXB1, Dnak Mix, Zinc chloride, Calcium chloride, Manganese chloride, Cofactor mix, GSSG, 3C protease.
+
+Based on ChatGPT analysis:
+
+### ========================= PMCH_P56942 ========================= ###
+
+Include:
+- PDI/GSSG: to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): can provide an oxidizing environment for disulfide formation if you want a simpler redox condition than PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding
+- TRXB1: want to explore redox balancing
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion and you want to test tag removal in-workflow
+
+Not needed:
+- Zinc chloride
+- Calcium chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= CHGB_P16014 ========================= ###
+
+Include:
+- PDI/GSSG: to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding
+- Calcium chloride: CHGB biology is tied to Ca²⁺, and Ca²⁺-dependent behavior has been reported for chromogranins
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= NRN1_Q8CFV4 ========================= ###
+
+Include:
+- PDI/GSSG: strongly recom, to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Calcium chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= NTNG1_Q8R4G0 ========================= ###
+
+Include:
+- PDI/GSSG: strongly recom, to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- Calcium chloride: some EGF-like domains can be Ca²⁺-binding; if you’re chasing stability/behavior
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= RTN4R_Q99PI8 ========================= ###
+
+Include:
+- PDI/GSSG: strongly recom, to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= LY6H_Q9WUC3 ========================= ###
+
+Include:
+- PDI/GSSG: strongly recom, to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= ITM2C_Q91VK4_extracel ========================= ###
+
+Include:
+- PDI/GSSG: best default to drive correct disulfide formation/isomerization for the BRICHOS domain
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= ADGRB3_Q80ZF8_extracel ========================= ###
+
+Include:
+- PDI/GSSG: strongly recom, to support disulfide bond formation / oxidative folding
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ========================= ITM2B_O89051_extracel ========================= ###
+
+Include:
+- PDI/GSSG: best default to drive correct disulfide formation/isomerization for the BRICHOS domain
+
+Could include:
+- GSSG (alone): a simpler oxidizing condition to test alongside/after PDI/GSSG
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix
+
+
+### ======= CDH11_P55288_extracel, CDH10_P70408_extracel, CDH6_P97326_extracel, CDH4_P39038_extracel ========= ###
+
+Include:
+- Calcium chloride: Essential for correct folding, stability, and solubility of cadherin ectodomains. Without Ca²⁺, cadherins are typically flexible and prone to proteolysis/aggregation
+
+Could include:
+- DnaK Mix: if the construct is aggregating/misfolding or low solubility
+- 3C protease: only if your construct includes a 3C-cleavable tag/fusion
+
+Not needed:
+- PDI/GSSG: are not primarily disulfide-driven folding proteins
+- GSSG (alone)
+- TRXB1
+- Zinc chloride
+- Manganese chloride
+- Cofactor mix

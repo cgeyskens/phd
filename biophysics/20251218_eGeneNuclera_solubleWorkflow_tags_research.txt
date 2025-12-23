@@ -1,0 +1,209 @@
+Possible standard tags: P17, CUSF, FH8, TRX, ZZ, SUMO, SNUT
+- P17: very small, hydrophilic; boosts solubility + thermostability 
+- FH8: small, very soluble/thermostable; can also act as purification handle 
+- SUMO (HSUMO3): “detergent-like” effect on otherwise insoluble proteins 
+- TRX: classic solubility enhancer for heterologous proteins 
+- SNUT: solubility-enhancing “unique tag” derived from sortase; intended to help difficult soluble domains 
+- CUSF: beta-barrel tag; proposed solubility/periplasmic fusion behavior 
+- ZZ: Protein A IgG-repeat domain (often used as fusion/handle) 
+
+Literature Research:
+- Do any of these proteins have crystal structures/cryoEM? Look at how they produced the proteins.
+- Do any of these proteins have been expressed or purified for other experiments? Look at how they produced the proteins.
+- Or do they have any trouble in general to producing them?
+- Any aggregation prone or unstable?
+
+
+Based on ChatGPT analysis:
+
+### ========================= PMCH_P56942 ========================= ###
+Best tag: P17 (or FH8)
+Why: It’s a small secretory peptide precursor; you usually want the lightest solubility help and easiest downstream cleavage/handling. 
+There are recombinant PMCH products made in E. coli with His-tag, suggesting it’s not inherently “impossible,” but processing/folding can still be annoying. 
+
+Trouble risk: moderate (small peptide, disulfide requirements depending on what fragment you express).
+Flag: Try 2 tags → P17 + FH8.
+
+
+### ========================= CHGB_P16014 ========================= ###
+Best tag: SUMO (backup: SNUT)
+Why: CHGB is a big secretory/granule protein and is reported to partition into soluble and membrane-associated forms, 
+and some workflows use detergents for extraction—signals “sticky / aggregation-prone behavior”. 
+
+Also, recombinant CHGB fragments have been produced in E. coli (His-tag), which suggests truncations are doable but may need help staying soluble. 
+
+Trouble risk: high (size + stickiness).
+Flag: Try 2 tags → SUMO + SNUT.
+
+Studies where they purified the protein:
+https://pubmed.ncbi.nlm.nih.gov/37435575/
+
+
+### ========================= NRN1_Q8CFV4 ========================= ###
+Best tag: P17 (backup: TRX or FH8)
+Why: Neuritin has been expressed recombinantly in E. coli in published work. 
+
+This is a “secreted/GPI-related” protein class that often benefits from mild solubility help and good redox 
+(which you’re already handling with additives).
+Trouble risk: medium (disulfides).
+Flag: Try 2 tags → P17 + TRX.
+
+Studies where they produced the protein:
+https://pubmed.ncbi.nlm.nih.gov/26751893/
+
+
+### ========================= NTNG1_Q8R4G0 ========================= ###
+Best tag: FH8 (backup: P17)
+Why: Commercial recombinant NTNG1 is commonly produced in mammalian cells with a C-terminal His tag, which is typical 
+for disulfide-rich extracellular guidance cues. 
+
+FH8 is small, very soluble, and often a good choice for extracellular/disulfide-rich domains when you still want a 
+compact fusion. 
+
+Trouble risk: high-ish (extracellular disulfide folding).
+Flag: Try 2 tags → FH8 + P17.
+
+Protein production paper:
+https://link.springer.com/article/10.1038/emboj.2011.346#Sec8
+
+
+### ========================= RTN4R_Q99PI8 ========================= ###
+Best tag: FH8 (backup: SUMO)
+Why: There are structures of RTN4R ectodomain; at least one PDB entry reports expression in insect cells (Trichoplusia ni), again typical for disulfide-rich extracellular proteins. 
+ebi.ac.uk
+
+If you’re expressing it in a soluble cell-free workflow, you’ll likely need a strong “keep-it-soluble” fusion—FH8 is a great first pick; SUMO is the “if it’s still sticky” backup. 
+Nuclera
+
+Trouble risk: high (LRR ectodomain + disulfide caps → aggregation if misfolded).
+Flag: Try 2 tags → FH8 + SUMO.
+
+Studies where they did Cryo-EM:
+https://www.cell.com/neuron/fulltext/S0896-6273(03)00232-0?_returnURL=https://linkinghub.elsevier.com/retrieve/pii/S0896627303002320?showall%3Dtrue
+
+
+### ========================= LY6H_Q9WUC3 ========================= ###
+Best tag: TRX (backup: FH8)
+Why: LY6-family/LU-domain proteins are typically very disulfide rich and can be hard to keep soluble unless folding is supported; 
+TRX is a classic solubility enhancer and often pairs well with oxidative folding conditions. 
+
+Trouble risk: high (disulfide density).
+Flag: Try 2 tags → TRX + FH8.
+
+
+### ========================= ITM2C_Q91VK4_extracel ========================= ###
+Best tag: P17 (backup: FH8)
+Why: BRICHOS domains are soluble-ish domains, but BRI3 BRICHOS forms larger oligomers and is discussed in the context of 
+preventing aggregation—i.e., it has “self-association/oligomer” behavior that can complicate purification. 
+
+Use small tags first to avoid pushing oligomeric behavior further. 
+
+Trouble risk: medium–high (oligomerization).
+Flag: Try 2 tags → P17 + FH8.
+
+Studies where they produced a large domain of the protein:
+https://pubmed.ncbi.nlm.nih.gov/32555390/
+
+
+### ========================= ADGRB3_Q80ZF8_extracel ========================= ###
+Best tag: SNUT (backup: SUMO)
+Why: This is a very large, multi-domain extracellular region (CUB, TSR repeats, GAIN/GPS typical of adhesion GPCRs), 
+which is a classic “difficult soluble recombinant” category. 
+
+For “hard mode” domains, SNUT/SUMO are your best bets in this tag set. 
+
+Trouble risk: very high (size, disulfides, domain boundaries).
+Flag: Try 2 tags → SNUT + SUMO.
+
+Protein production paper of family protein:
+https://www.biorxiv.org/content/biorxiv/early/2023/03/15/2023.03.14.532526.full.pdf
+
+
+### ========================= ITM2B_O89051_extracel ========================= ###
+Best tag: P17 (backup: FH8)
+Why: The Bri2 BRICHOS domain has cryoEM structure (e.g., PDB 8RNU), meaning soluble recombinant protein was produced 
+successfully for structural work. However, BRICHOS systems can oligomerize; start small and soluble. 
+
+Trouble risk: medium (oligomerization/aggregation interactions).
+Flag: Try 2 tags → P17 + FH8.
+
+Studies where they produced a large domain of the protein:
+https://pubmed.ncbi.nlm.nih.gov/32555390/
+
+
+### ======= CDH11_P55288_extracel, CDH10_P70408_extracel, CDH6_P97326_extracel, CDH4_P39038_extracel ========= ###
+Best tag: P17 (backup: FH8)
+Why: Cadherin ectodomains are usually produced in mammalian systems (often with Fc/His formats) and 
+are Ca²⁺-dependent for stability. You generally don’t want a bulky tag that might interfere with 
+cadherin EC-repeat behavior; small tags are safer. 
+
+Trouble risk: medium–high (needs Ca²⁺; can be floppy/aggregation-prone without it).
+Flag: Try 2 tags → P17 + FH8 (but keep CaCl₂ in your additive conditions for this one).
+
+Studies where they produced a large domain of the protein:
+https://pubmed.ncbi.nlm.nih.gov/38205802/
+https://www.cell.com/structure/fulltext/S0969-2126%2821%2900210-0
+
+Production pattern:
+- Express soluble ectodomain or EC1–2
+- Use mammalian or insect cells for correct folding/PTMs when needed
+- Maintain Ca²⁺ during purification/assays because cadherins are Ca²⁺-depend
+
+
+
+
+Summary: Evidence from literature / structures / recombinant production
+
+| Protein                | Structure exists (X-ray / cryoEM)                     | Recombinant expression reported        | Typical expression system used                           | Notes from literature                                                                                           |
+| ---------------------- | ----------------------------------------------------- | -------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| PMCH_P56942            | No full-length structure (mature MCH peptide studied) | Yes (peptide-level)                    | Chemical synthesis / E. coli fragments                   | Mature MCH is a small disulfide-closed peptide; often chemically synthesized rather than recombinantly produced |
+| CHGB_P16014            | No high-res globular structure                        | Yes                                    | Recombinant CHGB used in membrane reconstitution studies | Known to interact with membranes, form channels; shows soluble vs membrane-associated behavior                  |
+| NRN1_Q8CFV4            | No structure                                          | Yes                                    | E. coli                                                  | Published recombinant expression with affinity purification and tag removal                                     |
+| NTNG1_Q8R4G0           | Yes (interaction/domain structures)                   | Yes                                    | Mammalian (Fc/His), insect                               | Extracellular guidance protein; disulfide-rich; commonly expressed as secreted protein                          |
+| RTN4R_Q99PI8           | Yes (X-ray/cryoEM in complexes)                       | Yes                                    | Insect cells (baculovirus)                               | Disulfide-capped LRR ectodomain; classic insect-cell ectodomain production                                      |
+| LY6H_Q9WUC3            | No direct structure                                   | No clear standalone purification paper | Family-level precedent (various systems)                 | Ly6/uPAR family are disulfide-rich, often difficult to fold                                                     |
+| ITM2C_Q91VK4_extracel  | No structure                                          | Yes                                    | Recombinant protein reported                             | BRICHOS domain; oligomerization reported                                                                        |
+| ITM2B_O89051_extracel  | Yes (cryoEM)                                          | Yes                                    | Recombinant protein                                      | BRICHOS oligomers; aggregation-prone by nature                                                                  |
+| ADGRB3_Q80ZF8_extracel | No direct structure                                   | No clean ectodomain production paper   | Family-level precedent only                              | Very large adhesion GPCR ectodomain; typically difficult                                                        |
+| CDH11_P55288_extracel  | Partial (EC1 domain NMR)                              | Yes                                    | Mammalian                                                | Classical cadherin; Ca2+-dependent stability                                                                    |
+| CDH10_P70408_extracel  | No direct structure                                   | Yes (commercial)                       | Mammalian                                                | Very long cadherin ectodomain                                                                                   |
+| CDH6_P97326_extracel   | Yes (functional soluble ectodomain)                   | Yes                                    | Mammalian                                                | Soluble CDH6 ectodomain used in antibody studies                                                                |
+| CDH4_P39038_extracel   | No direct structure                                   | Yes (commercial)                       | Mammalian                                                | Classical cadherin; Ca2+-dependent                                                                              |
+
+
+Summary: Aggregation / instability risk and main pain points
+
+| Protein                | Main biochemical risk                | Aggregation / instability risk | Notes                                             |
+| ---------------------- | ------------------------------------ | ------------------------------ | ------------------------------------------------- |
+| PMCH_P56942            | Disulfide closure in small peptide   | Medium                         | Small peptides can misfold or oxidize incorrectly |
+| CHGB_P16014            | Membrane interaction, stickiness     | High                           | Known to associate with membranes; can aggregate  |
+| NRN1_Q8CFV4            | Disulfide folding                    | Medium                         | Expressible, but needs folding support            |
+| NTNG1_Q8R4G0           | Disulfide-rich extracellular folding | High                           | Usually handled in eukaryotic systems             |
+| RTN4R_Q99PI8           | Disulfide-capped LRR ectodomain      | High                           | Misfolding leads to aggregation                   |
+| LY6H_Q9WUC3            | Very high disulfide density          | High                           | Typical three-finger LU-domain difficulty         |
+| ITM2C_Q91VK4_extracel  | Oligomerization (BRICHOS)            | Medium–High                    | Can appear as aggregation                         |
+| ITM2B_O89051_extracel  | Oligomerization (BRICHOS)            | Medium                         | Structurally tractable but self-associating       |
+| ADGRB3_Q80ZF8_extracel | Size + multiple domains              | Very High                      | Large adhesion GPCR ectodomain                    |
+| CDH11_P55288_extracel  | Ca2+ dependence                      | Medium                         | Unstable without Ca2+                             |
+| CDH10_P70408_extracel  | Length + Ca2+ dependence             | Medium–High                    | Very long ectodomain                              |
+| CDH6_P97326_extracel   | Ca2+ dependence                      | Medium                         | Canonical cadherin behavior                       |
+| CDH4_P39038_extracel   | Ca2+ dependence                      | Medium                         | Protease-prone without Ca2+                       |
+
+
+Summary: Recommended solubility tag strategy (final)
+
+| Protein                | Primary tag | Backup tag | Rationale                                        |
+| ---------------------- | ----------- | ---------- | ------------------------------------------------ |
+| PMCH_P56942            | P17         | FH8        | Small tag for small peptide precursor            |
+| CHGB_P16014            | SUMO        | SNUT       | Strong solubility enhancement for sticky protein |
+| NRN1_Q8CFV4            | P17         | TRX        | Moderate folding help, avoid bulky tags          |
+| NTNG1_Q8R4G0           | FH8         | P17        | Disulfide-rich extracellular protein             |
+| RTN4R_Q99PI8           | FH8         | SUMO       | LRR ectodomain prone to aggregation              |
+| LY6H_Q9WUC3            | TRX         | FH8        | Disulfide-heavy LU domain                        |
+| ITM2C_Q91VK4_extracel  | P17         | FH8        | Avoid promoting oligomerization                  |
+| ITM2B_O89051_extracel  | P17         | FH8        | Same BRICHOS logic as ITM2C                      |
+| ADGRB3_Q80ZF8_extracel | SNUT        | SUMO       | Very large, difficult ectodomain                 |
+| CDH11_P55288_extracel  | P17         | FH8        | Ca2+-dependent cadherin, avoid bulky tags        |
+| CDH10_P70408_extracel  | P17         | FH8        | Same as CDH11                                    |
+| CDH6_P97326_extracel   | P17         | FH8        | Same as CDH11                                    |
+| CDH4_P39038_extracel   | P17         | FH8        | Same as CDH11                                    |
