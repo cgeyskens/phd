@@ -22,7 +22,7 @@ phd/
 | Figure | Experiment/Modality | Raw Data Repo | Code Repo | 
 | --- | ---| --- | --- | 
 | 1, S1     | Image-based Spatial Transcriptomics | | [phd/spatial-transcriptomics](https://github.com/cgeyskens/phd/tree/master/spatial-transcriptomics) |
-| 3, S3 | Synapse In-Vivo Imaging Data | | [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
+| 3, S3 | Synapse In-Vivo Imaging Data | BioImage Archive: S-BIAD2530| [phd/image-analysis/synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/synapse-counting)
 | 4,  S4 | co-IP Proteomics | ProteomeXchange: PXD070371 & PXD070422 | [phd/ip-proteomics](https://github.com/cgeyskens/phd/tree/master/ip-proteomics)
 | 5 | Synapse In-Vitro Imaging Data | BioImage Archive: S-BIAD2430 | [phd/image-analysis/in-vitro-synapse-counting](https://github.com/cgeyskens/phd/tree/master/image-analysis/in-vitro-synapse-counting)        
 
