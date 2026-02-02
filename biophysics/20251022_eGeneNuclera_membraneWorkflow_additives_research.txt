@@ -23,9 +23,12 @@ Not needed:
 -Ca2+
 -Cofactor Mix
 
+Nanodisc:
+- 
+
 
 ### ========================= PRRT1_O35449 ========================= ###
-Palmitoylated in brain and may carry a single N-glycosylation site.
+Palmitoylated in brain and may carry a single N-glycosylation site. Multipass membrane protein.
 
 Include:
 -Custom: zDHHC palmitoyl-acyltransferase + palmitoyl-CoA.
@@ -41,7 +44,7 @@ Not needed:
 
 
 ### ========================= AQP4_P55088 ========================= ###
-N-glycan on an extracellular loop, and reported S-palmitoylation.
+N-glycan on an extracellular loop, and reported S-palmitoylation. Multipass membrane protein.
 
 Include:
 -DnaK Mix: Helps a multi-pass IMP fold.

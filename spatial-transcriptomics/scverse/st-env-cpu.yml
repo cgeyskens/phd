@@ -1,0 +1,43 @@
+name: st-analysis
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib-inline=0.2.1=pyhd8ed1ab_0
+  - pip:
+      - anndata==0.12.7
+      - bbknn==1.6.0
+      - cellpose==4.0.8
+      - dask==2024.11.2
+      - dask-expr==1.1.19
+      - dask-image==2025.11.0
+      - geopandas==1.1.2
+      - harpy-analysis==0.2.0
+      - lazy-loader==0.4
+      - leidenalg==0.11.0
+      - lightning==2.6.0
+      - lightning-utilities==0.15.2
+      - matplotlib==3.10.8
+      - matplotlib-scalebar==0.9.0
+      - numpy==2.2.6
+      - ome-types==0.6.3
+      - ome-zarr==0.12.2
+      - scanorama==1.7.4
+      - scanpy==1.11.5
+      - scib==1.1.7
+      - scikit-image==0.26.0
+      - scikit-learn==1.8.0
+      - scikit-misc==0.5.2
+      - scipy==1.16.3
+      - scvi-tools==1.4.1
+      - seaborn==0.13.2
+      - segment-anything==1.0
+      - spatial-image==1.2.3
+      - spatialdata==0.6.1
+      - spatialdata-io==0.5.1
+      - spatialdata-plot==0.2.13
+      - torch==2.9.1
+      - torchmetrics==1.8.2
+      - torchvision==0.24.1
+      - xarray==2025.12.0
+prefix: /data/leuven/357/vsc35768/miniconda3/envs/st-analysis
