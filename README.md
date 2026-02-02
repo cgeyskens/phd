@@ -11,6 +11,7 @@ The code spans multiple experimental modalities (spatial transcriptomics, super-
 ```
 phd/
 ├─- spatial-transcriptomics/ # Spatial transcriptomics analysis scripts
+├── candidate-profiling/ # systematic profiling of candidate CSPs
 ├── image-analysis/
 │ ├── synapse-counting/ # Automated image processing and synapse quantification
 │ └── in-vitro-synapse-counting/ # Semi-automated Fiji pipeline for in-vitro data
