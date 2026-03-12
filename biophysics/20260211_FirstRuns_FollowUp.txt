@@ -1,0 +1,71 @@
+Proteins that are scalable from the Membrane Workflow: 
+AQP4, PRRT1 (doubt)
+
+Proteins that are scalabale from the Soluble Workflow: (not ADGRB3_extracel, RTN4, CDH4)
+CDH6, CDH10, CDH11, ITM2B, NTGN1, NRN1, PMCH, CHGB, ITM2C, LY6H
+
+GPR37L1 did not work in the membrane workflow. Therefore, we will not followup on GPR37L1 and its interactors.
+
+Proteins to followup on:
+- VCAM1, use recombinant R&D protein
+- PRRT1, medium worked in membrane
+- PMCH, worked in soluble
+- CHGB, worked in soluble
+- AQP4, worked in membrane
+
+If we do another soluble run (these were in the membrane workflow):
+- IGDCC4; cloud design and ordering
+- SLC39A; cloud design and ordering
+
+
+PPI:
+His tag-based, STREPT-Biotinylated (AVI-tag VCAM1), PCH (amine coupling)
+
+Immobilization: 0,1 - 30 ug/ml (100uL) -> VCAM1-Fc from R&D
+Analytes: 5uM few 100s uL
+
+PBS dilution VCAM1-Fc: 50 µg, in 1ML.
+Ask Toon scale up kit, for the membrane.
+Buy kit for solubale scale-up.
+Check amount of DNA for scale, another PCR.
+
+Resuspended in PBS & flash frozen in isopentane:
+
+- mouse VCAM1-Fc, 800 uL (in 16 x 50 uL aliquots) at 0,22 ug/uL (101.9 kDa) -> 2,16 uM
+- human CHGB-His, 175 uL (in 7 x 25 uL aliquots) at 0.20 ug/uL (18.5 kDa) -> 10,8 uM
+- human PMCH-His, 175 uL (in 7 x 25 uL aliquots) at 0.18 ug/uL (19,4 kDa) -> 9,3 uM
+
+Next:
+-Check predicted yield and PPI conc
+
+
+
+####### Meeting with Ryan about scale up
+
+Need for the scale-up: 5nM DNA in 100 nL (just like the screen)
+
+Need for the creoptrix: 5uM in 400 uL. See the predicted yield (ug/200nL).
+
+soluble:
+PMCH - 18 kDa - 90 ug/ml - 36 ug/400nL
+CHGB - 78 kDa - 390 ug/ml - 156 ug/400nL
+
+membrane:
+PRRT1 - 18 kDa - 170 ug/ml - 68 ug/400nL
+AQP4 - 32 kDa - 160 ug/ml - 64 ug/400nL
+
+
+Lets start the scale up reactions with the soluble ones.
+
+
+### new PCR for scale up:
+
+CHGB-SUMO: 3414 bp: 57,9 ng/uL in 18 uL - 100.12 kDa 
+CHGB-SNUT: 3549 bp: 52,8 ng/uL in 18 uL - 105.37 kDa
+
+PMCH-P17: 1626 bp: 31,8 ng/uL in 18 uL - 31.21 kDa
+PMCH-FH8: 1731 bp: 165 ng/uL in 18 uL - 34.93 kDa
+
+AQP4-STREP: 1956 bp: 142 ng/uL in 18 uL - 42.17 kDa
+
+PRRT1-STREP: 1905 bp: 180 ng/uL in 18 uL - 39.12 kDa

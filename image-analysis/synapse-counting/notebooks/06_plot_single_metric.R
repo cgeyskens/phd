@@ -12,21 +12,25 @@ library(dplyr)
 library(ggplot2)
 
 #### =============================== arguments =============================== ####
+protein = "GPR37L1"
 synapse = "VGAT-GEPH"
-layer = "CA1 SLM"
-metric = "pre_puncta_density_per_100_um2"
-
+layer = "CA3 SL"
+metric = "post_puncta_density_per_100_um2"
 
 #### =============================== get input =============================== ####
-file_path_vglut1 <- "/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_194547/metric_results.csv"
-file_path_vgat <- "/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv"
-
-if (synapse == "VGLUT1-PSD95"){
-  data = read.csv(file_path_vglut1)
-} else if (synapse == "VGAT-GEPH") {
-  data = read.csv(file_path_vgat)
+if (protein == "VCAM1"){
+    data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_194547/metric_results.csv")
+    data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv")
+} else if (protein == "GPR37L1") {
+    data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp10_GPR37L1_VGLUT1-PSD95_output_data_20251201_194537/metric_results.csv")
+    data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp11_GPR37L1_VGAT-GEPH_output_data_20251201_194548/metric_results.csv")
 }
 
+if (synapse == "VGLUT1-PSD95"){
+  data = data_vglut1
+} else if (synapse == "VGAT-GEPH") {
+  data = data_vgat
+}
 
 #### =============================== data processing =============================== ####
 # subset data
@@ -74,10 +78,17 @@ brain_df <- brain_means %>%
 
 #### =============================== plotting =============================== ####
 # specifying the colors
-grna_cols <- c(
-  "VCAM1-gRNA" = "#21a0e2",
-  "LacZ-gRNA" = "#c6c6c6"
-)
+if (protein == "VCAM1"){
+  grna_cols <- c(
+    "VCAM1-gRNA" = "#21a0e2",
+    "LacZ-gRNA" = "#c6c6c6"
+  )
+} else if (protein == "GPR37L1") {
+  grna_cols <- c(
+    "GPR37L1-gRNA" = "#e28d21",
+    "LacZ-gRNA" = "#c6c6c6"
+  )
+}
 
 p <- ggplot() +
   # FOV points (outside-ish via jitter)
@@ -128,14 +139,14 @@ p <- ggplot() +
     scale_y_continuous(
         expand = c(0, 0),
         limits = c(0, 2),
-        breaks = c(0, 0.5, 1, 1.5, 2) 
+        breaks = c(0, 1, 2) 
     ) +  
     scale_x_continuous(
         expand = c(0, 0),
         limits = c(0.8, 2.2),
         breaks = c(0, 1, 2) 
     ) +
-    coord_fixed(ratio = 2) 
+    coord_fixed(ratio = 1.8)  # 0r 1.3
 p
 
 ggsave(paste0(synapse, "_", layer, "_", metric, "_paper.svg"), 

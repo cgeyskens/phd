@@ -35,10 +35,10 @@ hgd() # open the server for plotting
 
 # loading in the data and setting arguments
 pre_post_in_vitro <- read_excel(
-  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp10_11_12_13_data.xlsx", "raw_data"
+  "/mnt/image-analysis/in-vitro-synapse-counting/all_data/exp17_20_23_24_data.xlsx", "raw_data"
 )
 
-synapse_type = "exc"
+synapse_type = "inh"
 
 dim(pre_post_in_vitro)
 
@@ -165,7 +165,6 @@ experiment_means <- experiment_means %>%
 
 # get unique experiments and treatments
 experiments <- sort(unique(as.character(data_clean$experiment)))
-n_exp <- length(experiments)
 
 # create color mapping: greys for Fc, PuBu for VCAM1-Fc
 experiment_colors <- c()
@@ -180,52 +179,184 @@ for (i in seq_along(experiments)) {
   experiment_colors[paste0(exp, "_VCAM1-Fc")] <- pu_colors[i]
 }
 
-# actual plotting
-p1 <- ggplot(data_clean, aes(x = treatment, 
-                            y = !!sym(y_value_to_visualize), 
-                            color = exp_treat)) +
-    geom_beeswarm(
-      cex = 4, 
-      size = 5, 
-      alpha = 0.8, 
-      priority = "ascending", 
-      stroke = 0,
-      corral = "wrap",
-      corral.width = 0.6
-      ) + 
-    geom_point(data = experiment_means, 
-              aes(x = as.numeric(as.factor(treatment)) + 0.45, 
-              y = !!sym(paste0("mean_", y_value_to_visualize)), 
-              color = exp_treat),
-              size = 7, shape = 19, alpha = 0.6, stroke = 0, show.legend = FALSE) +  
-    labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
-        y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
-        color = "Experiment") +
-    scale_color_manual(values = experiment_colors) +
-    theme(
-      legend.position = "top",  
-      panel.background = element_blank(),
-      panel.grid = element_blank(), 
-      axis.line = element_line(color = "black", size = 1.2),  
-      axis.ticks.x = element_blank(),
-      axis.ticks.y = element_line(color = "black", size = 1.2),
-      axis.ticks.length.y = unit(.3, "cm"),
-      axis.text = element_text(size = 14), 
-      axis.title.x = element_blank(),
-      axis.title.y = element_text(size = 16)
-    ) +
-    scale_y_continuous(
-        expand = c(0, 0),
-        limits = c(0, 5.2),
-        breaks = c(0, 1, 2, 3, 4, 5) 
-    ) +  
-    coord_fixed(ratio = 1.2) 
-p1
+# common theme
+my_theme <- theme(
+  legend.position = "top",
+  panel.background = element_blank(),
+  panel.grid = element_blank(),
+  axis.line = element_line(color = "black", linewidth = 1.2),
+  axis.ticks.x = element_blank(),
+  axis.ticks.y = element_line(color = "black", linewidth = 1.2),
+  axis.ticks.length.y = unit(.3, "cm"),
+  axis.text = element_text(size = 14),
+  axis.title.x = element_blank(),
+  axis.title.y = element_text(size = 16)
+)
 
-ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
-    plot = p1, 
-    device = cairo_pdf,
-    width = 25, height = 20, units = "cm", dpi=300)
+# 1) plot with all individual FOV data points only
+p_fov <- ggplot(
+  data_clean,
+  aes(
+    x = treatment,
+    y = !!sym(y_value_to_visualize),
+    color = exp_treat
+  )
+) +
+  geom_beeswarm(
+    cex = 4,
+    size = 5,
+    alpha = 0.8,
+    priority = "ascending",
+    stroke = 0,
+    corral = "wrap",
+    corral.width = 0.6
+  ) +
+  labs(
+    title = "Individual FOVs by Experiment and Treatment",
+    y = gsub("_", " ", y_value_to_visualize),
+    color = "Experiment"
+  ) +
+  scale_color_manual(values = experiment_colors) +
+  scale_y_continuous(
+    expand = c(0, 0),
+    limits = c(0, 5.2),
+    breaks = c(0, 1, 2, 3, 4, 5)
+  ) +
+  coord_fixed(ratio = 1.2) +
+  my_theme
+
+p_fov
+
+# 2) plot with only experiment means
+treatment_summary <- experiment_means %>%
+  group_by(treatment) %>%
+  summarize(
+    mean_value = mean(!!sym(paste0("mean_", y_value_to_visualize))),
+    sem = sd(!!sym(paste0("mean_", y_value_to_visualize))) / sqrt(n()),
+    .groups = "drop"
+  )
+
+bar_colors <- c(
+  "Fc" = brewer.pal(9, "Greys")[4],
+  "VCAM1-Fc" = brewer.pal(9, "PuBu")[4]
+)
+
+p_means <- ggplot() +
+  # bars (mean of experiment means)
+  geom_col(
+    data = treatment_summary,
+    aes(x = treatment, y = mean_value, fill = treatment),
+    width = 0.6,
+    alpha = 0.8
+  ) +
+
+  # SEM error bars
+  geom_errorbar(
+    data = treatment_summary,
+    aes(
+      x = treatment,
+      ymin = mean_value - sem,
+      ymax = mean_value + sem,
+      color = treatment
+    ),
+    width = 0.3,
+    linewidth = 1.5
+  ) +
+
+  # individual experiment means
+  geom_point(
+    data = experiment_means,
+    aes(
+      x = treatment,
+      y = !!sym(paste0("mean_", y_value_to_visualize)),
+      color = exp_treat
+    ),
+    size = 9,
+    alpha = 0.9,
+    position = position_jitter(width = 0.05)
+  ) +
+
+  scale_fill_manual(values = bar_colors) +
+  scale_color_manual(values = c(bar_colors, experiment_colors)) +
+
+  labs(
+    title = "Experimental Means by Treatment",
+    y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
+    color = "Experiment"
+  ) +
+
+  scale_y_continuous(
+    expand = c(0,0),
+    limits = c(0,2.5),
+    breaks = c(0,1,2)
+  ) +
+
+  coord_fixed(ratio = 2.3) +
+  my_theme
+
+p_means
+
+# # 3) plotting means & indivudual data points
+# p_all <- ggplot(data_clean, aes(x = treatment, 
+#                             y = !!sym(y_value_to_visualize), 
+#                             color = exp_treat)) +
+#     geom_beeswarm(
+#       cex = 4, 
+#       size = 5, 
+#       alpha = 0.8, 
+#       priority = "ascending", 
+#       stroke = 0,
+#       corral = "wrap",
+#       corral.width = 0.6
+#       ) + 
+#     geom_point(data = experiment_means, 
+#               aes(x = as.numeric(as.factor(treatment)) + 0.45, 
+#               y = !!sym(paste0("mean_", y_value_to_visualize)), 
+#               color = exp_treat),
+#               size = 7, shape = 19, alpha = 0.6, stroke = 0, show.legend = FALSE) +  
+#     labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
+#         y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
+#         color = "Experiment") +
+#     scale_color_manual(values = experiment_colors) +
+#     theme(
+#       legend.position = "top",  
+#       panel.background = element_blank(),
+#       panel.grid = element_blank(), 
+#       axis.line = element_line(color = "black", size = 1.2),  
+#       axis.ticks.x = element_blank(),
+#       axis.ticks.y = element_line(color = "black", size = 1.2),
+#       axis.ticks.length.y = unit(.3, "cm"),
+#       axis.text = element_text(size = 14), 
+#       axis.title.x = element_blank(),
+#       axis.title.y = element_text(size = 16)
+#     ) +
+#     scale_y_continuous(
+#         expand = c(0, 0),
+#         limits = c(0, 5.2),
+#         breaks = c(0, 1, 2, 3, 4, 5) 
+#     ) +  
+#     coord_fixed(ratio = 1.2) 
+# p_all
+
+# saving the plots
+ggsave(
+  paste0(y_value_to_visualize, "_", synapse_type, "_FOV_plot_paper.svg"),
+  plot = p_fov,
+  device = cairo_pdf,
+  width = 25, height = 20, units = "cm", dpi = 300
+)
+
+ggsave(
+  paste0(y_value_to_visualize, "_", synapse_type, "_experiment_means_plot_paper.svg"),
+  plot = p_means,
+  device = cairo_pdf,
+  width = 25, height = 20, units = "cm", dpi = 300
+)
+
+# ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
+#     plot = p_all, 
+#     device = cairo_pdf,
+#     width = 25, height = 20, units = "cm", dpi=300)
 
 
 # visualize the data
@@ -343,58 +474,173 @@ for (i in seq_along(experiments)) {
   experiment_colors[paste0(exp, "_VCAM1-Fc")] <- pu_colors[i]
 }
 
-# actual plotting
-p2 <- ggplot(data_clean, aes(x = treatment, 
-                            y = !!sym(y_value_to_visualize), 
-                            color = exp_treat)) +
-    geom_beeswarm(
-      cex = 4, 
-      size = 5, 
-      alpha = 0.8, 
-      priority = "ascending", 
-      stroke = 0,
-      corral = "wrap",
-      corral.width = 0.6
-    ) + 
-    geom_point(
-      data = experiment_means, 
-      aes(x = as.numeric(as.factor(treatment)) + 0.45, 
-      y = !!sym(paste0("mean_", y_value_to_visualize)), 
-      color = exp_treat),
-      size = 7, 
-      shape = 19, 
-      alpha = 0.6, 
-      stroke = 0, 
-      show.legend = FALSE
-    ) +  
-    labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
-        y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
-        color = "Experiment") +
-    scale_color_manual(values = experiment_colors) +
-    theme(
-      legend.position = "top",  
-      panel.background = element_blank(),
-      panel.grid = element_blank(), 
-      axis.line = element_line(color = "black", size = 1.2),  
-      axis.ticks.x = element_blank(),
-      axis.ticks.y = element_line(color = "black", size = 1.2),
-      axis.ticks.length.y = unit(.3, "cm"),
-      axis.text = element_text(size = 14), 
-      axis.title.x = element_blank(),
-      axis.title.y = element_text(size = 16)
-    ) +
-    scale_y_continuous(
-        expand = c(0, 0),
-        limits = c(0, 3),
-        breaks = c(0, 1, 2, 3) 
-    ) +
-    coord_fixed(ratio = 1.8) 
-p2
+# 1) plot with all individual FOV data points only
+p2_fov <- ggplot(
+  data_clean,
+  aes(
+    x = treatment,
+    y = !!sym(y_value_to_visualize),
+    color = exp_treat
+  )
+) +
+  geom_beeswarm(
+    cex = 4,
+    size = 5,
+    alpha = 0.8,
+    priority = "ascending",
+    stroke = 0,
+    corral = "wrap",
+    corral.width = 0.6
+  ) +
+  labs(
+    title = "Individual FOVs by Experiment and Treatment",
+    y = gsub("_", " ", y_value_to_visualize),
+    color = "Experiment"
+  ) +
+  scale_color_manual(values = experiment_colors) +
+  scale_y_continuous(
+    expand = c(0, 0),
+    limits = c(0, 3),
+    breaks = c(0, 1, 2, 3)
+  ) +
+  coord_fixed(ratio = 1.8) +
+  my_theme
 
-ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
-    plot = p2, 
+p2_fov
+
+
+# 2) plot with only experiment means
+treatment_summary <- experiment_means %>%
+  group_by(treatment) %>%
+  summarize(
+    mean_value = mean(!!sym(paste0("mean_", y_value_to_visualize))),
+    sem = sd(!!sym(paste0("mean_", y_value_to_visualize))) / sqrt(n()),
+    .groups = "drop"
+  )
+
+bar_colors <- c(
+  "Fc" = brewer.pal(9, "Greys")[4],
+  "VCAM1-Fc" = brewer.pal(9, "PuBu")[4]
+)
+
+p2_means <- ggplot() +
+  # bars (mean of experiment means)
+  geom_col(
+    data = treatment_summary,
+    aes(x = treatment, y = mean_value, fill = treatment),
+    width = 0.6,
+    alpha = 0.8
+  ) +
+
+  # SEM error bars
+  geom_errorbar(
+    data = treatment_summary,
+    aes(
+      x = treatment,
+      ymin = mean_value - sem,
+      ymax = mean_value + sem,
+      color = treatment
+    ),
+    width = 0.3,
+    linewidth = 1.5
+  ) +
+
+  # individual experiment means
+  geom_point(
+    data = experiment_means,
+    aes(
+      x = treatment,
+      y = !!sym(paste0("mean_", y_value_to_visualize)),
+      color = exp_treat
+    ),
+    size = 9,
+    alpha = 0.9,
+    position = position_jitter(width = 0.05)
+  ) +
+
+  scale_fill_manual(values = bar_colors) +
+  scale_color_manual(values = c(bar_colors, experiment_colors)) +
+
+  labs(
+    title = "Experimental Means by Treatment",
+    y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
+    color = "Experiment"
+  ) +
+
+  scale_y_continuous(
+    expand = c(0,0),
+    limits = c(0,2),
+    breaks = c(0,1,2)
+  ) +
+
+  coord_fixed(ratio = 2.5) +
+  my_theme
+
+p2_means
+
+# # 3) plotting means & indivudual data points
+# p2_all <- ggplot(data_clean, aes(x = treatment, 
+#                             y = !!sym(y_value_to_visualize), 
+#                             color = exp_treat)) +
+#     geom_beeswarm(
+#       cex = 4, 
+#       size = 5, 
+#       alpha = 0.8, 
+#       priority = "ascending", 
+#       stroke = 0,
+#       corral = "wrap",
+#       corral.width = 0.6
+#     ) + 
+#     geom_point(
+#       data = experiment_means, 
+#       aes(x = as.numeric(as.factor(treatment)) + 0.45, 
+#       y = !!sym(paste0("mean_", y_value_to_visualize)), 
+#       color = exp_treat),
+#       size = 7, 
+#       shape = 19, 
+#       alpha = 0.6, 
+#       stroke = 0, 
+#       show.legend = FALSE
+#     ) +  
+#     labs(title = "FOVs by Experiment and Treatment with Mean Synapse Counts",
+#         y = paste("Mean", gsub("_", " ", y_value_to_visualize)),
+#         color = "Experiment") +
+#     scale_color_manual(values = experiment_colors) +
+#     theme(
+#       legend.position = "top",  
+#       panel.background = element_blank(),
+#       panel.grid = element_blank(), 
+#       axis.line = element_line(color = "black", size = 1.2),  
+#       axis.ticks.x = element_blank(),
+#       axis.ticks.y = element_line(color = "black", size = 1.2),
+#       axis.ticks.length.y = unit(.3, "cm"),
+#       axis.text = element_text(size = 14), 
+#       axis.title.x = element_blank(),
+#       axis.title.y = element_text(size = 16)
+#     ) +
+#     scale_y_continuous(
+#         expand = c(0, 0),
+#         limits = c(0, 3),
+#         breaks = c(0, 1, 2, 3) 
+#     ) +
+#     coord_fixed(ratio = 1.8) 
+# p2_all
+
+# saving all plots
+ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_means_plot_paper.svg"), 
+    plot = p2_means, 
     device = cairo_pdf,
     width = 25, height = 20, units = "cm", dpi=300)
+
+ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_FOV_plot_paper.svg"), 
+    plot = p2_fov, 
+    device = cairo_pdf,
+    width = 25, height = 20, units = "cm", dpi=300)
+
+# ggsave(paste0(y_value_to_visualize, "_", synapse_type, "_plot_paper.svg"), 
+#     plot = p2_all, 
+#     device = cairo_pdf,
+#     width = 25, height = 20, units = "cm", dpi=300)
 
 # # visualize the data
 # p <- ggplot(data_clean, aes(x = treatment, y = !!sym(y_value_to_visualize), color = as.factor(experiment))) +
