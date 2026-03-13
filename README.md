@@ -3,7 +3,7 @@
 A Systematic Cross-Modal Approach Identifies Astrocytic VCAM1 as a Regulator of Hippocampal Synapse Development
 --------------------------------------------------------------------------------------------------------------------------
 
-_Cydric Geyskens, Dan Dascenco, Elke Leysen, Efstathia Kotoula, Kjen Bogaert, Joris Vandenbempt, Francisco Pestana, Benjamin Pavie, Steffen Fieuws, Lars Lefever, Pedro Magalhaes and Joris de Wit._
+_Cydric Geyskens, Dan Dascenco, Elke Leysen, Efstathia Kotoula, Kjen Bogaert, Joris Vandenbempt, Francisco Pestana, (Benjamin Pavie, Steffen Fieuws,) Lars Lefever, Pedro Magalhaes and Joris de Wit._
 
 The code spans multiple experimental modalities (spatial transcriptomics, super-resolution imaging, and proteomics) and is organized by figure. Each sub-repository includes scripts for raw data processing pipelines, downstream data analysis, and figure reproduction.
 
@@ -38,7 +38,7 @@ C.G. developed and implemented all data processing pipelines and statistical ana
 F.P. advised on the Resolve Bioscience spatial transcriptomics workflow analysis.  
 B.P. reviewed the synapse image processing workflow.  
 S.F. advised on statistical modeling.  
-P.M. and D.D. provided input on proteomics analysis.
+P.M. and D.D. provided guidance on proteomics analysis.
 ```
 ### Contact
 

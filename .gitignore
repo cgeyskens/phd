@@ -41,7 +41,9 @@ gdf_path_save/
 
 image-analysis/synapse-counting/notebooks/scratch_notebooks
 
-
+# securities
+credentials.md 
+*notes.md
 
 # Do include:
 !/image-analysis/in-vitro-synapse-counting/data/exp10_11_12_13_data.xlsx
