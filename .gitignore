@@ -17,6 +17,7 @@ data/
 # all folders related to the hpc
 ppi-hpc/
 .DS_Store
+
 # for pychache folders
 __pycache__/
 *.py[cod]
