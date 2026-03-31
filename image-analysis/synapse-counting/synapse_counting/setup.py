@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="synapse_counting",
-    version="0.1.3",
+    version="0.1.4",
     author="Cydric Geyskens",
     author_email="cydric.geyskens@gmail.com",
     description="A custom package for counting synapses",

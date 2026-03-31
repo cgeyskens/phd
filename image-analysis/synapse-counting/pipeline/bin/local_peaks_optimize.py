@@ -132,7 +132,7 @@ def optimize_parameters_for_hippocampal_layer(file_list,
     @dask.delayed
     def process_hippocampal_layer(hippocampal_layer):
         # only taking control (LacZ-images) images for setting the parameters
-        images = [f for f in file_list if hippocampal_layer in f and "LacZ-gRNA" in f] 
+        images = [f for f in file_list if hippocampal_layer in f and ("LacZ-gRNA" in f or "Lck-GFP" in f)] 
     
         preprocess_params = preprocess_params_by_hippocampal_layer[hippocampal_layer]
         

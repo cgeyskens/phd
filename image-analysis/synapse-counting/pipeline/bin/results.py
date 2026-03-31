@@ -45,12 +45,16 @@ puncta_df.set_index("img_filename", inplace=True)
 
 ### ---------------------------------------------- data wrangling ------------------------------------------------- ###
 
+# getting the protein name from the protein_and_synaptic_marker parser argument
+protein_of_interest = protein_and_synaptic_marker.split("_")[0]
+control_condition = protein_and_synaptic_marker.split("_")[1]
+
 # getting the merged dataframe with all the data
 merged_df = pd.concat([local_peaks_df, manders_df, overlap_df, pearson_df, puncta_df], axis=1)
 merged_df = merged_df.drop(["Unnamed: 0"], axis = 1)
 merged_df = merged_df.reset_index() # this is the final df with all the data
 
-# formatting the data, to include a column of gRNA and hippocampal layer, important for calculating statistics
+# formatting the data
 merged_df['gRNA'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-3:-2]).apply(lambda x: '_'.join(x))
 merged_df['hippocampal_layer'] = merged_df['img_filename'].apply(lambda x: x.split('_')[-2:]).apply(lambda x: ' '.join(x))
 merged_df['Brain'] = merged_df['img_filename'].str.split('_').str[2]
@@ -175,11 +179,22 @@ metrics = ["overlap_um2",
 
 ### ------------------------------------------------ calculate statistics ------------------------------------------------- ###
 
-# getting the protein name from the protein_and_synaptic_marker parser argument
-protein_of_interest = protein_and_synaptic_marker.split("_")[0]
-
 # calculate the statistics with a t-test
-statistcs_instance = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = "doesnt_matter")
+if control_condition == "LacZ":
+    statistcs_instance = results_plotting.PlotResults(
+        df = merged_df, 
+        candidate_gRNA = protein_of_interest + "-gRNA", 
+        name_of_plot = "doesnt_matter",
+        control_gRNA = control_condition + "-gRNA"
+    )
+elif control_condition == "GFP":
+    statistcs_instance = results_plotting.PlotResults(
+        df = merged_df, 
+        candidate_gRNA = "HA-" + protein_of_interest, 
+        name_of_plot = "doesnt_matter",
+        control_gRNA = "Lck-" + control_condition
+    )
+
 statistics_results = []
 for hippocampal_layer in hippocampal_layers:
     for metric in metrics:
@@ -202,6 +217,19 @@ df_significant_statistics_results.to_csv("significant_statistics.csv")
 ### --- Plotting the LacZ-gRNA vs the candidate-gRNA (strip plot that shows the means of each brain connected through lines) --- ###
 
 # make the plot
-i = results_plotting.PlotResults(df = merged_df, candidate_gRNA = protein_of_interest + "-gRNA", name_of_plot = "combined_plots")
-i.save_figure(hippocampal_layer_list = hippocampal_layers, metric_list = metrics)
+if control_condition == "LacZ":
+    i = results_plotting.PlotResults(
+        df = merged_df, 
+        candidate_gRNA = protein_of_interest + "-gRNA", 
+        name_of_plot = "combined_plots",
+        control_gRNA = control_condition + "-gRNA"
+    )
+elif control_condition == "GFP":
+    i = results_plotting.PlotResults(
+        df = merged_df, 
+        candidate_gRNA = "HA-" + protein_of_interest, 
+        name_of_plot = "combined_plots",
+        control_gRNA = "Lck-" + control_condition
+    )
 
+i.save_figure(hippocampal_layer_list = hippocampal_layers, metric_list = metrics)

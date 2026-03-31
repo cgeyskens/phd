@@ -42,7 +42,7 @@ You can run the pipeline using one of the following:
     or `../Dockerfile` 
 
     ```bash
-    docker pull cgeyskens/synapse-counting:v6
+    docker pull cgeyskens/synapse-counting:v8
     ```
 
 3. **Apptainer**
@@ -50,7 +50,7 @@ You can run the pipeline using one of the following:
     Also pull from Docker Hub:
 
     ```bash
-    apptainer pull docker://cgeyskens/synapse-counting:v6
+    apptainer pull docker://cgeyskens/synapse-counting:v8
     ```
 
 NOTE: When running multiple Nextflow pipelines in parallel using SLURM, its best to pull the container before running the pipeline. Otherwise, it will try to pull it at the same time from Docker Hub and it will crash.
@@ -62,8 +62,8 @@ Configure first the pipeline in  `nextflow.config`
 This pipeline provides three Nextflow profiles, depending on how you want to run it:
 
 - `-profile conda` — uses the Conda environment in the parent folder (`../synapse-counting-env.yml`)
-- `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting:v6` (or builds from `../Dockerfile` if you choose)
-- `-profile hpc` — runs with Apptainer/Singularity using `docker://cgeyskens/synapse-counting:v6`
+- `-profile docker` — runs with the Docker image `cgeyskens/synapse-counting:v8` (or builds from `../Dockerfile` if you choose)
+- `-profile hpc` — runs with Apptainer/Singularity using `docker://cgeyskens/synapse-counting:v8`
 
 Example usage:
 

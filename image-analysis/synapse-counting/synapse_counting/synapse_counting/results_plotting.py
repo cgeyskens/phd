@@ -72,7 +72,7 @@ def plot_data(df, x, y, extra_y_upper, title, hue = "gRNA", extra_y_lower = 0, a
 
 class PlotResults:
 
-    def __init__(self, df, candidate_gRNA, name_of_plot, control_gRNA = "LacZ-gRNA"):
+    def __init__(self, df, candidate_gRNA, name_of_plot, control_gRNA):
         self.df = df
         self.candidate_gRNA = candidate_gRNA    
         self.control_gRNA = control_gRNA

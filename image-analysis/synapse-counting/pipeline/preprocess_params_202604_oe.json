@@ -1,0 +1,140 @@
+{
+    "VGLUT1_PSD95": {
+        "CA1_SO": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 0.5,
+            "puncta_size_threshold": 20, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 0.7
+        },
+        "CA1_SR": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 0.5,
+            "puncta_size_threshold": 20,
+            "threshold_algorithm": "otsu",
+            "pre_threshold_scale": 1.6,
+            "post_threshold_scale": 2
+        },
+        "CA1_SLM": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 20,
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 0.7
+        },
+        "CA3_SO": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 0.5,
+            "puncta_size_threshold": 20, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 0.7
+        },
+        "CA3_SL": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 4,
+            "puncta_size_threshold": 20, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 1
+        },
+        "CA3_SR": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 4,
+            "puncta_size_threshold": 20,
+            "threshold_algorithm": "otsu",
+            "pre_threshold_scale": 2.3,
+            "post_threshold_scale": 1.8
+        }
+    },
+
+    "VGAT_GEPH": {
+        "CA1_SO": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 2, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.3,
+            "post_threshold_scale": 0.3
+        },
+        "CA1_SR": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 2, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.4,
+            "post_threshold_scale": 0.3
+        },
+        "CA1_SLM": {
+            "include_rolling_ball": "True", "radius": 5,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 2,
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 0.6
+        },
+        "CA3_SO": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 5, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.5,
+            "post_threshold_scale": 0.5
+        },
+        "CA3_SL": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 5, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.7,
+            "post_threshold_scale": 0.8
+        },
+        "CA3_SR": {
+            "include_rolling_ball": "True", "radius": 30,
+            "include_blur": "True", "sigma": 1,
+            "include_clahe": "True",
+            "include_tophat": "True", "element_size": 9,
+            "watershed_sigma": 1,
+            "puncta_size_threshold": 5, 
+            "threshold_algorithm": "yen",
+            "pre_threshold_scale": 0.3,
+            "post_threshold_scale": 0.5
+        }
+
+    }
+}

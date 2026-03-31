@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 # Upgrade pip and install the required Python packages
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
-    synapse-counting==0.1.3 \
+    synapse-counting==0.1.4 \
     dask==2025.2.0 \
     distributed==2025.2.0 \
     optuna==4.3.0 \
@@ -26,7 +26,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     matplotlib==3.10.0 \
     pillow==11.1.0 \
     lxml==5.4.0 \
-    czifile==2019.7.2.1
+    czifile==2019.7.2.1 \
+    tifffile==2025.12.12
 
 # Set the working directory in the container
 WORKDIR /app
