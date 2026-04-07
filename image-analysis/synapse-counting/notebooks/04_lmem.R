@@ -23,15 +23,16 @@ hgd()
 
 #### -------------------------------- arguments --------------------------------- #####
 
-# loading the data [for each protein (VCAM1 vs GPR37L1) and synapse type (VGLUT1-PSD95 vs VGAT-GEPH)]
-data <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv")
-dim(data)
-
+# experiment type (crispr or oe)
+experiment = "oe"
 # protein
 protein = "VCAM1"
-
 # synapse type
 synapse_type = "VGAT-GEPH"
+
+# loading the data [for each protein (VCAM1 vs GPR37L1) and synapse type (VGLUT1-PSD95 vs VGAT-GEPH)]
+data <- read.csv("/mnt/image-analysis/synapse-counting-oe/results_202604/VGAT-GEPH_output_data_20260403_171952/metric_results.csv")
+dim(data)
 
 # metrics to assess
 metrics_to_assess = c("local_peak_colocalized_spots",
@@ -175,7 +176,13 @@ data_analyzed <- run_analysis(
 
 
 #### -------------------------------- saving --------------------------------- ####
-output_directory <- "/mnt/image-analysis/synapse-counting/results_20251203"
-output_filename <- paste0(protein, "_", synapse_type, "_lmem_analysis_results.csv")
-output_filepath <- file.path(output_directory, output_filename)
+if (experiment == "crispr"){
+    output_directory <- "/mnt/image-analysis/synapse-counting/results_20251203"
+    output_filename <- paste0(protein, "_", synapse_type, "_crispr_lmem_analysis_results.csv")
+    output_filepath <- file.path(output_directory, output_filename)
+} else if (experiment == "oe") {
+    output_directory <- "/mnt/image-analysis/synapse-counting-oe/results_202604"
+    output_filename <- paste0(protein, "_", synapse_type, "_oe_lmem_analysis_results.csv")
+    output_filepath <- file.path(output_directory, output_filename)
+}
 write.csv(data_analyzed, file = output_filepath, row.names = FALSE)

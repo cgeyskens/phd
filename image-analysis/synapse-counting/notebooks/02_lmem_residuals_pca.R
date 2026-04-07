@@ -19,16 +19,21 @@ library(nlme)
 library(stringr)
 
 #### =============================== arguments =============================== ####
-
-protein = "GPR37L1"
+experiment = "oe" # or "crispr"
+protein = "VCAM1"
 
 #### =============================== get input =============================== ####
-if (protein == "VCAM1"){
-    data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_194547/metric_results.csv")
-    data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv")
-} else if (protein == "GPR37L1") {
-    data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp10_GPR37L1_VGLUT1-PSD95_output_data_20251201_194537/metric_results.csv")
-    data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp11_GPR37L1_VGAT-GEPH_output_data_20251201_194548/metric_results.csv")
+if (experiment == "crispr") {
+  if (protein == "VCAM1"){
+      data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp9_VCAM1_VGLUT1-PSD95_output_data_20251201_194547/metric_results.csv")
+      data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp12_VCAM1_VGAT-GEPH_output_data_20251201_194539/metric_results.csv")
+  } else if (protein == "GPR37L1") {
+      data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp10_GPR37L1_VGLUT1-PSD95_output_data_20251201_194537/metric_results.csv")
+      data_vgat <- read.csv("/mnt/image-analysis/synapse-counting/IHC_Exp11_GPR37L1_VGAT-GEPH_output_data_20251201_194548/metric_results.csv")
+  }
+} else if (experiment == "oe"){
+      data_vglut1 <- read.csv("/mnt/image-analysis/synapse-counting-oe/results_202604/VGLUT1-PSD95_output_data_20260403_172044/metric_results.csv")
+      data_vgat <- read.csv("/mnt/image-analysis/synapse-counting-oe/results_202604/VGAT-GEPH_output_data_20260403_171952/metric_results.csv")
 }
 
 #### =============================== data processing =============================== ####
@@ -137,7 +142,7 @@ residuals_for_pca <- as.data.frame(residuals_list) %>%
 
 #### ============================= saving the residuals =============================== ####
 
-output_directory <- "/mnt/image-analysis/synapse-counting/results_202512"
+output_directory <- "/mnt/image-analysis/synapse-counting-oe/results_202604"
 output_filepath <- file.path(output_directory, paste0(protein, "_lmem_residuals_results.csv"))
 write.csv(residuals_for_pca, file = output_filepath, row.names = TRUE)
 
@@ -169,10 +174,17 @@ if (protein == "VCAM1") {
   warning("You didn’t set arguments correctly")
   gRNA_color <- "#000000"   
 }
-condition_colors <- c(
+if (experiment == "crispr"){
+  condition_colors <- c(
   setNames(gRNA_color, paste0(protein, "-gRNA")),
   "LacZ-gRNA" = "#c6c6c6"
-)
+  )
+} else if (experiment == "oe"){
+  condition_colors <- c(
+  setNames(gRNA_color, paste0("HA-", protein)),
+  "Lck-GFP" = "#c6c6c6"
+  )
+}
 
 # create the PCA plot
 p <- ggplot(plot_data_pca, aes(x = PC1, y = PC2, color = gRNA, label = Brain)) +
@@ -212,7 +224,14 @@ p <- ggplot(plot_data_pca, aes(x = PC1, y = PC2, color = gRNA, label = Brain)) +
 p
 
 # saving
-ggsave(paste0(protein, "_pca_paper.svg"), 
-    plot = p, 
-    device = cairo_pdf,
-    width = 23, height = 20, units = "cm", dpi=300)
+if (experiment == "crispr"){
+  ggsave(paste0(protein, "_crispr_pca_paper.svg"), 
+      plot = p, 
+      device = cairo_pdf,
+      width = 23, height = 20, units = "cm", dpi=300)
+} else if (experiment == "oe"){
+  ggsave(paste0(protein, "_oe_pca_paper.svg"), 
+      plot = p, 
+      device = cairo_pdf,
+      width = 23, height = 20, units = "cm", dpi=300)
+}
