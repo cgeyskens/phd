@@ -8,4 +8,8 @@
 
     `dev-expression.ipynb` 
 
+3. Fluorescence intensity plots of VCAM1 and GPR37L1 at P28 in CA1, CA3 and DG.
+
+    `fluorescence-intensity-plots.ipynb`
+
 with accompanied data in folder `wb-dev-data`
