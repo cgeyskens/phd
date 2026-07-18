@@ -12,4 +12,4 @@
 
     `fluorescence-intensity-plots.ipynb`
 
-with accompanied data in folder `wb-dev-data`
+with accompanied data in folder `wb-dev-data` & `fluor-intensity-data`
