@@ -17,7 +17,7 @@ library(ggbeeswarm)
 
 #### =============================== get input =============================== ####
 data <- read_excel(
-  "/mnt/image-analysis/synapse-counting/results_202512/VCAM1_gRNA-QC_WB.xlsx"
+  "wb-data/VCAM1_gRNA-QC_WB.xlsx"
 )
 
 

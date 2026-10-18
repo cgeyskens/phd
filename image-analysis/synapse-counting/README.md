@@ -49,19 +49,7 @@ Detailed documentation on pipeline execution, configuration, and parameterizatio
 
 ### Analysis workflows
 
-`notebooks/01_in-vitro_VCAM1-gRNA_QC.R`
-
-Quality control of VCAM1 gRNAs in astrocyte culture:
-
-1. Normalization to LacZ-gRNA#1
-
-2. Test normality of the data 
-
-3. ANOVA with Dunnet's posthoc test
-
-4. Generate the barplot
-
-`notebooks/02_lmem_residuals_pca.R`
+`notebooks/01_lmem_residuals_pca.R`
 
 Correction for brain-to-brain variability and dimensionality reduction:
 
@@ -73,7 +61,7 @@ Correction for brain-to-brain variability and dimensionality reduction:
 
 4. Generate the PCA plot
 
-`notebooks/03_lmem_residuals_heatmap.ipynb`
+`notebooks/02lmem_residuals_heatmap.ipynb`
 
 Clustering of synaptic metrics:
 
@@ -83,7 +71,7 @@ Clustering of synaptic metrics:
 
 3. Hierachical clustering of the synaptic metrics & plotting in heatmap
 
-`notebooks/04_lmem.R`
+`notebooks/03_lmem.R`
 
 Formal statistical testing of synaptic metrics:
 
@@ -95,7 +83,7 @@ Formal statistical testing of synaptic metrics:
 
 4. FDR adjusted per synaptic metric across hippocampal laminae
 
-`notebooks/05_heatmap_lmem.ipynb`
+`notebooks/04_heatmap_lmem.ipynb`
 
 Visualization of statistical results:
 
@@ -105,7 +93,7 @@ Visualization of statistical results:
 
 3. Generate heatmap of synaptic metrics x hippocampal laminae
 
-`notebooks/06_plot_single_metric.R`
+`notebooks/05_plot_single_metric.R`
 
 Single-metric visualization:
 
