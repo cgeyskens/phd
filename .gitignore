@@ -56,5 +56,5 @@ docs/
 !/image-analysis/synapse-counting/fig_exp.png
 !/candidate-profiling/fluor-intensity-data/**
 !/candidate-profiling/wb-dev-data/**
-!/image-analysis/crispr-ko-analysis/intensity-data/crispr-cas9-gpr37l1-hippo-intensity.xlsx
-!/image-analysis/crispr-ko-analysis/intensity-data/crispr-cas9-vcam1-hippo-intensity.xlsx
+!/image-analysis/crispr-in-vivo-ko-analysis/intensity-data/crispr-cas9-gpr37l1-hippo-intensity.xlsx
+!/image-analysis/crispr-in-vivo-ko-analysis/intensity-data/crispr-cas9-vcam1-hippo-intensity.xlsx
