@@ -1,0 +1,14 @@
+name: bulk-rnaseq
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip:
+      - pandas
+      - seaborn
+      - matplotlib
+      - numpy
+      - seaborn
+      - scikit-learn
+      - pydeseq2
